@@ -113,10 +113,6 @@ async function onConfigView(view) {
             alert("没有导入任何 JS 文件");
         }
     }
-    // scriptio.onDevModeStatus((event, enabled) => {
-    //     console.log("[Scriptio] onDevModeStatus", enabled); // DEBUG
-    //     $("dev").classList.toggle("is-active", enabled);
-    // });
     scriptio.rendererReady(); // We don't have to create a new function for this 😉
     $("dev").addEventListener("click", devMode);
     scriptio.queryDevMode().then(enabled => {

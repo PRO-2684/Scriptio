@@ -32,7 +32,7 @@ function getDesc(code) {
         return null;
     }
 }
-
+// 获取 JS 文件内容
 function getScript(name) {
     let content = "";
     try {
@@ -40,7 +40,6 @@ function getScript(name) {
     } catch (err) { }
     return content;
 }
-
 // 脚本更改
 function updateScript(name, webContent) {
     let content = getScript(name);
@@ -60,7 +59,12 @@ function updateScript(name, webContent) {
     }
 }
 // 重载所有窗口
-function reload() {
+function reload(event) {
+    // 若有，关闭发送者窗口 (设置界面)
+    if (event && event.sender) {
+        const win = BrowserWindow.fromWebContents(event.sender);
+        win.close();
+    }
     BrowserWindow.getAllWindows().forEach((window) => {
         window.reload();
     });
@@ -81,13 +85,11 @@ function importScript(fname, content) {
         updateScript(fname.slice(0, -3));
     }
 }
-
-// 监听 `scripts` 目录修改
+// `scripts` 目录修改
 function onScriptChange(eventType, filename) {
     log("onScriptChange", eventType, filename);
     reload();
 }
-
 // 监听配置修改
 function onConfigChange(event, name, enable) {
     log("onConfigChange", name, enable);
@@ -111,7 +113,6 @@ function onConfigChange(event, name, enable) {
         updateScript(name);
     }
 }
-
 // 监听开发者模式开关
 function onDevMode(event, enable) {
     log("onDevMode", enable);
@@ -125,13 +126,12 @@ function onDevMode(event, enable) {
         log("watcher closed");
     }
 }
-
+// 监听目录更改
 function watchScriptChange() {
     return fs.watch(scriptPath, "utf-8",
         debounce(onScriptChange, updateInterval)
     );
 }
-
 // 插件加载触发
 async function onLoad(plugin) {
     dataPath = plugin.path.data;
@@ -170,17 +170,6 @@ async function onLoad(plugin) {
         return devMode;
     });
 }
-
-// 创建窗口触发
-// function onBrowserWindowCreated(window, plugin) {
-//     window.on("ready-to-show", () => {
-//         const url = window.webContents.getURL();
-//         if (url.includes("app://./renderer/index.html")) {
-//             window.webContents.send("LiteLoader.scriptio.devModeStatus", [devMode]);
-//             log("devModeStatus", devMode);
-//         }
-//     });
-// }
 
 module.exports = {
     onLoad
