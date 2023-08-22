@@ -16,7 +16,7 @@
 
 > 演示中使用了 [MSpring-Theme](https://github.com/MUKAPP/LiteLoaderQQNT-MSpring-Theme)，主题色为 `#74A9F6`。
 
-暂无截图
+![Scriptio](./attachments/settings.jpg)
 
 ## 📥 安装
 
