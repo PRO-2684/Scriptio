@@ -68,6 +68,9 @@ plugins (所有的插件目录)
 > [!WARNING]
 > 请不要在文件名中使用诸如句点 `.`, 空格 ` `, 加 `+` 等特殊字符，否则可能会导致插件无法正常工作。推荐仅使用字母、数字、下划线 `_` 与连字符 `-`。
 
+> [!WARNING]
+> 推荐使用 `(function () { <你的代码> })();` 的格式编写你的代码，以防止变量污染。（除非你知道自己在做什么）
+
 | 名称 | 作者 | 说明 | 链接 |
 | --- | --- | --- | --- |
-| none | none | 暂无 | 暂无 |
+| shortcutio | [PRO-2684](https://github.com/PRO-2684) | 添加一些常用的快捷键 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio) |
