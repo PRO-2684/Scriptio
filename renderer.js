@@ -65,7 +65,7 @@ async function onConfigView(view) {
         switch_.parentNode.classList.toggle("is-loading", false);
         let span = view.querySelector(`div#${configIdPrefix}${name}-item > div > span.secondary-text`);
         span.textContent = comment || "此文件没有描述";
-        console.log("[Scriptio] onUpdateScript", name, enabled); // DEBUG
+        // console.log("[Scriptio] onUpdateScript", name, enabled); // DEBUG
     });
     function $(prop) { // Helper function for scriptio selectors
         return view.querySelector(`#scriptio-${prop}`);
@@ -116,7 +116,7 @@ async function onConfigView(view) {
     scriptio.rendererReady(); // We don't have to create a new function for this 😉
     $("dev").addEventListener("click", devMode);
     scriptio.queryDevMode().then(enabled => {
-        console.log("[Scriptio] devModeStatus", enabled); // DEBUG
+        // console.log("[Scriptio] devModeStatus", enabled); // DEBUG
         $("dev").classList.toggle("is-active", enabled);
     });
     $("reload").addEventListener("dblclick", scriptio.reload);

@@ -8,10 +8,10 @@ let devMode = false;
 let updateInterval = 1000;
 let watcher = null;
 
-function log(...args) { // DEBUG
-    console.log("[Scriptio]", ...args);
-}
-// function log(...args) { }
+// function log(...args) { // DEBUG
+//     console.log("[Scriptio]", ...args);
+// }
+function log(...args) { }
 
 // 防抖
 function debounce(fn, time) {
