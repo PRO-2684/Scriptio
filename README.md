@@ -1,11 +1,13 @@
 # Scriptio
 
-[LiteLoaderQQNT](https://github.com/mo-jinran/LiteLoaderQQNT) 插件，用于为 QQNT 加载任意**渲染层**的 Javascript 片段。
+[LiteLoaderQQNT](https://github.com/mo-jinran/LiteLoaderQQNT) 插件，用于为 QQNT 加载任意**渲染层**的 JavaScript 片段。
 
-## 具体功能
+你可能也感兴趣：[Transitio](https://github.com/PRO-2684/transitio)，自定义 CSS 片段加载器。
+
+## 🪄 具体功能
 
 > [!WARNING]
-> 由于 js 代码的复杂性，禁用/修改某脚本可能需要**重启生效**
+> 由于 js 代码的复杂性，禁用/修改某脚本需要**重启/重载生效**
 
 - 导入 js 代码片段
 - 启用/禁用 js 代码片段
@@ -20,7 +22,7 @@
 
 ### 插件商店
 
-在插件商店中找到 Scriptio 并安装。
+~~在插件商店中找到 Scriptio 并安装。~~ (开发中，暂未上架)
 
 ### 手动安装
 
@@ -43,12 +45,12 @@ plugins (所有的插件目录)
 ## 🤔 使用方法
 
 > [!WARNING]
-> 由于 js 代码的复杂性，禁用/修改某脚本可能需要**重启生效**
+> 由于 js 代码的复杂性，禁用/修改某脚本需要**重启/重载生效**
 
 - 启用/禁用脚本：打开插件设置界面，将对应的脚本开关打开/关闭，即时生效。
     - 注意：禁用脚本，实际上是在文件内第一行注释末尾添加了 `[Disabled]` 标记。
-- 导入脚本：在配置界面导入 CSS 文件，或将之放入 `plugins_data/Scriptio/styles/` 文件夹。
-    - CSS 文件开头的注释（若有）会被当作脚本说明，显示在设置界面中。
+- 导入脚本：在配置界面导入 JS 文件，或将之放入 `plugins_data/Scriptio/styles/` 文件夹。
+    - JS 文件首行的注释（若有）会被当作脚本说明，显示在设置界面中。
 - 删除样式：~~点击删除按钮，或~~进入 `plugins_data/Scriptio/styles/` 文件夹删除对应文件。
 - 修改样式：修改对应文件即可。
 - 更新样式：重新导入即可。

@@ -1,0 +1,31 @@
+{
+    "manifest_version": 3,
+    "type": "extension",
+    "name": "Scriptio",
+    "slug": "scriptio",
+    "description": "自定义渲染层 JavaScript 脚本加载器",
+    "version": "0.1.0",
+    "thumbnail": "./icons/icon.svg",
+    "author": {
+        "name": "PRO-2684",
+        "link": "https://github.com/PRO-2684"
+    },
+    "repository": {
+        "repo": "PRO-2684/Scriptio",
+        "branch": "main",
+        "use_release": {
+            "tag": "latest",
+            "name": "scriptio-release.zip"
+        }
+    },
+    "platform": [
+        "win32",
+        "linux",
+        "darwin"
+    ],
+    "injects": {
+        "renderer": "./renderer.js",
+        "main": "./main.js",
+        "preload": "./preload.js"
+    }
+}
