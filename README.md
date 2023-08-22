@@ -1,3 +1,5 @@
+<img src="./icons/icon.svg" align="right" style="width: 6em; height: 6em;"></img>
+
 # Scriptio
 
 [LiteLoaderQQNT](https://github.com/mo-jinran/LiteLoaderQQNT) 插件，用于为 QQNT 加载任意**渲染层**的 JavaScript 片段。
