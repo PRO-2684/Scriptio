@@ -3,7 +3,7 @@ const configIdPrefix = "scriptio-config-";
 // Normalized plugin path
 const plugin_path = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/");
 
-// Helper function for css
+// Helper function for js
 function injectJS(name, code) {
     let script = document.createElement("script");
     script.id = scriptIdPrefix + name;
@@ -20,9 +20,6 @@ function scriptHelper(name, code, enabled, comment) {
 async function onLoad() {
     scriptio.onUpdateScript((event, args) => {
         scriptHelper(...args);
-    });
-    scriptio.onResetScript(() => {
-        window.location.reload();
     });
     scriptio.rendererReady();
 }
@@ -68,14 +65,8 @@ async function onConfigView(view) {
         switch_.parentNode.classList.toggle("is-loading", false);
         let span = view.querySelector(`div#${configIdPrefix}${name}-item > div > span.secondary-text`);
         span.textContent = comment || "此文件没有描述";
-        // console.log("[Scriptio] onUpdateScript", name, enabled); // DEBUG
+        console.log("[Scriptio] onUpdateScript", name, enabled); // DEBUG
     });
-    // scriptio.onResetScript(() => {
-    //     let items = view.querySelectorAll(`[id^="${configIdPrefix}"]`);
-    //     items.forEach((item) => {
-    //         item.remove();
-    //     });
-    // });
     function $(prop) { // Helper function for scriptio selectors
         return view.querySelector(`#scriptio-${prop}`);
     }
@@ -97,7 +88,7 @@ async function onConfigView(view) {
         let cnt = 0;
         let promises = [];
         for (let file of this.files) {
-            if (!file.name.endsWith(".css")) {
+            if (!file.name.endsWith(".js")) {
                 console.log("[Scriptio] Ignored", file.name);
                 continue;
             }
@@ -122,9 +113,17 @@ async function onConfigView(view) {
             alert("没有导入任何 JS 文件");
         }
     }
+    // scriptio.onDevModeStatus((event, enabled) => {
+    //     console.log("[Scriptio] onDevModeStatus", enabled); // DEBUG
+    //     $("dev").classList.toggle("is-active", enabled);
+    // });
     scriptio.rendererReady(); // We don't have to create a new function for this 😉
     $("dev").addEventListener("click", devMode);
-    $("reload").addEventListener("dblclick", scriptio.reloadScript);
+    scriptio.queryDevMode().then(enabled => {
+        console.log("[Scriptio] devModeStatus", enabled); // DEBUG
+        $("dev").classList.toggle("is-active", enabled);
+    });
+    $("reload").addEventListener("dblclick", scriptio.reload);
     $("open-folder").addEventListener("click", () => {
         openURI("folder", "scripts"); // Relative to the data directory
     });

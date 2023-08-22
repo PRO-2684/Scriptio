@@ -12,8 +12,8 @@ contextBridge.exposeInMainWorld("scriptio", {
         "LiteLoader.scriptio.devMode",
         enable
     ),
-    reloadScript: () => ipcRenderer.send(
-        "LiteLoader.scriptio.reloadScript"
+    reload: () => ipcRenderer.send(
+        "LiteLoader.scriptio.reload"
     ),
     importScript: (fname, content) => ipcRenderer.send(
         "LiteLoader.scriptio.importScript",
@@ -23,12 +23,15 @@ contextBridge.exposeInMainWorld("scriptio", {
         "LiteLoader.scriptio.open",
         type, uri
     ),
+    queryDevMode: () => ipcRenderer.invoke(
+        "LiteLoader.scriptio.queryDevMode"
+    ),
     onUpdateScript: (callback) => ipcRenderer.on(
         "LiteLoader.scriptio.updateScript",
         callback
     ),
-    onResetScript: (callback) => ipcRenderer.on(
-        "LiteLoader.scriptio.resetScript",
-        callback
-    ),
+    // onDevModeStatus: (callback) => ipcRenderer.on(
+    //     "LiteLoader.scriptio.devModeStatus",
+    //     callback
+    // ),
 });

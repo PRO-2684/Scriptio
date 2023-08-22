@@ -1,18 +1,17 @@
 const fs = require("fs");
 const path = require("path");
-const { BrowserWindow, ipcMain, shell } = require("electron");
+const { BrowserWindow, ipcMain, shell, webContents } = require("electron");
 
 let dataPath = null;
 let scriptPath = null;
 let devMode = false;
 let updateInterval = 1000;
-let openedContents = new Set();
 let watcher = null;
 
-// function log(...args) { // DEBUG
-//     console.log("[Scriptio]", ...args);
-// }
-function log(...args) { }
+function log(...args) { // DEBUG
+    console.log("[Scriptio]", ...args);
+}
+// function log(...args) { }
 
 // 防抖
 function debounce(fn, time) {
@@ -43,7 +42,7 @@ function getScript(name) {
 }
 
 // 脚本更改
-function updateScript(name, webContents) {
+function updateScript(name, webContent) {
     let content = getScript(name);
     let comment = getDesc(content) || "";
     let enabled = true;
@@ -52,44 +51,41 @@ function updateScript(name, webContents) {
         enabled = false;
     }
     log("updateScript", name, comment, enabled);
-    if (webContents) {
-        webContents.send("LiteLoader.scriptio.updateScript", [name, content, enabled, comment]);
+    if (webContent) {
+        webContent.send("LiteLoader.scriptio.updateScript", [name, content, enabled, comment]);
     } else {
-        openedContents.forEach((webContents) => {
-            webContents.send("LiteLoader.scriptio.updateScript", [name, content, enabled, comment]);
+        webContents.getAllWebContents().forEach((webContent) => {
+            webContent.send("LiteLoader.scriptio.updateScript", [name, content, enabled, comment]);
         });
     }
 }
-
-// 重置脚本
-function reloadScript(webContents) {
-    if (webContents) {
-        webContents.send("LiteLoader.scriptio.resetScript");
-    } else {
-        openedContents.forEach((webContents) => {
-            webContents.send("LiteLoader.scriptio.resetScript");
-        });
-    }
-    const files = fs.readdirSync(scriptPath, { withFileTypes: true }).filter((file) => file.name.endsWith(".css") && !file.isDirectory());
-    files.forEach((file) => {
-        updateScript(file.name.slice(0, -4), webContents);
+// 重载所有窗口
+function reload() {
+    BrowserWindow.getAllWindows().forEach((window) => {
+        window.reload();
     });
 }
-
-// 导入样式
+// 载入脚本
+function loadScripts(webContent) {
+    const files = fs.readdirSync(scriptPath, { withFileTypes: true }).filter((file) => file.name.endsWith(".js") && !file.isDirectory());
+    files.forEach((file) => {
+        updateScript(file.name.slice(0, -3), webContent);
+    });
+}
+// 导入脚本
 function importScript(fname, content) {
     log("importScript", fname);
     let filePath = path.join(scriptPath, fname);
     fs.writeFileSync(filePath, content, "utf-8");
     if (!devMode) {
-        updateScript(fname.slice(0, -4));
+        updateScript(fname.slice(0, -3));
     }
 }
 
 // 监听 `scripts` 目录修改
 function onScriptChange(eventType, filename) {
     log("onScriptChange", eventType, filename);
-    reloadScript();
+    reload();
 }
 
 // 监听配置修改
@@ -148,11 +144,9 @@ async function onLoad(plugin) {
     // 监听
     ipcMain.on("LiteLoader.scriptio.rendererReady", (event) => {
         const window = BrowserWindow.fromWebContents(event.sender);
-        reloadScript(window.webContents);
+        loadScripts(window.webContents);
     });
-    ipcMain.on("LiteLoader.scriptio.reloadScript", (event) => {
-        reloadScript();
-    });
+    ipcMain.on("LiteLoader.scriptio.reload", reload);
     ipcMain.on("LiteLoader.scriptio.importScript", (event, fname, content) => {
         importScript(fname, content);
     });
@@ -171,22 +165,23 @@ async function onLoad(plugin) {
     });
     ipcMain.on("LiteLoader.scriptio.configChange", onConfigChange);
     ipcMain.on("LiteLoader.scriptio.devMode", onDevMode);
-}
-
-// 创建窗口触发
-function onBrowserWindowCreated(window, plugin) {
-    window.on("ready-to-show", () => {
-        const url = window.webContents.getURL();
-        if (url.includes("app://./renderer/index.html")) {
-            openedContents.add(window.webContents);
-            window.webContents.once("destroyed", () => {
-                openedContents.delete(window.webContents);
-            });
-        }
+    ipcMain.handle("LiteLoader.scriptio.queryDevMode", async (event) => {
+        log("queryDevMode", devMode);
+        return devMode;
     });
 }
 
+// 创建窗口触发
+// function onBrowserWindowCreated(window, plugin) {
+//     window.on("ready-to-show", () => {
+//         const url = window.webContents.getURL();
+//         if (url.includes("app://./renderer/index.html")) {
+//             window.webContents.send("LiteLoader.scriptio.devModeStatus", [devMode]);
+//             log("devModeStatus", devMode);
+//         }
+//     });
+// }
+
 module.exports = {
-    onLoad,
-    onBrowserWindowCreated
+    onLoad
 }
