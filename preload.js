@@ -23,6 +23,9 @@ contextBridge.exposeInMainWorld("scriptio", {
         "LiteLoader.scriptio.open",
         type, uri
     ),
+    queryIsDebug: () => ipcRenderer.invoke(
+        "LiteLoader.scriptio.queryIsDebug"
+    ),
     queryDevMode: () => ipcRenderer.invoke(
         "LiteLoader.scriptio.queryDevMode"
     ),

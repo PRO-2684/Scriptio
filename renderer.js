@@ -2,6 +2,8 @@ const scriptIdPrefix = "scriptio-script-";
 const configIdPrefix = "scriptio-config-";
 // Normalized plugin path
 const plugin_path = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/");
+let isDebug = false;
+let log = () => { }; // Dummy function
 
 // Helper function for js
 function injectJS(name, code) {
@@ -22,6 +24,10 @@ async function onLoad() {
         scriptHelper(...args);
     });
     scriptio.rendererReady();
+    isDebug = await scriptio.queryIsDebug();
+    if (isDebug) {
+        log = console.log.bind(console, "[Scriptio]");
+    }
 }
 async function onConfigView(view) {
     let r = await fetch(`llqqnt://local-file/${plugin_path}/settings.html`);
@@ -65,7 +71,7 @@ async function onConfigView(view) {
         switch_.parentNode.classList.toggle("is-loading", false);
         let span = view.querySelector(`div#${configIdPrefix}${name}-item > div > span.secondary-text`);
         span.textContent = comment || "此文件没有描述";
-        // console.log("[Scriptio] onUpdateScript", name, enabled); // DEBUG
+        log("onUpdateScript", name, enabled);
     });
     function $(prop) { // Helper function for scriptio selectors
         return view.querySelector(`#scriptio-${prop}`);
@@ -114,11 +120,17 @@ async function onConfigView(view) {
         }
     }
     scriptio.rendererReady(); // We don't have to create a new function for this 😉
-    $("dev").addEventListener("click", devMode);
+    let dev = $("dev");
+    dev.addEventListener("click", devMode);
     scriptio.queryDevMode().then(enabled => {
-        // console.log("[Scriptio] devModeStatus", enabled); // DEBUG
-        $("dev").classList.toggle("is-active", enabled);
+        log("queryDevMode", enabled);
+        dev.classList.toggle("is-active", enabled);
     });
+    if (isDebug) {
+        let debug = $("debug");
+        debug.style.color = "red";
+        debug.title = "Debug 模式已激活";
+    }
     $("reload").addEventListener("dblclick", scriptio.reload);
     $("open-folder").addEventListener("click", () => {
         openURI("folder", "scripts"); // Relative to the data directory

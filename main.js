@@ -5,13 +5,10 @@ const { BrowserWindow, ipcMain, shell, webContents } = require("electron");
 let dataPath = null;
 let scriptPath = null;
 let devMode = false;
-let updateInterval = 1000;
 let watcher = null;
-
-// function log(...args) { // DEBUG
-//     console.log("[Scriptio]", ...args);
-// }
-function log(...args) { }
+const isDebug = process.argv.includes("--debug") || process.argv.includes("--scriptio-debug");
+const updateInterval = 1000;
+const log = isDebug ? console.log.bind(console, "[Scriptio]") : () => { };
 
 // 防抖
 function debounce(fn, time) {
@@ -165,6 +162,10 @@ async function onLoad(plugin) {
     });
     ipcMain.on("LiteLoader.scriptio.configChange", onConfigChange);
     ipcMain.on("LiteLoader.scriptio.devMode", onDevMode);
+    ipcMain.handle("LiteLoader.scriptio.queryIsDebug", (event) => {
+        log("queryIsDebug", isDebug);
+        return isDebug;
+    });
     ipcMain.handle("LiteLoader.scriptio.queryDevMode", async (event) => {
         log("queryDevMode", devMode);
         return devMode;
