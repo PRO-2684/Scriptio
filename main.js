@@ -6,7 +6,7 @@ let dataPath = null;
 let scriptPath = null;
 let devMode = false;
 let watcher = null;
-const isDebug = process.argv.includes("--debug") || process.argv.includes("--scriptio-debug");
+const isDebug = process.argv.includes("--scriptio-debug");
 const updateInterval = 1000;
 const log = isDebug ? console.log.bind(console, "[Scriptio]") : () => { };
 
