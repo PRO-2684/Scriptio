@@ -80,4 +80,5 @@ plugins (所有的插件目录)
 
 | 名称 | 作者 | 说明 | 链接 |
 | --- | --- | --- | --- |
+| hitokoto | [PRO-2684](https://github.com/PRO-2684) | 输入框展示一言 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto) |
 | shortcutio | [PRO-2684](https://github.com/PRO-2684) | 添加一些常用的快捷键 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio) |
