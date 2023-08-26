@@ -77,7 +77,7 @@ plugins (所有的插件目录)
 > [!WARNING]
 > 推荐使用 `(function () { <你的代码> })();` 的格式编写你的代码，以防止变量污染。（除非你知道自己在做什么）
 
-| 名称 | 作者 | 说明 | 链接 |
-| --- | --- | --- | --- |
-| hitokoto | [PRO-2684](https://github.com/PRO-2684) | 输入框展示一言 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto) |
-| shortcutio | [PRO-2684](https://github.com/PRO-2684) | 添加一些常用的快捷键 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio) |
+| 名称 | 作者 | 说明 | 实时响应 | 链接 |
+| --- | --- | --- | --- | --- |
+| hitokoto | [PRO-2684](https://github.com/PRO-2684) | 输入框展示一言 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto) |
+| shortcutio | [PRO-2684](https://github.com/PRO-2684) | 添加一些常用的快捷键 | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio) |
