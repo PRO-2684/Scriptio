@@ -11,7 +11,7 @@
 - 导入 js 代码片段
 - 启用/禁用 js 代码片段
     - 约定：说明若以 `* ` 开头，则启用/禁用此脚本需要重启/重载生效，否则立即生效
-    - 由于 js 代码的复杂性，立即生效由脚本自行实现，Scriptio 仅提供 `scriptio-toggle-<脚本名>` 事件以供脚本监听 (参考范例 [hitokoto](https://github.com/PRO-2684/Scriptio-user-scripts/blob/main/hitokoto.js))
+    - 由于 js 代码的复杂性，立即生效由脚本自行实现，Scriptio 仅提供 `scriptio-toggle-<脚本名>` 事件以供脚本监听 (参考范例 [hitokoto](https://github.com/PRO-2684/Scriptio-user-scripts/blob/main/hitokoto.js#L67-L74))
 
 ## 🖼️ 截图
 
