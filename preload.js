@@ -33,8 +33,8 @@ contextBridge.exposeInMainWorld("scriptio", {
         "LiteLoader.scriptio.updateScript",
         callback
     ),
-    // onDevModeStatus: (callback) => ipcRenderer.on(
-    //     "LiteLoader.scriptio.devModeStatus",
-    //     callback
-    // ),
+    onToggleScript: (callback) => ipcRenderer.on(
+        "LiteLoader.scriptio.toggleScript",
+        callback
+    ),
 });

@@ -55,6 +55,13 @@ function updateScript(name, webContent) {
         });
     }
 }
+// 启用/禁用脚本
+function toggleScript(name, enable) {
+    log("toggleScript", name, enable);
+    webContents.getAllWebContents().forEach((webContent) => {
+        webContent.send("LiteLoader.scriptio.toggleScript", [name, enable]);
+    });
+}
 // 重载所有窗口
 function reload(event) {
     // 若有，关闭发送者窗口 (设置界面)
@@ -107,7 +114,7 @@ function onConfigChange(event, name, enable) {
     content = `// ${comment}\n` + content;
     fs.writeFileSync(path.join(scriptPath, name + ".js"), content, "utf-8");
     if (!devMode) {
-        updateScript(name);
+        toggleScript(name, enable);
     }
 }
 // 监听开发者模式开关
