@@ -19,25 +19,24 @@ function scriptHelper(name, code, enabled, comment) {
     if (!current && enabled) {
         current = injectJS(name, code);
     }
+    window.dispatchEvent(new CustomEvent(eventTogglePrefix + name, {
+        detail: {
+            enabled: enabled
+        }
+    }));
 }
 async function onLoad() {
     scriptio.onUpdateScript((event, args) => {
         scriptHelper(...args);
     });
-    scriptio.onToggleScript((event, args) => {
-        let [name, enabled] = args;
-        log("onToggleScript", name, enabled);
-        window.dispatchEvent(new CustomEvent(eventTogglePrefix + name, {
-            detail: {
-                enabled: enabled
-            }
-        }));
-    });
     scriptio.rendererReady();
-    isDebug = await scriptio.queryIsDebug();
-    if (isDebug) {
-        log = console.log.bind(console, "[Scriptio]");
-    }
+    scriptio.queryIsDebug().then(enabled => {
+        isDebug = enabled;
+        if (isDebug) {
+            log = console.log.bind(console, "[Scriptio]");
+            log("Debug mode activated");
+        }
+    });
     // TODO: Issue event
 }
 async function onConfigView(view) {
@@ -88,14 +87,6 @@ async function onConfigView(view) {
             span.title = "";
         }
         log("onUpdateScript", name, enabled);
-    });
-    scriptio.onToggleScript((event, args) => {
-        let [name, enabled] = args;
-        let switch_ = view.querySelector("#" + configIdPrefix + name);
-        if (switch_) {
-            switch_.classList.toggle("is-active", enabled);
-            switch_.parentNode.classList.toggle("is-loading", false);
-        }
     });
     function $(prop) { // Helper function for scriptio selectors
         return view.querySelector(`#scriptio-${prop}`);
