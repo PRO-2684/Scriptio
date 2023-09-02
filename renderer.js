@@ -6,24 +6,56 @@ const plugin_path = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://"
 let isDebug = false;
 let log = () => { }; // Dummy function
 
+// Get page
+const pagePromise = new Promise((resolve, reject) => {
+    let page = window.location.hash.slice(2).split("/")[0];
+    if (page && page !== "blank") {
+        log("Page is:", page);
+        resolve(page);
+    } else {
+        log("Waiting for navigation...");
+        navigation.addEventListener("navigatesuccess", () => {
+            page = window.location.hash.slice(2).split("/")[0];
+            log("Page is:", page);
+            resolve(page);
+        }, { once: true });
+    }
+});
 // Helper function for js
-function injectJS(name, code) {
-    let script = document.createElement("script");
-    script.id = scriptIdPrefix + name;
-    script.textContent = code;
-    document.body.appendChild(script);
-    return script;
-}
-function scriptHelper(name, code, enabled, comment) {
+function injectJS(name, code, enabled) {
     let current = document.getElementById(scriptIdPrefix + name);
     if (!current && enabled) {
-        current = injectJS(name, code);
+        current = document.createElement("script");
+        current.id = scriptIdPrefix + name;
+        current.textContent = code;
+        document.body.appendChild(current);
     }
     window.dispatchEvent(new CustomEvent(eventTogglePrefix + name, {
         detail: {
             enabled: enabled
         }
     }));
+    return true;
+}
+function test(name, code, enabled, page, runAts) {
+    log(`name: ${name}, page: ${page}, runAts: ${runAts}`);
+    if (!runAts.length || runAts.includes(page)) {
+        injectJS(name, code, enabled);
+        return true;
+    } else if (page !== "blank") {
+        if (runAts.includes(page)) {
+            injectJS(name, code, enabled);
+            return true;
+        }
+    }
+    return false;
+}
+function scriptHelper(name, code, enabled, comment, runAts) {
+    let injected = false;
+    pagePromise.then(page => {
+        injected = test(name, code, enabled, page, runAts);
+        log(`"${name}" injected? ${injected}`);
+    });
 }
 async function onLoad() {
     scriptio.onUpdateScript((event, args) => {
@@ -37,7 +69,6 @@ async function onLoad() {
             log("Debug mode activated");
         }
     });
-    // TODO: Issue event
 }
 async function onConfigView(view) {
     let r = await fetch(`llqqnt://local-file/${plugin_path}/settings.html`);

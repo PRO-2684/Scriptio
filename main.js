@@ -20,14 +20,19 @@ function debounce(fn, time) {
         }, time);
     }
 }
-// 获取 JS 文件的首行注释
-function getDesc(code) {
-    let firstLine = code.split("\n")[0].trim();
-    if (firstLine.startsWith("//")) {
-        return firstLine.slice(2).trim();
-    } else {
-        return null;
+// 获取 JS 文件头的注释，返回为数组
+function getComments(code) {
+    let lines = code.split("\n");
+    let comments = [];
+    for (let line of lines) {
+        line = line.trim();
+        if (line.startsWith("//")) {
+            comments.push(line.slice(2).trim());
+        } else {
+            break;
+        }
     }
+    return comments.slice(0, 2); // 目前只考虑前两行
 }
 // 获取 JS 文件内容
 function getScript(name) {
@@ -40,18 +45,27 @@ function getScript(name) {
 // 脚本更改
 function updateScript(name, webContent) {
     let content = getScript(name);
-    let comment = getDesc(content) || "";
+    let comments = getComments(content);
+    let comment = comments[0] || "";
+    let runAts = comments[1] || "";
     let enabled = true;
     if (comment.endsWith("[Disabled]")) {
         comment = comment.slice(0, -10).trim();
         enabled = false;
     }
-    log("updateScript", name, comment, enabled);
+    if (runAts.toLowerCase().startsWith("@run-at ")) {
+        runAts = runAts.slice(8).split(",")
+            .map((item) => item.trim())
+            .filter((item) => item);
+    } else {
+        runAts = [];
+    }
+    log("updateScript", name, enabled, comment, runAts);
     if (webContent) {
-        webContent.send("LiteLoader.scriptio.updateScript", [name, content, enabled, comment]);
+        webContent.send("LiteLoader.scriptio.updateScript", [name, content, enabled, comment, runAts]);
     } else {
         webContents.getAllWebContents().forEach((webContent) => {
-            webContent.send("LiteLoader.scriptio.updateScript", [name, content, enabled, comment]);
+            webContent.send("LiteLoader.scriptio.updateScript", [name, content, enabled, comment, runAts]);
         });
     }
 }
@@ -91,7 +105,7 @@ function onScriptChange(eventType, filename) {
 function onConfigChange(event, name, enable) {
     log("onConfigChange", name, enable);
     let content = getScript(name);
-    let comment = getDesc(content);
+    let comment = getComments(content)[0] || "";
     let current = (comment === null) || !comment.endsWith("[Disabled]");
     if (current === enable) return;
     if (comment === null) {
