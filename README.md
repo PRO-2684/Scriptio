@@ -75,4 +75,5 @@ plugins (所有的插件目录)
 | 名称 | 作者 | 说明 | 实时响应 | 链接 |
 | --- | --- | --- | --- | --- |
 | hitokoto | [PRO-2684](https://github.com/PRO-2684) | 输入框展示一言 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto) |
+| img-quick-close | [PRO-2684](https://github.com/PRO-2684) | 快速关闭图片 | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#img-quick-close) |
 | shortcutio | [PRO-2684](https://github.com/PRO-2684) | 添加一些常用的快捷键 | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio) |
