@@ -2,7 +2,7 @@ const scriptIdPrefix = "scriptio-script-";
 const configIdPrefix = "scriptio-config-";
 const eventTogglePrefix = "scriptio-toggle-";
 // Normalized plugin path
-const plugin_path = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/");
+const pluginPath = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/");
 let isDebug = false;
 let log = () => { }; // Dummy function
 
@@ -51,10 +51,9 @@ function test(name, code, enabled, page, runAts) {
     return false;
 }
 function scriptHelper(name, code, enabled, comment, runAts) {
-    let injected = false;
     pagePromise.then(page => {
-        injected = test(name, code, enabled, page, runAts);
-        log(`"${name}" injected? ${injected}`);
+        const result = test(name, code, enabled, page, runAts);
+        log(`"${name}" injected? ${result}`);
     });
 }
 async function onLoad() {
@@ -71,31 +70,31 @@ async function onLoad() {
     });
 }
 async function onConfigView(view) {
-    let r = await fetch(`llqqnt://local-file/${plugin_path}/settings.html`);
+    const r = await fetch(`llqqnt://local-file/${pluginPath}/settings.html`);
     view.innerHTML = await r.text();
-    let container = view.querySelector("section.snippets > div.wrap");
+    const container = view.querySelector("section.snippets > div.wrap");
     function addItem(name) { // Add a list item with name and description, returns the switch
-        let divider = document.createElement("hr");
+        const divider = document.createElement("hr");
         divider.className = "horizontal-dividing-line";
         divider.id = configIdPrefix + name + "-divider";
         container.appendChild(divider);
-        let item = document.createElement("div");
+        const item = document.createElement("div");
         item.className = "vertical-list-item";
         item.id = configIdPrefix + name + "-item";
         container.appendChild(item);
-        let left = document.createElement("div");
+        const left = document.createElement("div");
         item.appendChild(left);
-        let h2 = document.createElement("h2");
+        const h2 = document.createElement("h2");
         h2.textContent = name;
         left.appendChild(h2);
-        let span = document.createElement("span");
+        const span = document.createElement("span");
         span.className = "secondary-text";
         left.appendChild(span);
-        let switch_ = document.createElement("div");
+        const switch_ = document.createElement("div");
         switch_.className = "q-switch";
         switch_.id = configIdPrefix + name;
         item.appendChild(switch_);
-        let span2 = document.createElement("span");
+        const span2 = document.createElement("span");
         span2.className = "q-switch__handle";
         switch_.appendChild(span2);
         switch_.addEventListener("click", () => {
@@ -105,12 +104,12 @@ async function onConfigView(view) {
         return switch_;
     }
     scriptio.onUpdateScript((event, args) => {
-        let [name, code, enabled, comment] = args;
-        let switch_ = view.querySelector("#" + configIdPrefix + name)
+        const [name, code, enabled, comment] = args;
+        const switch_ = view.querySelector("#" + configIdPrefix + name)
             || addItem(name);
         switch_.classList.toggle("is-active", enabled);
         switch_.parentNode.classList.toggle("is-loading", false);
-        let span = view.querySelector(`div#${configIdPrefix}${name}-item > div > span.secondary-text`);
+        const span = view.querySelector(`div#${configIdPrefix}${name}-item > div > span.secondary-text`);
         span.textContent = comment || "* 此文件没有描述";
         if (span.textContent.startsWith("* ")) {
             span.title = "对此脚本的更改将在重载后生效";
@@ -123,7 +122,7 @@ async function onConfigView(view) {
         return view.querySelector(`#scriptio-${prop}`);
     }
     function devMode() {
-        let enabled = this.classList.toggle("is-active");
+        const enabled = this.classList.toggle("is-active");
         scriptio.devMode(enabled);
     }
     function openURI(type, uri) {
@@ -131,14 +130,14 @@ async function onConfigView(view) {
         scriptio.open(type, uri);
     }
     function openURL() {
-        let url = this.getAttribute("data-scriptio-url");
+        const url = this.getAttribute("data-scriptio-url");
         openURI("link", url);
     }
     async function importScript() {
         if (this.files.length == 0) return; // No file selected
         this.parentNode.classList.toggle("is-loading", true);
         let cnt = 0;
-        let promises = [];
+        const promises = [];
         for (let file of this.files) {
             if (!file.name.endsWith(".js")) {
                 console.log("[Scriptio] Ignored", file.name);
@@ -166,14 +165,14 @@ async function onConfigView(view) {
         }
     }
     scriptio.rendererReady(); // We don't have to create a new function for this 😉
-    let dev = $("dev");
+    const dev = $("dev");
     dev.addEventListener("click", devMode);
     scriptio.queryDevMode().then(enabled => {
         log("queryDevMode", enabled);
         dev.classList.toggle("is-active", enabled);
     });
     if (isDebug) {
-        let debug = $("debug");
+        const debug = $("debug");
         debug.style.color = "red";
         debug.title = "Debug 模式已激活";
     }
@@ -192,7 +191,7 @@ async function onConfigView(view) {
     });
     // About - Backgroud image
     ["version", "author", "issues", "submit"].forEach(id => {
-        $(`about-${id}`).style.backgroundImage = `url("llqqnt://local-file/${plugin_path}/icons/${id}.svg")`;
+        $(`about-${id}`).style.backgroundImage = `url("llqqnt://local-file/${pluginPath}/icons/${id}.svg")`;
     });
 }
 

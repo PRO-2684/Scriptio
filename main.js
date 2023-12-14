@@ -12,7 +12,7 @@ const log = isDebug ? console.log.bind(console, "[Scriptio]") : () => { };
 
 // 防抖
 function debounce(fn, time) {
-    let timer = null;
+    const timer = null;
     return function (...args) {
         timer && clearTimeout(timer);
         timer = setTimeout(() => {
@@ -22,9 +22,9 @@ function debounce(fn, time) {
 }
 // 获取 JS 文件头的注释，返回为数组
 function getComments(code) {
-    let lines = code.split("\n");
-    let comments = [];
-    for (let line of lines) {
+    const lines = code.split("\n");
+    const comments = [];
+    for (const line of lines) {
         line = line.trim();
         if (line.startsWith("//")) {
             comments.push(line.slice(2).trim());
@@ -36,16 +36,16 @@ function getComments(code) {
 }
 // 获取 JS 文件内容
 function getScript(name) {
-    let content = "";
     try {
-        content = fs.readFileSync(path.join(scriptPath, name + ".js"), "utf-8");
-    } catch (err) { }
-    return content;
+        return fs.readFileSync(path.join(scriptPath, name + ".js"), "utf-8");
+    } catch (err) {
+        return "";
+    }
 }
 // 脚本更改
 function updateScript(name, webContent) {
-    let content = getScript(name);
-    let comments = getComments(content);
+    const content = getScript(name);
+    const comments = getComments(content);
     let comment = comments[0] || "";
     let runAts = comments[1] || "";
     let enabled = true;
@@ -90,7 +90,7 @@ function loadScripts(webContent) {
 // 导入脚本
 function importScript(fname, content) {
     log("importScript", fname);
-    let filePath = path.join(scriptPath, fname);
+    const filePath = path.join(scriptPath, fname);
     fs.writeFileSync(filePath, content, "utf-8");
     if (!devMode) {
         updateScript(fname.slice(0, -3));
@@ -106,7 +106,7 @@ function onConfigChange(event, name, enable) {
     log("onConfigChange", name, enable);
     let content = getScript(name);
     let comment = getComments(content)[0] || "";
-    let current = (comment === null) || !comment.endsWith("[Disabled]");
+    const current = (comment === null) || !comment.endsWith("[Disabled]");
     if (current === enable) return;
     if (comment === null) {
         comment = "";
