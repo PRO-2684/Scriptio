@@ -24,7 +24,7 @@ function debounce(fn, time) {
 function getComments(code) {
     const lines = code.split("\n");
     const comments = [];
-    for (const line of lines) {
+    for (let line of lines) {
         line = line.trim();
         if (line.startsWith("//")) {
             comments.push(line.slice(2).trim());
