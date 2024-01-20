@@ -23,20 +23,15 @@
         background-color: var(--overlay_hover);
     }
     /* 各个脚本片段 */
-    .scriptio div.vertical-list-item.is-loading {
+    .scriptio setting-item.is-loading {
         cursor: progress;
     }
-    .scriptio div.vertical-list-item.is-loading > div.q-switch, .scriptio div.vertical-list-item.is-loading > input, .scriptio div.vertical-list-item.is-loading > div.ops-btns {
+    .scriptio setting-item.is-loading > setting-switch, .scriptio setting-item.is-loading > input, .scriptio setting-item.is-loading > setting-button {
         pointer-events: none;
         opacity: 0.6;
     }
     /* 关于 */
-    .scriptio .about .wrap {
-        display: flex;
-        justify-content: space-between;
-        padding: 16px 0px;
-    }
-    .scriptio .about .wrap > div {
+    .scriptio .about setting-item {
         flex: 1;
         margin: 0px 10px;
         border-radius: 8px;
@@ -56,73 +51,68 @@
         color: var(--brand_standard);
     }
 </style>
-<section class="dev">
-    <h1 id="scriptio-debug">调试</h1>
-    <div class="wrap">
-        <div class="vertical-list-item">
-            <div>
-                <h2>开发者模式</h2>
-                <span class="secondary-text">监听脚本目录，本地修改脚本后立即重载所有窗口（可能造成性能损失）</span>
-            </div>
-            <div class="q-switch" id="scriptio-dev">
-                <span class="q-switch__handle"></span>
-            </div>
-        </div>
-        <hr class="horizontal-dividing-line">
-        <div class="vertical-list-item">
-            <div>
-                <h2>打开脚本目录</h2>
-                <span class="secondary-text">点击以打开存放脚本的目录</span>
-            </div>
-            <div class="ops-btns">
-                <button class="q-button q-button--small q-button--secondary" id="scriptio-open-folder">打开目录</button>
-            </div>
-        </div>
-    </div>
-</section>
-<section class="snippets">
-    <h1 id="scriptio-reload" title="双击以立即重载所有窗口">用户脚本</h1>
-    <div class="wrap">
-        <div class="vertical-list-item">
-            <div>
-                <h2>导入脚本...</h2>
-                <span class="secondary-text">导入任意用户脚本，或查看<span class="scriptio-link"
-                    style="font-style: italic;"
-                    data-scriptio-url="https://github.com/PRO-2684/Scriptio#-用户脚本">用户脚本列表</span></span>
-            </div>
-            <input id="scriptio-import" type="file" accept=".js" multiple />
-        </div>
-    </div>
-</section>
-<section class="about">
-    <h1>关于</h1>
-    <div class="wrap">
-        <div id="scriptio-about-version">
-            <div>
-                <h2>版本</h2>
-                <p class="secondary-text scriptio-link" id="scriptio-version" data-scriptio-url="https://github.com/PRO-2684/Scriptio">NaN</p>
-            </div>
-        </div>
-        <hr class="vertical-dividing-line">
-        <div id="scriptio-about-author">
-            <div>
-                <h2>作者</h2>
-                <p class="secondary-text scriptio-link" data-scriptio-url="https://github.com/PRO-2684/">PRO-2684</p>
-            </div>
-        </div>
-        <hr class="vertical-dividing-line">
-        <div id="scriptio-about-issues">
-            <div>
-                <h2>反馈</h2>
-                <p class="secondary-text scriptio-link" data-scriptio-url="https://github.com/PRO-2684/Scriptio/issues">GitHub Issues</p>
-            </div>
-        </div>
-        <hr class="vertical-dividing-line">
-        <div id="scriptio-about-submit">
-            <div>
-                <h2>投稿</h2>
-                <p class="secondary-text scriptio-link" data-scriptio-url="https://github.com/PRO-2684/Scriptio/issues/1">提交您的脚本</p>
-            </div>
-        </div>
-    </div>
-</section>
+<setting-section data-title="调试" class="dev">
+    <setting-panel>
+        <setting-list data-direction="column">
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text id="scriptio-debug">开发者模式</setting-text>
+                    <setting-text data-type="secondary">监听脚本目录，本地修改脚本后立即重载所有窗口（可能造成性能损失）</setting-text>
+                </div>
+                <setting-switch id="scriptio-dev"></setting-switch>
+            </setting-item>
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>打开脚本目录</setting-text>
+                    <setting-text data-type="secondary">点击以打开存放脚本的目录</setting-text>
+                </div>
+                <setting-button data-type="primary" id="scriptio-open-folder">打开目录</setting-button>
+            </setting-item>
+        </setting-list>
+    </setting-panel>
+</setting-section>
+<setting-section data-title="用户脚本" class="snippets">
+    <setting-panel>
+        <setting-list data-direction="column">
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text id="scriptio-reload" title="双击以立即重载所有窗口">导入脚本...</setting-text>
+                    <setting-text data-type="secondary">导入任意用户脚本，或查看<span class="scriptio-link"
+                        style="font-style: italic;"
+                        data-scriptio-url="https://github.com/PRO-2684/Scriptio#-用户脚本">用户脚本列表</span></setting-text>
+                </div>
+                <input id="scriptio-import" type="file" accept=".js" multiple />
+            </setting-item>
+        </setting-list>
+    </setting-panel>
+</setting-section>
+<setting-section data-title="关于" class="about">
+    <setting-panel>
+        <setting-list data-direction="row">
+            <setting-item id="scriptio-about-version">
+                <div>
+                    <setting-text>版本</setting-text>
+                    <setting-text data-type="secondary" class="scriptio-link" id="scriptio-version" data-scriptio-url="https://github.com/PRO-2684/Scriptio">NaN</setting-text>
+                </div>
+            </setting-item>
+            <setting-item id="scriptio-about-author">
+                <div>
+                    <setting-text>作者</setting-text>
+                    <setting-text data-type="secondary" class="scriptio-link" data-scriptio-url="https://github.com/PRO-2684/">PRO-2684</setting-text>
+                </div>
+            </setting-item>
+            <setting-item id="scriptio-about-issues">
+                <div>
+                    <setting-text>反馈</setting-text>
+                    <setting-text data-type="secondary" class="scriptio-link" data-scriptio-url="https://github.com/PRO-2684/Scriptio/issues">GitHub Issues</setting-text>
+                </div>
+            </setting-item>
+            <setting-item id="scriptio-about-submit">
+                <div>
+                    <setting-text>投稿</setting-text>
+                    <setting-text data-type="secondary" class="scriptio-link" data-scriptio-url="https://github.com/PRO-2684/Scriptio/issues/1">提交您的脚本</setting-text>
+                </div>
+            </setting-item>
+        </setting-list>
+    </setting-panel>
+</setting-section>

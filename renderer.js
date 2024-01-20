@@ -56,50 +56,40 @@ function scriptHelper(name, code, enabled, comment, runAts) {
         log(`"${name}" injected? ${result}`);
     });
 }
-async function onLoad() {
-    scriptio.onUpdateScript((event, args) => {
-        scriptHelper(...args);
-    });
-    scriptio.rendererReady();
-    scriptio.queryIsDebug().then(enabled => {
-        isDebug = enabled;
-        if (isDebug) {
-            log = console.log.bind(console, "[Scriptio]");
-            log("Debug mode activated");
-        }
-    });
-}
-async function onConfigView(view) {
-    const r = await fetch(`llqqnt://local-file/${pluginPath}/settings.html`);
+scriptio.onUpdateScript((event, args) => {
+    scriptHelper(...args);
+});
+scriptio.rendererReady();
+scriptio.queryIsDebug().then(enabled => {
+    isDebug = enabled;
+    if (isDebug) {
+        log = console.log.bind(console, "[Scriptio]");
+        log("Debug mode activated");
+    }
+});
+async function onSettingWindowCreated(view) {
+    const r = await fetch(`local:///${pluginPath}/settings.html`);
     view.innerHTML = await r.text();
-    const container = view.querySelector("section.snippets > div.wrap");
+    const container = view.querySelector("setting-section.snippets > setting-panel > setting-list");
     function addItem(name) { // Add a list item with name and description, returns the switch
-        const divider = document.createElement("hr");
-        divider.className = "horizontal-dividing-line";
-        divider.id = configIdPrefix + name + "-divider";
-        container.appendChild(divider);
-        const item = document.createElement("div");
-        item.className = "vertical-list-item";
+        const item = document.createElement("setting-item");
+        item.setAttribute("data-direction", "row");
         item.id = configIdPrefix + name + "-item";
         container.appendChild(item);
         const left = document.createElement("div");
         item.appendChild(left);
-        const h2 = document.createElement("h2");
-        h2.textContent = name;
-        left.appendChild(h2);
-        const span = document.createElement("span");
-        span.className = "secondary-text";
-        left.appendChild(span);
-        const switch_ = document.createElement("div");
-        switch_.className = "q-switch";
+        const itemName = document.createElement("setting-text");
+        itemName.textContent = name;
+        left.appendChild(itemName);
+        const itemDesc = document.createElement("setting-text");
+        itemDesc.setAttribute("data-type", "secondary");
+        left.appendChild(itemDesc);
+        const switch_ = document.createElement("setting-switch");
         switch_.id = configIdPrefix + name;
         item.appendChild(switch_);
-        const span2 = document.createElement("span");
-        span2.className = "q-switch__handle";
-        switch_.appendChild(span2);
         switch_.addEventListener("click", () => {
             switch_.parentNode.classList.toggle("is-loading", true);
-            scriptio.configChange(name, switch_.classList.toggle("is-active")); // Update the UI immediately, so it would be more smooth
+            scriptio.configChange(name, switch_.toggleAttribute("is-active")); // Update the UI immediately, so it would be more smooth
         });
         return switch_;
     }
@@ -107,9 +97,9 @@ async function onConfigView(view) {
         const [name, code, enabled, comment] = args;
         const switch_ = view.querySelector("#" + configIdPrefix + name)
             || addItem(name);
-        switch_.classList.toggle("is-active", enabled);
+        switch_.toggleAttribute("is-active", enabled);
         switch_.parentNode.classList.toggle("is-loading", false);
-        const span = view.querySelector(`div#${configIdPrefix}${name}-item > div > span.secondary-text`);
+        const span = view.querySelector(`setting-item#${configIdPrefix}${name}-item > div > setting-text[data-type="secondary"]`);
         span.textContent = comment || "* 此文件没有描述";
         if (span.textContent.startsWith("* ")) {
             span.title = "对此脚本的更改将在重载后生效";
@@ -122,7 +112,7 @@ async function onConfigView(view) {
         return view.querySelector(`#scriptio-${prop}`);
     }
     function devMode() {
-        const enabled = this.classList.toggle("is-active");
+        const enabled = this.toggleAttribute("is-active");
         scriptio.devMode(enabled);
     }
     function openURI(type, uri) {
@@ -169,7 +159,7 @@ async function onConfigView(view) {
     dev.addEventListener("click", devMode);
     scriptio.queryDevMode().then(enabled => {
         log("queryDevMode", enabled);
-        dev.classList.toggle("is-active", enabled);
+        dev.toggleAttribute("is-active", enabled);
     });
     if (isDebug) {
         const debug = $("debug");
@@ -191,11 +181,10 @@ async function onConfigView(view) {
     });
     // About - Backgroud image
     ["version", "author", "issues", "submit"].forEach(id => {
-        $(`about-${id}`).style.backgroundImage = `url("llqqnt://local-file/${pluginPath}/icons/${id}.svg")`;
+        $(`about-${id}`).style.backgroundImage = `url("local:///${pluginPath}/icons/${id}.svg")`;
     });
 }
 
 export {
-    onLoad,
-    onConfigView
+    onSettingWindowCreated
 }

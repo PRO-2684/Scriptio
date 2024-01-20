@@ -1,15 +1,17 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 4,
     "type": "extension",
     "name": "Scriptio",
     "slug": "scriptio",
     "description": "自定义渲染层 JavaScript 脚本加载器",
-    "version": "0.3.0",
-    "thumbnail": "./icons/icon.svg",
-    "author": {
-        "name": "PRO-2684",
-        "link": "https://github.com/PRO-2684"
-    },
+    "version": "1.0.0",
+    "icon": "./icons/icon.svg",
+    "authors": [
+        {
+            "name": "PRO-2684",
+            "link": "https://github.com/PRO-2684"
+        }
+    ],
     "repository": {
         "repo": "PRO-2684/Scriptio",
         "branch": "main",

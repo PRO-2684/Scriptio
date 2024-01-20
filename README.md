@@ -2,6 +2,9 @@
 
 # Scriptio
 
+> [!NOTE]
+> 此插件 `1.0.0` 版本及以上最低支持 LiteLoaderQQNT 1.0.0，之前版本的 LiteLoaderQQNT 请使用 `1.0.0` 之前的 Release
+
 [LiteLoaderQQNT](https://github.com/mo-jinran/LiteLoaderQQNT) 插件，用于为 QQNT 加载任意**渲染层**的 JavaScript 片段。
 
 你可能也感兴趣：[Transitio](https://github.com/PRO-2684/transitio)，自定义 CSS 片段加载器。
@@ -50,16 +53,16 @@ plugins (所有的插件目录)
 
 - 启用/禁用脚本：打开插件设置界面，将对应的脚本开关打开/关闭。
     - 注意：禁用脚本，实际上是在文件内第一行注释末尾添加了 `[Disabled]` 标记。
-- 导入脚本：在配置界面导入 JS 文件，或将之放入 `plugins_data/Scriptio/scripts/` 文件夹。
+- 导入脚本：在配置界面导入 JS 文件，或将之放入 `data/Scriptio/scripts/` 文件夹。
     - JS 文件首行的注释（若有）会被当作脚本说明，显示在设置界面中。
-- 删除脚本：~~点击删除按钮，或~~进入 `plugins_data/Scriptio/scripts/` 文件夹删除对应文件。
+- 删除脚本：~~点击删除按钮，或~~进入 `data/Scriptio/scripts/` 文件夹删除对应文件。
 - 修改脚本：修改对应文件即可。
 - 更新脚本：重新导入即可。
-- 重载脚本：双击“用户脚本”这个标题。
+- 重载脚本：双击 "导入脚本..."。
 
 ## 💻 调试
 
-- 开发者模式：若您想要调试**您的用户脚本**，可以在插件设置界面打开*开发者模式*，此时插件会监控 `plugins_data/scriptio/scripts/` 文件夹，当发生更改时，会自动重载。
+- 开发者模式：若您想要调试**您的用户脚本**，可以在插件设置界面打开*开发者模式*，此时插件会监控 `data/scriptio/scripts/` 文件夹，当发生更改时，会自动重载。
 - Debug 模式：若您想要调试**此插件本身**，可以使用 `--scriptio-debug` 参数启动 QQNT，此时插件会在控制台输出调试信息。
 
 ## 📜 用户脚本

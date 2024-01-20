@@ -2,13 +2,53 @@ const fs = require("fs");
 const path = require("path");
 const { BrowserWindow, ipcMain, shell, webContents } = require("electron");
 
-let dataPath = null;
-let scriptPath = null;
-let devMode = false;
-let watcher = null;
 const isDebug = process.argv.includes("--scriptio-debug");
 const updateInterval = 1000;
 const log = isDebug ? console.log.bind(console, "[Scriptio]") : () => { };
+let devMode = false;
+let watcher = null;
+
+// 加载插件时触发
+const dataPath = LiteLoader.plugins.scriptio.path.data;
+const scriptPath = path.join(dataPath, "scripts");
+
+// 创建 scripts 目录 (如果不存在)
+if (!fs.existsSync(scriptPath)) {
+    log(`${scriptPath} does not exist, creating...`);
+    fs.mkdirSync(scriptPath, { recursive: true });
+}
+// 监听
+ipcMain.on("LiteLoader.scriptio.rendererReady", (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    loadScripts(window.webContents);
+});
+ipcMain.on("LiteLoader.scriptio.reload", reload);
+ipcMain.on("LiteLoader.scriptio.importScript", (event, fname, content) => {
+    importScript(fname, content);
+});
+ipcMain.on("LiteLoader.scriptio.open", (event, type, uri) => {
+    log("open", type, uri);
+    switch (type) {
+        case "folder": // Relative to dataPath
+            shell.openPath(path.join(dataPath, uri));
+            break;
+        case "link":
+            shell.openExternal(uri);
+            break;
+        default:
+            break;
+    }
+});
+ipcMain.on("LiteLoader.scriptio.configChange", onConfigChange);
+ipcMain.on("LiteLoader.scriptio.devMode", onDevMode);
+ipcMain.handle("LiteLoader.scriptio.queryIsDebug", (event) => {
+    log("queryIsDebug", isDebug);
+    return isDebug;
+});
+ipcMain.handle("LiteLoader.scriptio.queryDevMode", async (event) => {
+    log("queryDevMode", devMode);
+    return devMode;
+});
 
 // 防抖
 function debounce(fn, time) {
@@ -142,50 +182,4 @@ function watchScriptChange() {
     return fs.watch(scriptPath, "utf-8",
         debounce(onScriptChange, updateInterval)
     );
-}
-// 插件加载触发
-async function onLoad(plugin) {
-    dataPath = plugin.path.data;
-    scriptPath = path.join(dataPath, "scripts/");
-    // 创建 scripts 目录 (如果不存在)
-    if (!fs.existsSync(scriptPath)) {
-        log(`${scriptPath} does not exist, creating...`);
-        fs.mkdirSync(scriptPath, { recursive: true });
-    }
-    // 监听
-    ipcMain.on("LiteLoader.scriptio.rendererReady", (event) => {
-        const window = BrowserWindow.fromWebContents(event.sender);
-        loadScripts(window.webContents);
-    });
-    ipcMain.on("LiteLoader.scriptio.reload", reload);
-    ipcMain.on("LiteLoader.scriptio.importScript", (event, fname, content) => {
-        importScript(fname, content);
-    });
-    ipcMain.on("LiteLoader.scriptio.open", (event, type, uri) => {
-        log("open", type, uri);
-        switch (type) {
-            case "folder": // Relative to dataPath
-                shell.openPath(path.join(dataPath, uri));
-                break;
-            case "link":
-                shell.openExternal(uri);
-                break;
-            default:
-                break;
-        }
-    });
-    ipcMain.on("LiteLoader.scriptio.configChange", onConfigChange);
-    ipcMain.on("LiteLoader.scriptio.devMode", onDevMode);
-    ipcMain.handle("LiteLoader.scriptio.queryIsDebug", (event) => {
-        log("queryIsDebug", isDebug);
-        return isDebug;
-    });
-    ipcMain.handle("LiteLoader.scriptio.queryDevMode", async (event) => {
-        log("queryDevMode", devMode);
-        return devMode;
-    });
-}
-
-module.exports = {
-    onLoad
 }
