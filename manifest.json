@@ -16,7 +16,7 @@
         "repo": "PRO-2684/Scriptio",
         "branch": "main",
         "release": {
-            "tag": "1.0.0",
+            "tag": "v1.0.0",
             "file": "scriptio-release.zip"
         }
     },
