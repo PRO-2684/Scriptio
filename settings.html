@@ -7,9 +7,12 @@
         border-radius: 0.5em;
         padding: 0.5em;
     }
-    .scriptio input[type="file"]:focus, .scriptio input[type="file"]:hover {
+
+    .scriptio input[type="file"]:focus,
+    .scriptio input[type="file"]:hover {
         border: dashed var(--text_secondary) !important;
     }
+
     .scriptio input[type="file"]::file-selector-button {
         background-color: transparent;
         border-radius: 8px;
@@ -19,17 +22,23 @@
         height: 2em;
         transition: background-color 0.2s ease-in-out;
     }
+
     .scriptio input[type="file"]::file-selector-button:hover {
         background-color: var(--overlay_hover);
     }
+
     /* 各个脚本片段 */
     .scriptio setting-item.is-loading {
         cursor: progress;
     }
-    .scriptio setting-item.is-loading > setting-switch, .scriptio setting-item.is-loading > input, .scriptio setting-item.is-loading > setting-button {
+
+    .scriptio setting-item.is-loading>setting-switch,
+    .scriptio setting-item.is-loading>input,
+    .scriptio setting-item.is-loading>setting-button {
         pointer-events: none;
         opacity: 0.6;
     }
+
     /* 关于 */
     .scriptio .about setting-item {
         flex: 1;
@@ -40,6 +49,7 @@
         background-size: 1.8em;
         background-position: left;
     }
+
     /* 链接 */
     .scriptio .scriptio-link {
         cursor: pointer;
@@ -47,6 +57,7 @@
         margin: auto;
         transition: color 0.2s ease-in-out;
     }
+
     .scriptio .scriptio-link:hover {
         color: var(--brand_standard);
     }
@@ -78,8 +89,9 @@
                 <div>
                     <setting-text id="scriptio-reload" title="双击以立即重载所有窗口">导入脚本...</setting-text>
                     <setting-text data-type="secondary">导入任意用户脚本，或查看<span class="scriptio-link"
-                        style="font-style: italic;"
-                        data-scriptio-url="https://github.com/PRO-2684/Scriptio#-用户脚本">用户脚本列表</span></setting-text>
+                            style="font-style: italic;"
+                            data-scriptio-url="https://github.com/PRO-2684/Scriptio#-用户脚本">用户脚本列表</span>
+                    </setting-text>
                 </div>
                 <input id="scriptio-import" type="file" accept=".js" multiple />
             </setting-item>
@@ -92,25 +104,37 @@
             <setting-item id="scriptio-about-version">
                 <div>
                     <setting-text>版本</setting-text>
-                    <setting-text data-type="secondary" class="scriptio-link" id="scriptio-version" data-scriptio-url="https://github.com/PRO-2684/Scriptio">NaN</setting-text>
+                    <setting-text data-type="secondary">
+                        <span class="scriptio-link" id="scriptio-version"
+                            data-scriptio-url="https://github.com/PRO-2684/Scriptio">NaN</span>
+                    </setting-text>
                 </div>
             </setting-item>
             <setting-item id="scriptio-about-author">
                 <div>
                     <setting-text>作者</setting-text>
-                    <setting-text data-type="secondary" class="scriptio-link" data-scriptio-url="https://github.com/PRO-2684/">PRO-2684</setting-text>
+                    <setting-text data-type="secondary">
+                        <span class="scriptio-link" data-scriptio-url="https://github.com/PRO-2684/">PRO-2684</span>
+                    </setting-text>
                 </div>
             </setting-item>
             <setting-item id="scriptio-about-issues">
                 <div>
                     <setting-text>反馈</setting-text>
-                    <setting-text data-type="secondary" class="scriptio-link" data-scriptio-url="https://github.com/PRO-2684/Scriptio/issues">GitHub Issues</setting-text>
+                    <setting-text data-type="secondary">
+                        <span class="scriptio-link"
+                            data-scriptio-url="https://github.com/PRO-2684/Scriptio/issues">GitHub
+                            Issues</span>
+                    </setting-text>
                 </div>
             </setting-item>
             <setting-item id="scriptio-about-submit">
                 <div>
                     <setting-text>投稿</setting-text>
-                    <setting-text data-type="secondary" class="scriptio-link" data-scriptio-url="https://github.com/PRO-2684/Scriptio/issues/1">提交您的脚本</setting-text>
+                    <setting-text data-type="secondary">
+                        <span class="scriptio-link"
+                            data-scriptio-url="https://github.com/PRO-2684/Scriptio/issues/1">提交您的脚本</span>
+                    </setting-text>
                 </div>
             </setting-item>
         </setting-list>
