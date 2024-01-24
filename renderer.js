@@ -1,6 +1,8 @@
-const scriptIdPrefix = "scriptio-script-";
-const configIdPrefix = "scriptio-config-";
-const eventTogglePrefix = "scriptio-toggle-";
+const scriptDataAttr = "data-scriptio-script";
+const configDataAttr = "data-scriptio-config";
+const switchDataAttr = "data-scriptio-switch";
+const eventName = "scriptio-toggle";
+const $ = document.querySelector.bind(document);
 // Normalized plugin path
 const pluginPath = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/");
 let isDebug = false;
@@ -22,38 +24,39 @@ const pagePromise = new Promise((resolve, reject) => {
     }
 });
 // Helper function for js
-function injectJS(name, code, enabled) {
-    let current = document.getElementById(scriptIdPrefix + name);
+function injectJS(path, code, enabled) {
+    let current = $(`script[${scriptDataAttr}="${path}"]`);
     if (!current && enabled) {
         current = document.createElement("script");
-        current.id = scriptIdPrefix + name;
+        current.setAttribute(scriptDataAttr, path);
         current.textContent = code;
         document.body.appendChild(current);
     }
-    window.dispatchEvent(new CustomEvent(eventTogglePrefix + name, {
+    window.dispatchEvent(new CustomEvent(eventName, {
         detail: {
+            path: path,
             enabled: enabled
         }
     }));
     return true;
 }
-function test(name, code, enabled, page, runAts) {
-    log(`name: ${name}, page: ${page}, runAts: ${runAts}`);
+function test(path, code, enabled, page, runAts) {
+    log(`path: ${path}, page: ${page}, runAts: ${runAts}`);
     if (!runAts.length || runAts.includes(page)) {
-        injectJS(name, code, enabled);
+        injectJS(path, code, enabled);
         return true;
     } else if (page !== "blank") {
         if (runAts.includes(page)) {
-            injectJS(name, code, enabled);
+            injectJS(path, code, enabled);
             return true;
         }
     }
     return false;
 }
-function scriptHelper(name, code, enabled, comment, runAts) {
+function scriptHelper(path, code, enabled, comment, runAts) {
     pagePromise.then(page => {
-        const result = test(name, code, enabled, page, runAts);
-        log(`"${name}" injected? ${result}`);
+        const result = test(path, code, enabled, page, runAts);
+        log(`"${path}" injected? ${result}`);
     });
 }
 scriptio.onUpdateScript((event, args) => {
@@ -69,48 +72,54 @@ scriptio.queryIsDebug().then(enabled => {
 });
 async function onSettingWindowCreated(view) {
     const r = await fetch(`local:///${pluginPath}/settings.html`);
+    const $ = view.querySelector.bind(view);
     view.innerHTML = await r.text();
-    const container = view.querySelector("setting-section.snippets > setting-panel > setting-list");
-    function addItem(name) { // Add a list item with name and description, returns the switch
+    const container = $("setting-section.snippets > setting-panel > setting-list");
+    function stem(path) { // Get the stem of a path
+        // Assuming the path is separated by slash
+        const parts = path.split("/");
+        const last = parts.pop();
+        const name = last.split(".").slice(0, -1).join(".");
+        return name;
+    }
+    function addItem(path) { // Add a list item with name and description, returns the switch
         const item = document.createElement("setting-item");
         item.setAttribute("data-direction", "row");
-        item.id = configIdPrefix + name + "-item";
+        item.setAttribute(configDataAttr, path);
         container.appendChild(item);
         const left = document.createElement("div");
         item.appendChild(left);
         const itemName = document.createElement("setting-text");
-        itemName.textContent = name;
+        itemName.textContent = stem(path);
+        itemName.title = path;
         left.appendChild(itemName);
         const itemDesc = document.createElement("setting-text");
         itemDesc.setAttribute("data-type", "secondary");
         left.appendChild(itemDesc);
         const switch_ = document.createElement("setting-switch");
-        switch_.id = configIdPrefix + name;
+        switch_.setAttribute(switchDataAttr, path);
         item.appendChild(switch_);
         switch_.addEventListener("click", () => {
             switch_.parentNode.classList.toggle("is-loading", true);
-            scriptio.configChange(name, switch_.toggleAttribute("is-active")); // Update the UI immediately, so it would be more smooth
+            scriptio.configChange(path, switch_.toggleAttribute("is-active")); // Update the UI immediately, so it would be more smooth
         });
         return switch_;
     }
     scriptio.onUpdateScript((event, args) => {
-        const [name, code, enabled, comment] = args;
-        const switch_ = view.querySelector("#" + configIdPrefix + name)
-            || addItem(name);
+        const [path, code, enabled, comment] = args;
+        const switch_ = $(`setting-switch[${switchDataAttr}="${path}"]`)
+            || addItem(path);
         switch_.toggleAttribute("is-active", enabled);
         switch_.parentNode.classList.toggle("is-loading", false);
-        const span = view.querySelector(`setting-item#${configIdPrefix}${name}-item > div > setting-text[data-type="secondary"]`);
+        const span = $(`setting-item[${configDataAttr}="${path}"] > div > setting-text[data-type="secondary"]`);
         span.textContent = comment || "* 此文件没有描述";
         if (span.textContent.startsWith("* ")) {
             span.title = "对此脚本的更改将在重载后生效";
         } else {
             span.title = "";
         }
-        log("onUpdateScript", name, enabled);
+        log("onUpdateScript", path, enabled);
     });
-    function $(prop) { // Helper function for scriptio selectors
-        return view.querySelector(`#scriptio-${prop}`);
-    }
     function devMode() {
         const enabled = this.toggleAttribute("is-active");
         scriptio.devMode(enabled);
@@ -155,24 +164,24 @@ async function onSettingWindowCreated(view) {
         }
     }
     scriptio.rendererReady(); // We don't have to create a new function for this 😉
-    const dev = $("dev");
+    const dev = $("#scriptio-dev");
     dev.addEventListener("click", devMode);
     scriptio.queryDevMode().then(enabled => {
         log("queryDevMode", enabled);
         dev.toggleAttribute("is-active", enabled);
     });
     if (isDebug) {
-        const debug = $("debug");
+        const debug = $("#scriptio-debug");
         debug.style.color = "red";
         debug.title = "Debug 模式已激活";
     }
-    $("reload").addEventListener("dblclick", scriptio.reload);
-    $("open-folder").addEventListener("click", () => {
+    $("#scriptio-reload").addEventListener("dblclick", scriptio.reload);
+    $("#scriptio-open-folder").addEventListener("click", () => {
         openURI("folder", "scripts"); // Relative to the data directory
     });
-    $("import").addEventListener("change", importScript);
+    $("#scriptio-import").addEventListener("change", importScript);
     // About - Version
-    $("version").textContent = LiteLoader.plugins.scriptio.manifest.version;
+    $("#scriptio-version").textContent = LiteLoader.plugins.scriptio.manifest.version;
     view.querySelectorAll(".scriptio-link").forEach(link => {
         if (!link.getAttribute("title")) {
             link.setAttribute("title", link.getAttribute("data-scriptio-url"));
@@ -181,7 +190,7 @@ async function onSettingWindowCreated(view) {
     });
     // About - Backgroud image
     ["version", "author", "issues", "submit"].forEach(id => {
-        $(`about-${id}`).style.backgroundImage = `url("local:///${pluginPath}/icons/${id}.svg")`;
+        $(`#scriptio-about-${id}`).style.backgroundImage = `url("local:///${pluginPath}/icons/${id}.svg")`;
     });
 }
 

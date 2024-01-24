@@ -4,7 +4,7 @@ const { BrowserWindow, ipcMain, webContents } = require("electron");
 
 const isDebug = process.argv.includes("--scriptio-debug");
 const updateInterval = 1000;
-const log = isDebug ? console.log.bind(console, "[Scriptio]") : () => { };
+const log = isDebug ? (...args) => console.log("\x1b[32m%s\x1b[0m", "[Scriptio]", ...args) : () => { };
 let devMode = false;
 let watcher = null;
 
@@ -60,6 +60,30 @@ function debounce(fn, time) {
         }, time);
     }
 }
+function listJS(dir) {
+    log("listJS", dir);
+    function walk(dir, files = []) {
+        const dirFiles = fs.readdirSync(dir);
+        for (const f of dirFiles) {
+            const stat = fs.lstatSync(dir + "/" + f);
+            if (stat.isDirectory()) {
+                walk(dir + "/" + f, files);
+            } else if (f.endsWith(".js")) {
+                files.push(dir + "/" + f);
+            }
+        }
+        return files;
+    }
+    // Need relative path
+    return walk(dir).map((f) => {
+        f = f.slice(dir.length);
+        if (f.startsWith("/")) {
+            f = f.slice(1);
+        }
+        return f;
+    });
+}
+
 // 获取 JS 文件头的注释，返回为数组
 function getComments(code) {
     const lines = code.split("\n");
@@ -75,16 +99,16 @@ function getComments(code) {
     return comments.slice(0, 2); // 目前只考虑前两行
 }
 // 获取 JS 文件内容
-function getScript(name) {
+function getScript(relPath) {
     try {
-        return fs.readFileSync(path.join(scriptPath, name + ".js"), "utf-8");
+        return fs.readFileSync(path.join(scriptPath, relPath), "utf-8");
     } catch (err) {
         return "";
     }
 }
 // 脚本更改
-function updateScript(name, webContent) {
-    const content = getScript(name);
+function updateScript(relPath, webContent) {
+    const content = getScript(relPath);
     const comments = getComments(content);
     let comment = comments[0] || "";
     let runAts = comments[1] || "";
@@ -100,12 +124,12 @@ function updateScript(name, webContent) {
     } else {
         runAts = [];
     }
-    log("updateScript", name, enabled, comment, runAts);
+    log("updateScript", relPath, enabled, comment, runAts);
     if (webContent) {
-        webContent.send("LiteLoader.scriptio.updateScript", [name, content, enabled, comment, runAts]);
+        webContent.send("LiteLoader.scriptio.updateScript", [relPath, content, enabled, comment, runAts]);
     } else {
         webContents.getAllWebContents().forEach((webContent) => {
-            webContent.send("LiteLoader.scriptio.updateScript", [name, content, enabled, comment, runAts]);
+            webContent.send("LiteLoader.scriptio.updateScript", [relPath, content, enabled, comment, runAts]);
         });
     }
 }
@@ -122,10 +146,10 @@ function reload(event) {
 }
 // 载入脚本
 function loadScripts(webContent) {
-    const files = fs.readdirSync(scriptPath, { withFileTypes: true }).filter((file) => file.name.endsWith(".js") && !file.isDirectory());
-    files.forEach((file) => {
-        updateScript(file.name.slice(0, -3), webContent);
-    });
+    log("loadScripts");
+    for (const relPath of listJS(scriptPath)) {
+        updateScript(relPath, webContent);
+    }
 }
 // 导入脚本
 function importScript(fname, content) {
@@ -133,7 +157,7 @@ function importScript(fname, content) {
     const filePath = path.join(scriptPath, fname);
     fs.writeFileSync(filePath, content, "utf-8");
     if (!devMode) {
-        updateScript(fname.slice(0, -3));
+        updateScript(fname);
     }
 }
 // `scripts` 目录修改
@@ -142,9 +166,9 @@ function onScriptChange(eventType, filename) {
     reload();
 }
 // 监听配置修改
-function onConfigChange(event, name, enable) {
-    log("onConfigChange", name, enable);
-    let content = getScript(name);
+function onConfigChange(event, relPath, enable) {
+    log("onConfigChange", relPath, enable);
+    let content = getScript(relPath);
     let comment = getComments(content)[0] || "";
     const current = (comment === null) || !comment.endsWith("[Disabled]");
     if (current === enable) return;
@@ -159,9 +183,9 @@ function onConfigChange(event, name, enable) {
         comment += " [Disabled]";
     }
     content = `// ${comment}\n` + content;
-    fs.writeFileSync(path.join(scriptPath, name + ".js"), content, "utf-8");
+    fs.writeFileSync(path.join(scriptPath, relPath), content, "utf-8");
     if (!devMode) {
-        updateScript(name);
+        updateScript(relPath);
     }
 }
 // 监听开发者模式开关

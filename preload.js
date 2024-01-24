@@ -4,9 +4,9 @@ contextBridge.exposeInMainWorld("scriptio", {
     rendererReady: () => ipcRenderer.send(
         "LiteLoader.scriptio.rendererReady"
     ),
-    configChange: (name, enable) => ipcRenderer.send(
+    configChange: (path, enable) => ipcRenderer.send(
         "LiteLoader.scriptio.configChange",
-        name, enable
+        path, enable
     ),
     devMode: (enable) => ipcRenderer.send(
         "LiteLoader.scriptio.devMode",
