@@ -1,24 +1,35 @@
 [
     {
         "name": "hitokoto",
+        "save_name": "hitokoto.js",
         "description": "输入框展示一言",
         "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/hitokoto.js",
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto"
     },
     {
         "name": "img-quick-close",
+        "save_name": "img-quick-close.js",
         "description": "快速关闭图片",
         "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/img-quick-close.js",
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#img-quick-close"
     },
     {
         "name": "open-in-browser",
+        "save_name": "open-in-browser.js",
         "description": "小程序若可行则浏览器打开",
         "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/open-in-browser.js",
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#open-in-browser"
     },
     {
+        "name": "plugin-icon",
+        "save_name": "plugin-icon.js",
+        "description": "设置界面展示插件图标（若有）",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/plugin-icon.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#plugin-icon"
+    },
+    {
         "name": "shortcutio",
+        "save_name": "shortcutio.js",
         "description": "添加一些常用的快捷键",
         "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/shortcutio.js",
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio"
