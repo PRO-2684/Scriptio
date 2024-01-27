@@ -182,16 +182,30 @@ async function onSettingWindowCreated(view) {
     $("#scriptio-import").addEventListener("change", importScript);
     // About - Version
     $("#scriptio-version").textContent = LiteLoader.plugins.scriptio.manifest.version;
+    // About - Backgroud image
+    ["version", "author", "issues", "submit"].forEach(id => {
+        $(`#scriptio-about-${id}`).style.backgroundImage = `url("local:///${pluginPath}/icons/${id}.svg")`;
+    });
     view.querySelectorAll(".scriptio-link").forEach(link => {
         if (!link.getAttribute("title")) {
             link.setAttribute("title", link.getAttribute("data-scriptio-url"));
         }
         link.addEventListener("click", openURL);
     });
-    // About - Backgroud image
-    ["version", "author", "issues", "submit"].forEach(id => {
-        $(`#scriptio-about-${id}`).style.backgroundImage = `url("local:///${pluginPath}/icons/${id}.svg")`;
-    });
+    if (pluginStore?.createBrowserWindow) {
+        log("PluginStore detected");
+        const link = $("#scriptio-snippets");
+        link.removeEventListener("click", openURL);
+        link.textContent = "侧载插件商店";
+        link.title = "打开 Scriptio 侧载插件商店，或者 Ctrl + Click 打开默认的用户脚本列表";
+        link.addEventListener("click", (e) => {
+            if (e.ctrlKey) {
+                openURL.call(link);
+            } else {
+                pluginStore.createBrowserWindow("scriptio");
+            }
+        });
+    }
 }
 
 export {

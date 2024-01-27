@@ -1,0 +1,26 @@
+[
+    {
+        "name": "hitokoto",
+        "description": "输入框展示一言",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/hitokoto.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto"
+    },
+    {
+        "name": "img-quick-close",
+        "description": "快速关闭图片",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/img-quick-close.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#img-quick-close"
+    },
+    {
+        "name": "open-in-browser",
+        "description": "小程序若可行则浏览器打开",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/open-in-browser.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#open-in-browser"
+    },
+    {
+        "name": "shortcutio",
+        "description": "添加一些常用的快捷键",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/shortcutio.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio"
+    }
+]

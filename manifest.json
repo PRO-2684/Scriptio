@@ -4,7 +4,7 @@
     "name": "Scriptio",
     "slug": "scriptio",
     "description": "自定义渲染层 JavaScript 脚本加载器",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "icon": "./icons/icon.svg",
     "authors": [
         {
@@ -16,9 +16,14 @@
         "repo": "PRO-2684/Scriptio",
         "branch": "main",
         "release": {
-            "tag": "v1.1.0",
+            "tag": "v1.1.1",
             "file": "scriptio-release.zip"
         }
+    },
+    "store": {
+        "repo": "PRO-2684/Scriptio",
+        "branch": "main",
+        "save_folder": "./scripts/"
     },
     "platform": [
         "win32",

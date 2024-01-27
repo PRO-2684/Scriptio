@@ -41,14 +41,24 @@ ipcMain.on("LiteLoader.scriptio.open", (event, type, uri) => {
 });
 ipcMain.on("LiteLoader.scriptio.configChange", onConfigChange);
 ipcMain.on("LiteLoader.scriptio.devMode", onDevMode);
-ipcMain.handle("LiteLoader.scriptio.queryIsDebug", (event) => {
-    log("queryIsDebug", isDebug);
-    return isDebug;
-});
 ipcMain.handle("LiteLoader.scriptio.queryDevMode", async (event) => {
     log("queryDevMode", devMode);
     return devMode;
 });
+ipcMain.handle("LiteLoader.scriptio.queryIsDebug", (event) => {
+    log("queryIsDebug", isDebug);
+    return isDebug;
+});
+if (LiteLoader.plugins.pluginStore) {
+    ipcMain.handle("LiteLoader.scriptio.isSnippetInstall", (event, file) => {
+        return fs.existsSync(path.join(scriptPath, file));
+    });
+    ipcMain.handle("LiteLoader.scriptio.isSnippetRestart", (event, file) => {
+        log("isSnippetRestart", file);
+        updateScript(file);
+        return false;
+    });
+}
 
 // 防抖
 function debounce(fn, time) {
@@ -109,6 +119,7 @@ function getScript(relPath) {
 // 脚本更改
 function updateScript(relPath, webContent) {
     const content = getScript(relPath);
+    if (!content) return;
     const comments = getComments(content);
     let comment = comments[0] || "";
     let runAts = comments[1] || "";
