@@ -33,5 +33,12 @@
         "description": "添加一些常用的快捷键",
         "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/shortcutio.js",
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio"
+    },
+    {
+        "name": "to-contact-list-top",
+        "save_name": "to-contact-list-top.js",
+        "description": "添加一个回到聊天列表顶部的侧边栏按钮",
+        "download": "https://github.com/lgc2333/ScriptioScripts/raw/main/to-contact-list-top/to-contact-list-top.js",
+        "details": "https://github.com/lgc2333/ScriptioScripts/tree/main/to-contact-list-top#tocontactlisttop"
     }
 ]
