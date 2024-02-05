@@ -82,8 +82,10 @@ plugins (所有的插件目录)
 | 名称 | 作者 | 说明 | 实时响应 | 链接 |
 | --- | --- | --- | --- | --- |
 | hitokoto | [PRO-2684](https://github.com/PRO-2684) | 输入框展示一言 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto) |
+| hook-vue | [PRO-2684](https://github.com/PRO-2684) | Hook Vue 实例 | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hook-vue) |
 | img-quick-close | [PRO-2684](https://github.com/PRO-2684) | 快速关闭图片 | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#img-quick-close) |
 | open-in-browser | [PRO-2684](https://github.com/PRO-2684) | 小程序若可行则浏览器打开 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#open-in-browser) |
 | plugin-icon | [PRO-2684](https://github.com/PRO-2684) | 设置界面展示插件图标（若有） | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#plugin-icon) |
 | shortcutio | [PRO-2684](https://github.com/PRO-2684) | 添加一些常用的快捷键 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio) |
 | to-contact-list-top | [lgc2333](https://github.com/lgc2333) | 添加一个回到聊天列表顶部的侧边栏按钮 | ✔️ | [GitHub](https://github.com/lgc2333/ScriptioScripts/tree/main/to-contact-list-top#tocontactlisttop) |
+| show-time | [PRO-2684](https://github.com/PRO-2684) | 消息显示时间，需要 hook-vue.js 的支持 | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#show-time) |
