@@ -51,7 +51,7 @@
     {
         "name": "show-time",
         "save_name": "show-time.js",
-        "description": "消息显示时间，需要 hook-vue.js 的支持",
+        "description": "消息显示时间，需要 hook-vue.js 的支持；关闭后再次打开可能需要切换一次聊天窗口才能生效",
         "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/show-time.js",
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#show-time"
     }
