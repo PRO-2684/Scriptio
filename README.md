@@ -84,6 +84,8 @@ plugins (所有的插件目录)
 | hitokoto | [PRO-2684](https://github.com/PRO-2684) | 输入框展示一言 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto) |
 | hook-vue | [PRO-2684](https://github.com/PRO-2684) | Hook Vue 实例 | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hook-vue) |
 | img-quick-close | [PRO-2684](https://github.com/PRO-2684) | 快速关闭图片 | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#img-quick-close) |
+| inspectio | [PRO-2684](https://github.com/PRO-2684) | 添加各类提示信息，详见 README，需要 hook-vue.js 的支持 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#inspectio) |
+| link-preview | [PRO-2684](https://github.com/PRO-2684) | 链接预览：鼠标经过链接时尝试加载浏览，悬浮显示链接的标题和描述，需要 hook-vue.js 的支持 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#link-preview) |
 | msg-record-enhance | [PRO-2684](https://github.com/PRO-2684) | 查看聊天记录中部分发送者 QQ，需要 hook-vue.js 的支持 | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#msg-record-enhance) |
 | open-in-browser | [PRO-2684](https://github.com/PRO-2684) | 小程序若可行则浏览器打开 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#open-in-browser) |
 | plugin-icon | [PRO-2684](https://github.com/PRO-2684) | 设置界面展示插件图标（若有） | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#plugin-icon) |

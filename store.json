@@ -21,6 +21,20 @@
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#img-quick-close"
     },
     {
+        "name": "inspectio",
+        "save_name": "inspectio.js",
+        "description": "添加各类提示信息，详见 README，需要 hook-vue.js 的支持",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/inspectio.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#inspectio"
+    },
+    {
+        "name": "link-preview",
+        "save_name": "link-preview.js",
+        "description": "链接预览：鼠标经过链接时尝试加载浏览，悬浮显示链接的标题和描述，需要 hook-vue.js 的支持",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/link-preview.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#link-preview"
+    },
+    {
         "name": "msg-record-enhance",
         "save_name": "msg-record-enhance.js",
         "description": "查看聊天记录中部分发送者 QQ，需要 hook-vue.js 的支持",
