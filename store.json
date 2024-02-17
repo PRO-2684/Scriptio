@@ -14,6 +14,13 @@
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#hook-vue"
     },
     {
+        "name": "hook-fetch",
+        "save_name": "hook-fetch.js",
+        "description": "Hook `window.fetch`",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/hook-fetch.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#hook-fetch"
+    },
+    {
         "name": "img-quick-close",
         "save_name": "img-quick-close.js",
         "description": "快速关闭图片",
@@ -56,6 +63,13 @@
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#plugin-icon"
     },
     {
+        "name": "privacio",
+        "save_name": "privacio.js",
+        "description": "保护你的隐私：阻止 QQ 的一些追踪行为，需要 hook-fetch.js 的支持",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/privacio.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#privacio"
+    },
+    {
         "name": "shortcutio",
         "save_name": "shortcutio.js",
         "description": "添加一些常用的快捷键",
@@ -63,17 +77,17 @@
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio"
     },
     {
-        "name": "to-contact-list-top",
-        "save_name": "to-contact-list-top.js",
-        "description": "添加一个回到聊天列表顶部的侧边栏按钮",
-        "download": "https://github.com/lgc2333/ScriptioScripts/raw/main/to-contact-list-top/to-contact-list-top.js",
-        "details": "https://github.com/lgc2333/ScriptioScripts/tree/main/to-contact-list-top#tocontactlisttop"
-    },
-    {
         "name": "show-time",
         "save_name": "show-time.js",
         "description": "消息显示时间，需要 hook-vue.js 的支持",
         "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/show-time.js",
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#show-time"
+    },
+    {
+        "name": "to-contact-list-top",
+        "save_name": "to-contact-list-top.js",
+        "description": "添加一个回到聊天列表顶部的侧边栏按钮",
+        "download": "https://github.com/lgc2333/ScriptioScripts/raw/main/to-contact-list-top/to-contact-list-top.js",
+        "details": "https://github.com/lgc2333/ScriptioScripts/tree/main/to-contact-list-top#tocontactlisttop"
     }
 ]
