@@ -49,6 +49,17 @@ ipcMain.handle("LiteLoader.scriptio.queryIsDebug", (event) => {
     log("queryIsDebug", isDebug);
     return isDebug;
 });
+ipcMain.handle("LiteLoader.scriptio.fetchText", async (event, ...args) => {
+    log("fetch", ...args);
+    try {
+        const r = await fetch(...args);
+        const text = await r.text();
+        return text;
+    } catch (err) {
+        log("fetch error", err);
+        return "";
+    }
+});
 if (LiteLoader.plugins.pluginStore) {
     ipcMain.handle("LiteLoader.scriptio.isSnippetInstall", (event, file) => {
         return fs.existsSync(path.join(scriptPath, file));

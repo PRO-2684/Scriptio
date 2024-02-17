@@ -29,6 +29,10 @@ contextBridge.exposeInMainWorld("scriptio", {
     queryDevMode: () => ipcRenderer.invoke(
         "LiteLoader.scriptio.queryDevMode"
     ),
+    fetchText: (...args) => ipcRenderer.invoke(
+        "LiteLoader.scriptio.fetchText",
+        ...args
+    ),
     onUpdateScript: (callback) => ipcRenderer.on(
         "LiteLoader.scriptio.updateScript",
         callback
