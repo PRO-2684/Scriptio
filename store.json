@@ -70,6 +70,13 @@
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#privacio"
     },
     {
+        "name": "relay-self",
+        "save_name": "relay-self.js",
+        "description": "允许接龙自己的消息，需要 hook-vue.js 的支持",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/relay-self.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#relay-self"
+    },
+    {
         "name": "shortcutio",
         "save_name": "shortcutio.js",
         "description": "添加一些常用的快捷键",

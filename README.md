@@ -91,6 +91,7 @@ plugins (所有的插件目录)
 | open-in-browser | [PRO-2684](https://github.com/PRO-2684) | 小程序若可行则浏览器打开 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#open-in-browser) |
 | plugin-icon | [PRO-2684](https://github.com/PRO-2684) | 设置界面展示插件图标（若有） | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#plugin-icon) |
 | privacio | [PRO-2684](https://github.com/PRO-2684) | 保护你的隐私：阻止 QQ 的一些追踪行为，需要 hook-fetch.js 的支持。 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#privacio) |
+| relay-self | [PRO-2684](https://github.com/PRO-2684) | 允许接龙自己的消息，需要 hook-vue.js 的支持 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#relay-self) |
 | shortcutio | [PRO-2684](https://github.com/PRO-2684) | 添加一些常用的快捷键 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio) |
 | show-time | [PRO-2684](https://github.com/PRO-2684) | 消息显示时间，需要 hook-vue.js 的支持 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#show-time) |
 | smooth-transition | [PRO-2684](https://github.com/PRO-2684) | 为页面间导航添加平滑过渡动画 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#smooth-transition) |
