@@ -84,6 +84,13 @@
         "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#show-time"
     },
     {
+        "name": "smooth-transition",
+        "save_name": "smooth-transition.js",
+        "description": "为页面间导航添加平滑过渡动画",
+        "download": "https://github.com/PRO-2684/Scriptio-user-scripts/raw/main/smooth-transition.js",
+        "details": "https://github.com/PRO-2684/Scriptio-user-scripts/#smooth-transition"
+    },
+    {
         "name": "to-contact-list-top",
         "save_name": "to-contact-list-top.js",
         "description": "添加一个回到聊天列表顶部的侧边栏按钮",
