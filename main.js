@@ -11,6 +11,7 @@ let watcher = null;
 // 加载插件时触发
 const dataPath = LiteLoader.plugins.scriptio.path.data;
 const scriptPath = path.join(dataPath, "scripts");
+const CHARTSET_RE = /(?:charset|encoding)\s{0,10}=\s{0,10}['"]? {0,10}([\w\-]{1,100})/i;
 
 // 创建 scripts 目录 (如果不存在)
 if (!fs.existsSync(scriptPath)) {
@@ -53,7 +54,14 @@ ipcMain.handle("LiteLoader.scriptio.fetchText", async (event, ...args) => {
     log("fetch", ...args);
     try {
         const r = await fetch(...args);
-        const text = await r.text();
+        // Detect charset from response header. Adapted from https://github.com/node-modules/charset/blob/master/index.js
+        const contentType = r?.headers?.get("content-type") || r?.headers?.get("Content-Type");
+        const match = contentType?.match(CHARTSET_RE);
+        const charset = match ? match[1].toLowerCase() : "utf-8";
+        log(`Charset of "${args[0]}": ${charset}`);
+        const buffer = await r.arrayBuffer();
+        const decoder = new TextDecoder(charset);
+        const text = decoder.decode(buffer);
         return text;
     } catch (err) {
         log("fetch error", err);
