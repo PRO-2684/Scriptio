@@ -8,16 +8,43 @@ const pluginPath = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://")
 let isDebug = false;
 let log = () => { }; // Dummy function
 
+const listeners = new Map();
+const scriptio_toolkit = {
+    listen: (toggleFunc, immediate) => {
+        const self = scriptio_toolkit.scriptPath;
+        listeners.set(self, toggleFunc);
+        if (immediate) {
+            toggleFunc(true);
+        }
+    },
+};
+Object.defineProperty(window, "scriptio_toolkit", {
+    value: scriptio_toolkit,
+    writable: false,
+    enumerable: true,
+    configurable: false
+});
+Object.defineProperties(scriptio_toolkit, {
+    page: {
+        get: () => window.location.hash.slice(2).split("/")[0],
+        set: () => { }
+    },
+    scriptPath: {
+        get: () => document.currentScript?.getAttribute("data-scriptio-script"),
+        set: () => { }
+    }
+});
+
 // Get page
 const pagePromise = new Promise((resolve, reject) => {
-    let page = window.location.hash.slice(2).split("/")[0];
+    let page = scriptio_toolkit.page;
     if (page && page !== "blank") {
         log("Page is:", page);
         resolve(page);
     } else {
         log("Waiting for navigation...");
         navigation.addEventListener("navigatesuccess", () => {
-            page = window.location.hash.slice(2).split("/")[0];
+            page = scriptio_toolkit.page;
             log("Page is:", page);
             resolve(page);
         }, { once: true });
@@ -38,6 +65,10 @@ function injectJS(path, code, enabled) {
             enabled: enabled
         }
     }));
+    const toggleFunc = listeners.get(path);
+    if (toggleFunc) {
+        toggleFunc(enabled);
+    }
     return true;
 }
 function test(path, code, enabled, page, runAts) {
