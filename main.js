@@ -4,11 +4,10 @@ const { BrowserWindow, ipcMain, webContents } = require("electron");
 
 const isDebug = process.argv.includes("--scriptio-debug");
 const updateInterval = 1000;
-const log = isDebug ? (...args) => console.log("\x1b[32m%s\x1b[0m", "[Scriptio]", ...args) : () => { };
+const log = isDebug ? console.log.bind(console, "\x1b[32m%s\x1b[0m", "[Scriptio]") : () => { };
 let devMode = false;
 let watcher = null;
 
-// 加载插件时触发
 const dataPath = LiteLoader.plugins.scriptio.path.data;
 const scriptPath = path.join(dataPath, "scripts");
 const CHARTSET_RE = /(?:charset|encoding)\s{0,10}=\s{0,10}['"]? {0,10}([\w\-]{1,100})/i;
