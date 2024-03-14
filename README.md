@@ -89,6 +89,7 @@ plugins (所有的插件目录)
 | link-preview | [PRO-2684](https://github.com/PRO-2684) | 链接预览：鼠标经过链接时尝试加载浏览，悬浮显示链接的标题和描述，需要 hook-vue.js 的支持 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#link-preview) |
 | msg-record-enhance | [PRO-2684](https://github.com/PRO-2684) | 查看聊天记录中部分发送者 QQ，需要 hook-vue.js 的支持 | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#msg-record-enhance) |
 | open-in-browser | [PRO-2684](https://github.com/PRO-2684) | 小程序若可行则浏览器打开 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#open-in-browser) |
+| pangu | [PRO-2684](https://github.com/PRO-2684) | 编辑框内按下 Ctrl+P 后，自动在中英文、中文与数字之间添加空格，并进行合适的标点符号处理 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#pangu) |
 | plugin-icon | [PRO-2684](https://github.com/PRO-2684) | 设置界面展示插件图标（若有） | ✖️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#plugin-icon) |
 | privacio | [PRO-2684](https://github.com/PRO-2684) | 保护你的隐私：阻止 QQ 的一些追踪行为，需要 hook-fetch.js 的支持。 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#privacio) |
 | relay-self | [PRO-2684](https://github.com/PRO-2684) | 允许接龙自己的消息，需要 hook-vue.js 的支持 | ✔️ | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#relay-self) |
