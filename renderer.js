@@ -144,10 +144,9 @@ async function onSettingWindowCreated(view) {
         switch_.parentNode.classList.toggle("is-loading", false);
         const span = $(`setting-item[${configDataAttr}="${path}"] > div > setting-text[data-type="secondary"]`);
         span.textContent = comment || "* 此文件没有描述";
+        span.title = span.textContent;
         if (span.textContent.startsWith("* ")) {
-            span.title = "对此脚本的更改将在重载后生效";
-        } else {
-            span.title = "";
+            span.title += "\n对此脚本的更改将在重载后生效";
         }
         log("onUpdateScript", path, enabled);
     });
