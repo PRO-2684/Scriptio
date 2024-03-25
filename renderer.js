@@ -2,6 +2,7 @@ const scriptDataAttr = "data-scriptio-script";
 const configDataAttr = "data-scriptio-config";
 const switchDataAttr = "data-scriptio-switch";
 const eventName = "scriptio-toggle";
+const toolkitEventName = "scriptio-toolkit";
 const $ = document.querySelector.bind(document);
 // Normalized plugin path
 const pluginPath = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/");
@@ -17,6 +18,37 @@ const scriptio_toolkit = {
             toggleFunc(true);
         }
     },
+    register: (tool, value) => { // Register a tool
+        if (tool in scriptio_toolkit) {
+            return false;
+        }
+        scriptio_toolkit[tool] = value;
+        window.dispatchEvent(new CustomEvent(toolkitEventName, { detail: tool }));
+        return true;
+    },
+    wait: (tool, timeout = 5000) => { // Wait for a tool to be registered
+        return new Promise((resolve, reject) => {
+            if (tool in scriptio_toolkit) {
+                return resolve(scriptio_toolkit[tool]);
+            }
+            const timer = setTimeout(() => {
+                window.removeEventListener(toolkitEventName, listener);
+                if (tool in scriptio_toolkit) {
+                    resolve(scriptio_toolkit[tool]);
+                } else {
+                    reject(new Error("Timeout waiting for:", tool));
+                }
+            }, timeout);
+            function listener(event) {
+                if (event.detail === tool) {
+                    clearTimeout(timer);
+                    log("Toolkit event received:", tool);
+                    resolve(scriptio_toolkit[tool]);
+                }
+            }
+            window.addEventListener(toolkitEventName, listener, { once: true });
+        });
+    }
 };
 Object.defineProperty(window, "scriptio_toolkit", {
     value: scriptio_toolkit,
