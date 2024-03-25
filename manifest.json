@@ -4,7 +4,7 @@
     "name": "Scriptio",
     "slug": "scriptio",
     "description": "自定义渲染层 JavaScript 脚本加载器",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "icon": "./icons/icon.svg",
     "authors": [
         {
