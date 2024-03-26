@@ -52,9 +52,18 @@ ipcMain.handle("LiteLoader.scriptio.queryIsDebug", (event) => {
 ipcMain.handle("LiteLoader.scriptio.fetchText", async (event, ...args) => {
     log("fetch", ...args);
     try {
+        // Firing a HEAD request to check the content type
+        const head = await fetch(args[0], { method: "HEAD" });
+        const headContentType = head.headers.get("Content-Type");
+        // Judge the content type should be text
+        if (headContentType && !headContentType.startsWith("text")) {
+            log(`"${args[0]}" is not text, content type: ${headContentType}`); // Not text, return empty string
+            return ""; // Not text, return empty string
+        }
+        // Actually firing the request
         const r = await fetch(...args);
         // Detect charset from response header. Adapted from https://github.com/node-modules/charset/blob/master/index.js
-        const contentType = r?.headers?.get("content-type") || r?.headers?.get("Content-Type");
+        const contentType = r?.headers?.get("Content-Type");
         const match = contentType?.match(CHARTSET_RE);
         const charset = match ? match[1].toLowerCase() : "utf-8";
         log(`Charset of "${args[0]}": ${charset}`);
