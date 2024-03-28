@@ -248,6 +248,8 @@ async function onSettingWindowCreated(view) {
     ["version", "author", "issues", "submit"].forEach(id => {
         $(`#scriptio-about-${id}`).style.backgroundImage = `url("local:///${pluginPath}/icons/${id}.svg")`;
     });
+    // Logo
+    $(".logo").src = `local:///${pluginPath}/icons/icon.svg`;
     view.querySelectorAll(".scriptio-link").forEach(link => {
         if (!link.getAttribute("title")) {
             link.setAttribute("title", link.getAttribute("data-scriptio-url"));
