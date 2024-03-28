@@ -77,9 +77,12 @@
         width: 4em;
         height: 4em;
         z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
 
         &:hover {
-            animation: jump-shaking 1s;
+            opacity: 1;
+            animation: 1s jump-shaking 0.2s;
         }
     }
 
