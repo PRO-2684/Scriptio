@@ -74,11 +74,11 @@
         position: fixed;
         right: 20px;
         top: 40px;
-        width: 4em;
-        height: 4em;
+        width: calc(4em + 0.5em * var(--data-cnt));
+        height: calc(4em + 0.5em * var(--data-cnt));
         z-index: 9999;
         opacity: 0;
-        transition: opacity 0.2s ease-in-out;
+        transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out, height 0.2s ease-in-out;
 
         &:hover {
             opacity: 1;
@@ -97,7 +97,7 @@
         100% { transform: translateY(0) rotate(0) }
     }
 </style>
-<img class="logo" src=""></img>
+<img class="logo" src="" style="--data-cnt: 0;"></img>
 <setting-section data-title="调试" class="dev">
     <setting-panel>
         <setting-list data-direction="column">

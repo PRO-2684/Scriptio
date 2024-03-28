@@ -249,7 +249,32 @@ async function onSettingWindowCreated(view) {
         $(`#scriptio-about-${id}`).style.backgroundImage = `url("local:///${pluginPath}/icons/${id}.svg")`;
     });
     // Logo
-    $(".logo").src = `local:///${pluginPath}/icons/icon.svg`;
+    const logo = $(".logo");
+    logo.src = `local:///${pluginPath}/icons/icon.svg`;
+    // Easter egg
+    function shakeWindow() {
+        // Use moveBy to shake the window
+        const magnitude = 10;
+        const c = Math.PI / 4;
+        let t = 0;
+        const timer = setInterval(() => {
+            const delta = magnitude * (Math.sin(c * (t + 1)) - Math.sin(c * t));
+            window.moveBy(delta, 0);
+            t++;
+            if (t >= 16) {
+                clearInterval(timer);
+            }
+        }, 100);
+    }
+    const max = 10;
+    logo.addEventListener("animationend", () => {
+        const cnt = parseInt(logo.style.getPropertyValue("--data-cnt"));
+        if (cnt >= max) {
+            shakeWindow();
+        } else {
+            logo.style.setProperty("--data-cnt", cnt + 1);
+        }
+    });
     view.querySelectorAll(".scriptio-link").forEach(link => {
         if (!link.getAttribute("title")) {
             link.setAttribute("title", link.getAttribute("data-scriptio-url"));
