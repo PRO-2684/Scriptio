@@ -69,6 +69,32 @@
         }
     }
 
+    /* 菜单 */
+    .scriptio .scriptio-menu {
+        margin-left: 1em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1em;
+    }
+
+    /* 悬浮显示的按钮 */
+    .scriptio .scriptio-more {
+        width: 1.5em;
+        height: 1.5em;
+        color: var(--icon_secondary);
+        opacity: 0;
+        transition: color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+
+        &:hover {
+            color: var(--theme-color);
+        }
+    }
+
+    .scriptio setting-item:hover .scriptio-more {
+        opacity: 1;
+    }
+
     /* Logo */
     .scriptio .logo {
         position: fixed;

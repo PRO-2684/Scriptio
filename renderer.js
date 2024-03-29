@@ -4,8 +4,8 @@ const switchDataAttr = "data-scriptio-switch";
 const eventName = "scriptio-toggle";
 const toolkitEventName = "scriptio-toolkit";
 const $ = document.querySelector.bind(document);
-// Normalized plugin path
-const pluginPath = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/");
+const pluginPath = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/"); // Normalized plugin path
+const dataPath = LiteLoader.plugins.scriptio.path.data.replace(":\\", "://").replaceAll("\\", "/");
 let isDebug = false;
 let log = () => { }; // Dummy function
 
@@ -146,22 +146,27 @@ async function onSettingWindowCreated(view) {
         return name;
     }
     function addItem(path) { // Add a list item with name and description, returns the switch
-        const item = document.createElement("setting-item");
+        const item = container.appendChild(document.createElement("setting-item"));
         item.setAttribute("data-direction", "row");
         item.setAttribute(configDataAttr, path);
-        container.appendChild(item);
-        const left = document.createElement("div");
-        item.appendChild(left);
-        const itemName = document.createElement("setting-text");
+        const left = item.appendChild(document.createElement("div"));
+        const itemName = left.appendChild(document.createElement("setting-text"));
         itemName.textContent = stem(path);
         itemName.title = path;
-        left.appendChild(itemName);
-        const itemDesc = document.createElement("setting-text");
+        const itemDesc = left.appendChild(document.createElement("setting-text"));
         itemDesc.setAttribute("data-type", "secondary");
-        left.appendChild(itemDesc);
-        const switch_ = document.createElement("setting-switch");
+        const right = item.appendChild(document.createElement("div"));
+        right.classList.add("scriptio-menu");
+        const i = right.appendChild(document.createElement("i"));
+        i.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 6.75H11.5986L11.3759 6.41602L9.82126 4.08398C9.68216 3.87533 9.44798 3.75 9.19722 3.75H3.5C3.08579 3.75 2.75 4.08579 2.75 4.5V19.5C2.75 19.9142 3.08579 20.25 3.5 20.25H20.5C20.9142 20.25 21.25 19.9142 21.25 19.5V7.5C21.25 7.08579 20.9142 6.75 20.5 6.75H12Z" stroke="currentColor" stroke-width="1.5"></path></svg>';
+        i.classList.add("q-icon", "scriptio-more");
+        i.title = "在文件夹中显示";
+        i.addEventListener("click", () => {
+            scriptio.open("show", path);
+        });
+        const switch_ = right.appendChild(document.createElement("setting-switch"));
         switch_.setAttribute(switchDataAttr, path);
-        item.appendChild(switch_);
+        switch_.title = "启用/禁用此脚本";
         switch_.addEventListener("click", () => {
             switch_.parentNode.classList.toggle("is-loading", true);
             scriptio.configChange(path, switch_.toggleAttribute("is-active")); // Update the UI immediately, so it would be more smooth
@@ -239,7 +244,7 @@ async function onSettingWindowCreated(view) {
     }
     $("#scriptio-reload").addEventListener("dblclick", scriptio.reload);
     $("#scriptio-open-folder").addEventListener("click", () => {
-        openURI("folder", "scripts"); // Relative to the data directory
+        openURI("path", `${dataPath}/scripts`); // Relative to the data directory
     });
     $("#scriptio-import").addEventListener("change", importScript);
     // About - Version

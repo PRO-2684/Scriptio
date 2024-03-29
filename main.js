@@ -29,11 +29,14 @@ ipcMain.on("LiteLoader.scriptio.importScript", (event, fname, content) => {
 ipcMain.on("LiteLoader.scriptio.open", (event, type, uri) => {
     log("open", type, uri);
     switch (type) {
-        case "folder": // Relative to dataPath
-            LiteLoader.api.openPath(path.join(dataPath, uri));
-            break;
         case "link":
-            LiteLoader.api.openExternal(uri);
+            shell.openExternal(uri);
+            break;
+        case "path":
+            shell.openPath(path.normalize(uri));
+            break;
+        case "show":
+            shell.showItemInFolder(path.normalize(uri));
             break;
         default:
             break;
@@ -98,6 +101,7 @@ function debounce(fn, time) {
     }
 }
 
+// 标准化路径 (Unix style)
 function normalize(path) {
     return path.replace(":\\", "://").replaceAll("\\", "/");
 }
@@ -121,7 +125,6 @@ function listJS(dir) {
         }
         return files;
     }
-    // Absolute path
     return walk(dir);
 }
 
