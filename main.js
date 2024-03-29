@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { BrowserWindow, ipcMain, webContents } = require("electron");
+const { BrowserWindow, ipcMain, webContents, shell } = require("electron");
 
 const isDebug = process.argv.includes("--scriptio-debug");
 const updateInterval = 1000;
@@ -97,6 +97,11 @@ function debounce(fn, time) {
         }, time);
     }
 }
+
+function normalize(path) {
+    return path.replace(":\\", "://").replaceAll("\\", "/");
+}
+
 function listJS(dir) {
     log("listJS", dir);
     function walk(dir, files = []) {
@@ -106,19 +111,18 @@ function listJS(dir) {
             if (stat.isDirectory()) {
                 walk(dir + "/" + f, files);
             } else if (f.endsWith(".js")) {
-                files.push(dir + "/" + f);
+                files.push(normalize(dir + "/" + f));
+            } else if (f.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
+                const { target } = shell.readShortcutLink(dir + "/" + f);
+                if (target.endsWith(".js")) {
+                    files.push(normalize(target));
+                }
             }
         }
         return files;
     }
-    // Need relative path
-    return walk(dir).map((f) => {
-        f = f.slice(dir.length);
-        if (f.startsWith("/")) {
-            f = f.slice(1);
-        }
-        return f;
-    });
+    // Absolute path
+    return walk(dir);
 }
 
 // 获取 JS 文件头的注释，返回为数组
@@ -136,16 +140,16 @@ function getComments(code) {
     return comments.slice(0, 2); // 目前只考虑前两行
 }
 // 获取 JS 文件内容
-function getScript(relPath) {
+function getScript(absPath) {
     try {
-        return fs.readFileSync(path.join(scriptPath, relPath), "utf-8");
+        return fs.readFileSync(absPath, "utf-8");
     } catch (err) {
         return "";
     }
 }
 // 脚本更改
-function updateScript(relPath, webContent) {
-    const content = getScript(relPath);
+function updateScript(absPath, webContent) {
+    const content = getScript(absPath);
     if (!content) return;
     const comments = getComments(content);
     let comment = comments[0] || "";
@@ -162,12 +166,12 @@ function updateScript(relPath, webContent) {
     } else {
         runAts = [];
     }
-    log("updateScript", relPath, enabled, comment, runAts);
+    log("updateScript", absPath, enabled, comment, runAts);
     if (webContent) {
-        webContent.send("LiteLoader.scriptio.updateScript", [relPath, content, enabled, comment, runAts]);
+        webContent.send("LiteLoader.scriptio.updateScript", [absPath, content, enabled, comment, runAts]);
     } else {
         webContents.getAllWebContents().forEach((webContent) => {
-            webContent.send("LiteLoader.scriptio.updateScript", [relPath, content, enabled, comment, runAts]);
+            webContent.send("LiteLoader.scriptio.updateScript", [absPath, content, enabled, comment, runAts]);
         });
     }
 }
@@ -185,8 +189,8 @@ function reload(event) {
 // 载入脚本
 function loadScripts(webContent) {
     log("loadScripts");
-    for (const relPath of listJS(scriptPath)) {
-        updateScript(relPath, webContent);
+    for (const absPath of listJS(scriptPath)) {
+        updateScript(absPath, webContent);
     }
 }
 // 导入脚本
@@ -204,9 +208,9 @@ function onScriptChange(eventType, filename) {
     reload();
 }
 // 监听配置修改
-function onConfigChange(event, relPath, enable) {
-    log("onConfigChange", relPath, enable);
-    let content = getScript(relPath);
+function onConfigChange(event, absPath, enable) {
+    log("onConfigChange", absPath, enable);
+    let content = getScript(absPath);
     let comment = getComments(content)[0] || "";
     const current = (comment === null) || !comment.endsWith("[Disabled]");
     if (current === enable) return;
@@ -221,9 +225,9 @@ function onConfigChange(event, relPath, enable) {
         comment += " [Disabled]";
     }
     content = `// ${comment}\n` + content;
-    fs.writeFileSync(path.join(scriptPath, relPath), content, "utf-8");
+    fs.writeFileSync(absPath, content, "utf-8");
     if (!devMode) {
-        updateScript(relPath);
+        updateScript(absPath);
     }
 }
 // 监听开发者模式开关
