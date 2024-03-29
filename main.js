@@ -139,6 +139,7 @@ function getComments(code) {
     }
     return comments.slice(0, 2); // 目前只考虑前两行
 }
+
 // 获取 JS 文件内容
 function getScript(absPath) {
     try {
@@ -147,6 +148,7 @@ function getScript(absPath) {
         return "";
     }
 }
+
 // 脚本更改
 function updateScript(absPath, webContent) {
     const content = getScript(absPath);
@@ -175,6 +177,7 @@ function updateScript(absPath, webContent) {
         });
     }
 }
+
 // 重载所有窗口
 function reload(event) {
     // 若有，关闭发送者窗口 (设置界面)
@@ -186,6 +189,7 @@ function reload(event) {
         window.reload();
     });
 }
+
 // 载入脚本
 function loadScripts(webContent) {
     log("loadScripts");
@@ -193,6 +197,7 @@ function loadScripts(webContent) {
         updateScript(absPath, webContent);
     }
 }
+
 // 导入脚本
 function importScript(fname, content) {
     log("importScript", fname);
@@ -202,11 +207,13 @@ function importScript(fname, content) {
         updateScript(fname);
     }
 }
-// `scripts` 目录修改
+
+// 监听 `scripts` 目录修改
 function onScriptChange(eventType, filename) {
     log("onScriptChange", eventType, filename);
     reload();
 }
+
 // 监听配置修改
 function onConfigChange(event, absPath, enable) {
     log("onConfigChange", absPath, enable);
@@ -230,6 +237,7 @@ function onConfigChange(event, absPath, enable) {
         updateScript(absPath);
     }
 }
+
 // 监听开发者模式开关
 function onDevMode(event, enable) {
     log("onDevMode", enable);
@@ -243,6 +251,7 @@ function onDevMode(event, enable) {
         log("watcher closed");
     }
 }
+
 // 监听目录更改
 function watchScriptChange() {
     return fs.watch(scriptPath, "utf-8",
