@@ -4,6 +4,7 @@ const { BrowserWindow, ipcMain, webContents, shell } = require("electron");
 
 const isDebug = process.argv.includes("--scriptio-debug");
 const updateInterval = 1000;
+const ignoredFolders = new Set(["node_modules", ".git", ".vscode", ".idea", ".github"]);
 const log = isDebug ? console.log.bind(console, "\x1b[32m%s\x1b[0m", "[Scriptio]") : () => { };
 let devMode = false;
 let watcher = null;
@@ -113,7 +114,9 @@ function listJS(dir) {
         for (const f of dirFiles) {
             const stat = fs.lstatSync(dir + "/" + f);
             if (stat.isDirectory()) {
-                walk(dir + "/" + f, files);
+                if (!ignoredFolders.has(f)) {
+                    walk(dir + "/" + f, files);
+                }
             } else if (f.endsWith(".js")) {
                 files.push(normalize(dir + "/" + f));
             } else if (f.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
