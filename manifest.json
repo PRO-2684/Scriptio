@@ -3,9 +3,10 @@
     "type": "extension",
     "name": "Scriptio",
     "slug": "scriptio",
-    "description": "自定义渲染层 JavaScript 脚本加载器",
+    "description": "📄 自定义渲染层 JavaScript 脚本加载器",
     "version": "1.2.2",
     "icon": "./icons/icon.svg",
+    "thumb": "./icons/thumb.svg",
     "authors": [
         {
             "name": "PRO-2684",
