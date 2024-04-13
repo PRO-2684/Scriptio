@@ -73,8 +73,6 @@ plugins (所有的插件目录)
 > [!NOTE]
 > 以下脚本均为由我/其它用户编写的用户脚本，不内置在插件中。
 >
-> 你可以下载后**修改其内容**来满足你的需求，随后将其**导入到插件中**来体验。或者，若你装有 [插件商店](https://github.com/Night-stars-1/LiteLoaderQQNT-Plugin-Plugin-Store)，你可以直接在插件商店中点击安装它们（此项功能正在测试中）。
->
 > 若你有愿意分享的脚本，欢迎[提交 PR 或 Issue](https://github.com/PRO-2684/Scriptio/issues/1) 来将它们添加到这里。编写脚本前推荐先阅读 [Wiki](https://github.com/PRO-2684/Scriptio/wiki)。
 
 > [!WARNING]
