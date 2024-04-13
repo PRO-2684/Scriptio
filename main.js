@@ -4,7 +4,7 @@ const { BrowserWindow, ipcMain, webContents, shell } = require("electron");
 
 const isDebug = process.argv.includes("--scriptio-debug");
 const updateInterval = 1000;
-const ignoredFolders = new Set(["node_modules", ".git", ".vscode", ".idea", ".github"]);
+const ignoredFolders = new Set(["node_modules"]);
 const log = isDebug ? console.log.bind(console, "\x1b[38;2;0;72;91m%s\x1b[0m", "[Scriptio]") : () => { };
 let devMode = false;
 let watcher = null;
@@ -80,16 +80,6 @@ ipcMain.handle("LiteLoader.scriptio.fetchText", async (event, ...args) => {
         return "";
     }
 });
-if (LiteLoader.plugins.pluginStore) {
-    ipcMain.handle("LiteLoader.scriptio.isSnippetInstall", (event, file) => {
-        return fs.existsSync(path.join(scriptPath, file));
-    });
-    ipcMain.handle("LiteLoader.scriptio.isSnippetRestart", (event, file) => {
-        log("isSnippetRestart", file);
-        updateScript(file);
-        return false;
-    });
-}
 
 // 防抖
 function debounce(fn, time) {
@@ -114,7 +104,7 @@ function listJS(dir) {
         for (const f of dirFiles) {
             const stat = fs.lstatSync(dir + "/" + f);
             if (stat.isDirectory()) {
-                if (!ignoredFolders.has(f)) {
+                if (!ignoredFolders.has(f) && !f.startsWith(".")) { // Ignore given folders and hidden folders
                     walk(dir + "/" + f, files);
                 }
             } else if (f.endsWith(".js")) {
