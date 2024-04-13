@@ -97,28 +97,35 @@ function normalize(path) {
     return path.replace(":\\", "://").replaceAll("\\", "/");
 }
 
+// 列出 JS 文件，或指向 JS 文件的快捷方式
 function listJS(dir) {
-    log("listJS", dir);
-    function walk(dir, files = []) {
+    const files = [];
+    function walk(dir) {
         const dirFiles = fs.readdirSync(dir);
         for (const f of dirFiles) {
             const stat = fs.lstatSync(dir + "/" + f);
             if (stat.isDirectory()) {
                 if (!ignoredFolders.has(f) && !f.startsWith(".")) { // Ignore given folders and hidden folders
-                    walk(dir + "/" + f, files);
+                    walk(dir + "/" + f);
                 }
             } else if (f.endsWith(".js")) {
                 files.push(normalize(dir + "/" + f));
             } else if (f.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
-                const { target } = shell.readShortcutLink(dir + "/" + f);
-                if (target.endsWith(".js")) {
-                    files.push(normalize(target));
+                const linkPath = dir + "/" + f;
+                try {
+                    const { target } = shell.readShortcutLink(linkPath);
+                    if (target.endsWith(".js")) {
+                        files.push(normalize(linkPath));
+                    }
+                } catch (e) {
+                    log("Failed to read shortcut", linkPath);
                 }
             }
         }
         return files;
     }
-    return walk(dir);
+    walk(dir);
+    return files;
 }
 
 // 获取 JS 文件头的注释，返回为数组
@@ -138,15 +145,21 @@ function getComments(code) {
 
 // 获取 JS 文件内容
 function getScript(absPath) {
+    if (absPath.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
+        const { target } = shell.readShortcutLink(absPath);
+        absPath = target;
+    }
     try {
         return fs.readFileSync(absPath, "utf-8");
     } catch (err) {
+        log("getScript", absPath, err)
         return "";
     }
 }
 
 // 脚本更改
 function updateScript(absPath, webContent) {
+    absPath = normalize(absPath);
     const content = getScript(absPath);
     if (!content) return;
     const comments = getComments(content);
@@ -200,7 +213,7 @@ function importScript(fname, content) {
     const filePath = path.join(scriptPath, fname);
     fs.writeFileSync(filePath, content, "utf-8");
     if (!devMode) {
-        updateScript(fname);
+        updateScript(filePath);
     }
 }
 
@@ -213,6 +226,11 @@ function onScriptChange(eventType, filename) {
 // 监听配置修改
 function onConfigChange(event, absPath, enable) {
     log("onConfigChange", absPath, enable);
+    let linkPath = absPath;
+    if (absPath.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
+        const { target } = shell.readShortcutLink(absPath);
+        absPath = target;
+    }
     let content = getScript(absPath);
     let comment = getComments(content)[0] || "";
     const current = (comment === null) || !comment.endsWith("[Disabled]");
@@ -230,7 +248,7 @@ function onConfigChange(event, absPath, enable) {
     content = `// ${comment}\n` + content;
     fs.writeFileSync(absPath, content, "utf-8");
     if (!devMode) {
-        updateScript(absPath);
+        updateScript(linkPath);
     }
 }
 
