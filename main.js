@@ -37,6 +37,7 @@ ipcMain.on("LiteLoader.scriptio.removeScript", (event, absPath) => {
                 name: " [已删除] ",
                 description: "[此脚本已被删除]",
                 "run-at": [],
+                reactive: true
             }
         };
         webContents.getAllWebContents().forEach((webContent) => {
@@ -100,7 +101,7 @@ ipcMain.handle("LiteLoader.scriptio.fetchText", async (event, ...args) => {
 
 // 防抖
 function debounce(fn, time) {
-    const timer = null;
+    let timer = null;
     return function (...args) {
         timer && clearTimeout(timer);
         timer = setTimeout(() => {
@@ -145,15 +146,13 @@ function listJS(dir) {
     return files;
 }
 
-const debouncedSet = debounce((slug, data) => {
-    LiteLoader.api.config.set(slug, data);
-}, 1000);
+const debouncedSet = debounce(LiteLoader.api.config.set, 1000);
 const scriptsConfig = new Proxy({}, {
     cache: null,
     get(target, prop) {
         if (!this.cache) {
             log("Calling config.get");
-            this.cache = LiteLoader.api.config.get("scriptio", { "scripts": {} }).scripts;
+            this.cache = LiteLoader.api.config.get("scriptio", { scripts: {} }).scripts;
         }
         return this.cache[prop];
     },
@@ -161,7 +160,7 @@ const scriptsConfig = new Proxy({}, {
         this.cache[prop] = value;
         log("Calling debounced config.set after set");
         try {
-            debouncedSet("scriptio", { "scripts": this.cache });
+            debouncedSet("scriptio", { scripts: this.cache });
         } catch (e) {
             log("debouncedSet error", e);
         }
@@ -172,7 +171,7 @@ const scriptsConfig = new Proxy({}, {
             delete this.cache[prop];
             console.log("Calling debounced config.set after delete");
             try {
-                debouncedSet("scriptio", { "scripts": this.cache });
+                debouncedSet("scriptio", { scripts: this.cache });
             } catch (e) {
                 log("debouncedSet error", e);
             }
