@@ -22,21 +22,33 @@
             height: 2em;
             transition: background-color 0.2s ease-in-out;
         }
-    
+
         &::file-selector-button:hover {
             background-color: var(--overlay_hover);
         }
     }
 
     /* 各个脚本片段 */
-    .scriptio setting-item.is-loading {
-        cursor: progress;
-        
-        > setting-switch,
-        > input,
-        > setting-button {
-            pointer-events: none;
+    .scriptio setting-item {
+        &.is-loading {
+            cursor: progress;
+
+            > setting-switch,
+            > input,
+            > setting-button {
+                pointer-events: none;
+                opacity: 0.6;
+            }
+        }
+
+        &[data-deleted] {
+            filter: grayscale(1);
             opacity: 0.6;
+            cursor: not-allowed;
+
+            & > * {
+                pointer-events: none;
+            }
         }
     }
 
@@ -63,7 +75,7 @@
         width: fit-content;
         margin: auto;
         transition: color 0.2s ease-in-out;
-        
+
         &:hover {
             color: var(--brand_standard);
         }
@@ -80,19 +92,18 @@
 
     /* 悬浮显示的按钮 */
     .scriptio .scriptio-more {
-        width: 1.5em;
-        height: 1.5em;
-        color: var(--icon_secondary);
         opacity: 0;
-        transition: color 0.2s ease-in-out, opacity 0.2s ease-in-out;
-
-        &:hover {
-            color: var(--theme-color);
-        }
+        transition: color 0.2s ease-in-out, opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+        font-family: system-ui, PingFang SC, PingFangSC-Regular, Microsoft YaHei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif, Apple Braille;
     }
 
-    .scriptio setting-item:hover .scriptio-more {
-        opacity: 1;
+    .scriptio setting-item:not([data-deleted]):hover .scriptio-more {
+        opacity: 0.6;
+
+        &:hover {
+            transform: scale(1.2);
+            opacity: 1;
+        }
     }
 
     /* Logo */

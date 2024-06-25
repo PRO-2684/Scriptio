@@ -27,6 +27,23 @@ ipcMain.on("LiteLoader.scriptio.reload", reload);
 ipcMain.on("LiteLoader.scriptio.importScript", (event, fname, content) => {
     importScript(fname, content);
 });
+ipcMain.on("LiteLoader.scriptio.removeScript", (event, absPath) => {
+    log("removeScript", absPath);
+    fs.unlinkSync(absPath);
+    delete scriptsConfig[absPath];
+    if (!devMode) {
+        const msg = {
+            path: absPath, enabled: false, code: "// Removed", meta: {
+                name: " [已删除] ",
+                description: "[此脚本已被删除]",
+                "run-at": [],
+            }
+        };
+        webContents.getAllWebContents().forEach((webContent) => {
+            webContent.send("LiteLoader.scriptio.updateScript", msg);
+        });
+    }
+});
 ipcMain.on("LiteLoader.scriptio.open", (event, type, uri) => {
     log("open", type, uri);
     switch (type) {
@@ -128,6 +145,43 @@ function listJS(dir) {
     return files;
 }
 
+const debouncedSet = debounce((slug, data) => {
+    LiteLoader.api.config.set(slug, data);
+}, 1000);
+const scriptsConfig = new Proxy({}, {
+    cache: null,
+    get(target, prop) {
+        if (!this.cache) {
+            log("Calling config.get");
+            this.cache = LiteLoader.api.config.get("scriptio", { "scripts": {} }).scripts;
+        }
+        return this.cache[prop];
+    },
+    set(target, prop, value) {
+        this.cache[prop] = value;
+        log("Calling debounced config.set after set");
+        try {
+            debouncedSet("scriptio", { "scripts": this.cache });
+        } catch (e) {
+            log("debouncedSet error", e);
+        }
+        return true;
+    },
+    deleteProperty(target, prop) {
+        if (prop in this.cache) {
+            delete this.cache[prop];
+            console.log("Calling debounced config.set after delete");
+            try {
+                debouncedSet("scriptio", { "scripts": this.cache });
+            } catch (e) {
+                log("debouncedSet error", e);
+            }
+            return true;
+        }
+        return false;
+    }
+});
+
 // 获取 JS 文件头的注释，返回为数组
 function getComments(code) {
     const lines = code.split("\n");
@@ -141,6 +195,46 @@ function getComments(code) {
         }
     }
     return comments.slice(0, 2); // 目前只考虑前两行
+}
+
+function extractUserScriptMetadata(code) {
+    const result = {};
+    const userScriptRegex = /\/\/\s*=+\s*UserScript\s*=+\s*([\s\S]*?)\s*=+\s*\/UserScript\s*=+\s*/;
+    const match = code.match(userScriptRegex);
+
+    if (match) {// If the UserScript block is found
+        const content = match[1];// Extract the content within the UserScript block
+        const lines = content.split('\n'); // Split the content by newline
+
+        lines.forEach(line => {
+            // Regular expression to match "// @name value" pattern
+            const matchLine = line.trim().match(/^\/\/\s*@([^ \t]+)\s+(.+)$/);
+            if (matchLine) {
+                const name = matchLine[1]; // Extract the name
+                const value = matchLine[2]; // Extract the value
+                result[name] = value; // Store in the result object
+            }
+        });
+    } else {// Fall back to the old method
+        const comments = getComments(code);
+        const comment = comments[0] || "";
+        let runAts = comments[1] || "";
+        if (runAts.toLowerCase().startsWith("@run-at ")) {
+            runAts = runAts.slice(8);
+            result["run-at"] = runAts;
+        } else {
+            result["run-at"] = "";
+        }
+        result["description"] = comment;
+        if (comment.startsWith("* ")) {
+            result["reactive"] = "false";
+            result["description"] = comment.slice(2).trim();
+        } else {
+            result["reactive"] = "true";
+        }
+    }
+
+    return result;
 }
 
 // 获取 JS 文件内容
@@ -160,29 +254,22 @@ function getScript(absPath) {
 // 脚本更改
 function updateScript(absPath, webContent) {
     absPath = normalize(absPath);
-    const content = getScript(absPath);
-    if (!content) return;
-    const comments = getComments(content);
-    let comment = comments[0] || "";
-    let runAts = comments[1] || "";
-    let enabled = true;
-    if (comment.endsWith("[Disabled]")) {
-        comment = comment.slice(0, -10).trim();
-        enabled = false;
-    }
-    if (runAts.toLowerCase().startsWith("@run-at ")) {
-        runAts = runAts.slice(8).split(",")
-            .map((item) => item.trim())
-            .filter((item) => item);
-    } else {
-        runAts = [];
-    }
-    log("updateScript", absPath, enabled, comment, runAts);
+    const code = getScript(absPath);
+    if (!code) return;
+    const enabled = scriptsConfig[absPath] ?? (scriptsConfig[absPath] = true);
+    const meta = extractUserScriptMetadata(code);
+    meta.name ??= path.basename(absPath, ".js");
+    meta.description ??= "此脚本没有描述";
+    meta["run-at"] = (meta["run-at"] ?? "").split(",").map((item) => item.trim()).filter((item) => item);
+    meta.reactive ??= "false";
+    meta.reactive = (meta.reactive.toLowerCase() === "true");
+    log("updateScript", absPath, enabled, meta);
+    const msg = { path: absPath, enabled, code, meta };
     if (webContent) {
-        webContent.send("LiteLoader.scriptio.updateScript", [absPath, content, enabled, comment, runAts]);
+        webContent.send("LiteLoader.scriptio.updateScript", msg);
     } else {
         webContents.getAllWebContents().forEach((webContent) => {
-            webContent.send("LiteLoader.scriptio.updateScript", [absPath, content, enabled, comment, runAts]);
+            webContent.send("LiteLoader.scriptio.updateScript", msg);
         });
     }
 }
@@ -202,7 +289,8 @@ function reload(event) {
 // 载入脚本
 function loadScripts(webContent) {
     log("loadScripts");
-    for (const absPath of listJS(scriptPath)) {
+    const scripts = listJS(scriptPath);
+    for (const absPath of scripts) {
         updateScript(absPath, webContent);
     }
 }
@@ -226,29 +314,9 @@ function onScriptChange(eventType, filename) {
 // 监听配置修改
 function onConfigChange(event, absPath, enable) {
     log("onConfigChange", absPath, enable);
-    let linkPath = absPath;
-    if (absPath.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
-        const { target } = shell.readShortcutLink(absPath);
-        absPath = target;
-    }
-    let content = getScript(absPath);
-    let comment = getComments(content)[0] || "";
-    const current = (comment === null) || !comment.endsWith("[Disabled]");
-    if (current === enable) return;
-    if (comment === null) {
-        comment = "";
-    } else {
-        content = content.split("\n").slice(1).join("\n");
-    }
-    if (enable) {
-        comment = comment.slice(0, -11);
-    } else {
-        comment += " [Disabled]";
-    }
-    content = `// ${comment}\n` + content;
-    fs.writeFileSync(absPath, content, "utf-8");
+    scriptsConfig[absPath] = enable;
     if (!devMode) {
-        updateScript(linkPath);
+        updateScript(absPath);
     }
 }
 

@@ -19,6 +19,10 @@ contextBridge.exposeInMainWorld("scriptio", {
         "LiteLoader.scriptio.importScript",
         fname, content
     ),
+    removeScript: (path) => ipcRenderer.send(
+        "LiteLoader.scriptio.removeScript",
+        path
+    ),
     open: (type, uri) => ipcRenderer.send(
         "LiteLoader.scriptio.open",
         type, uri

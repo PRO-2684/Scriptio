@@ -116,14 +116,14 @@ function test(path, code, enabled, page, runAts) {
     }
     return false;
 }
-function scriptHelper(path, code, enabled, comment, runAts) {
+function scriptHelper(path, code, enabled, description, runAts) {
     pagePromise.then(page => {
         const result = test(path, code, enabled, page, runAts);
         log(`"${path}" injected? ${result}`);
     });
 }
 scriptio.onUpdateScript((event, args) => {
-    scriptHelper(...args);
+    scriptHelper(args.path, args.code, args.enabled, args.meta.description, args.meta["run-at"]);
 });
 scriptio.rendererReady();
 scriptio.queryIsDebug().then(enabled => {
@@ -138,52 +138,65 @@ async function onSettingWindowCreated(view) {
     const $ = view.querySelector.bind(view);
     view.innerHTML = await r.text();
     const container = $("setting-section.snippets > setting-panel > setting-list");
-    function stem(path) { // Get the stem of a path
-        // Assuming the path is separated by slash
-        const parts = path.split("/");
-        const last = parts.pop();
-        const name = last.split(".").slice(0, -1).join(".");
-        return name;
-    }
     function addItem(path) { // Add a list item with name and description, returns the switch
         const item = container.appendChild(document.createElement("setting-item"));
         item.setAttribute("data-direction", "row");
         item.setAttribute(configDataAttr, path);
         const left = item.appendChild(document.createElement("div"));
         const itemName = left.appendChild(document.createElement("setting-text"));
-        itemName.textContent = stem(path);
-        itemName.title = path;
         const itemDesc = left.appendChild(document.createElement("setting-text"));
         itemDesc.setAttribute("data-type", "secondary");
         const right = item.appendChild(document.createElement("div"));
         right.classList.add("scriptio-menu");
-        const i = right.appendChild(document.createElement("i"));
-        i.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 6.75H11.5986L11.3759 6.41602L9.82126 4.08398C9.68216 3.87533 9.44798 3.75 9.19722 3.75H3.5C3.08579 3.75 2.75 4.08579 2.75 4.5V19.5C2.75 19.9142 3.08579 20.25 3.5 20.25H20.5C20.9142 20.25 21.25 19.9142 21.25 19.5V7.5C21.25 7.08579 20.9142 6.75 20.5 6.75H12Z" stroke="currentColor" stroke-width="1.5"></path></svg>';
-        i.classList.add("q-icon", "scriptio-more");
-        i.title = "在文件夹中显示";
-        i.addEventListener("click", () => {
-            scriptio.open("show", path);
+        const remove = right.appendChild(document.createElement("span"));
+        remove.textContent = "🗑️";
+        remove.classList.add("scriptio-more");
+        remove.title = "删除此样式";
+        remove.addEventListener("click", () => {
+            if (!item.hasAttribute("data-deleted")) {
+                scriptio.removeScript(path);
+            }
+        });
+        const showInFolder = right.appendChild(document.createElement("span"));
+        showInFolder.textContent = "📂";
+        showInFolder.classList.add("scriptio-more");
+        showInFolder.title = "在文件夹中显示";
+        showInFolder.addEventListener("click", () => {
+            if (!item.hasAttribute("data-deleted")) {
+                scriptio.open("show", path);
+            }
         });
         const switch_ = right.appendChild(document.createElement("setting-switch"));
         switch_.setAttribute(switchDataAttr, path);
         switch_.title = "启用/禁用此脚本";
         switch_.addEventListener("click", () => {
-            switch_.parentNode.classList.toggle("is-loading", true);
-            scriptio.configChange(path, switch_.toggleAttribute("is-active")); // Update the UI immediately, so it would be more smooth
+            if (!item.hasAttribute("data-deleted")) {
+                switch_.parentNode.classList.toggle("is-loading", true);
+                scriptio.configChange(path, switch_.toggleAttribute("is-active")); // Update the UI immediately, so it would be more smooth
+            }
         });
-        return switch_;
+        return item;
     }
     scriptio.onUpdateScript((event, args) => {
-        const [path, code, enabled, comment] = args;
-        const switch_ = $(`setting-switch[${switchDataAttr}="${path}"]`)
-            || addItem(path);
+        const { path, meta, enabled } = args;
+        const isDeleted = meta.name === " [已删除] ";
+        const item = $(`setting-item[${configDataAttr}="${path}"]`) || addItem(path);
+        const itemName = item.querySelector("setting-text");
+        const optionalVersion = meta.version ? ` (v${meta.version})` : "";
+        itemName.textContent = meta.name + optionalVersion;
+        itemName.title = path;
+        const itemDesc = item.querySelector("setting-text[data-type='secondary']");
+        itemDesc.textContent = meta.description || "此文件没有描述";
+        itemDesc.title = itemDesc.textContent;
+        if (!meta.reactive) {
+            itemDesc.textContent = "* " + itemDesc.textContent;
+            itemDesc.title += "\n对此脚本的更改将在重载后生效";
+        }
+        const switch_ = item.querySelector(`setting-switch[${switchDataAttr}="${path}"]`);
         switch_.toggleAttribute("is-active", enabled);
         switch_.parentNode.classList.toggle("is-loading", false);
-        const span = $(`setting-item[${configDataAttr}="${path}"] > div > setting-text[data-type="secondary"]`);
-        span.textContent = comment || "* 此文件没有描述";
-        span.title = span.textContent;
-        if (span.textContent.startsWith("* ")) {
-            span.title += "\n对此脚本的更改将在重载后生效";
+        if (isDeleted) {
+            item.toggleAttribute("data-deleted", true);
         }
         log("onUpdateScript", path, enabled);
     });
