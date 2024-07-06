@@ -73,21 +73,21 @@ plugins (所有的插件目录)
 >
 > 若你有愿意分享的脚本，欢迎[提交 PR 或 Issue](https://github.com/PRO-2684/Scriptio/issues/1) 来将它们添加到这里。编写脚本前推荐先阅读 [Wiki](https://github.com/PRO-2684/Scriptio/wiki)。
 
-| 名称 | 作者 | 说明 | 实时响应 | 链接 |
-| --- | --- | --- | --- | --- |
-| hitokoto | [PRO-2684](https://github.com/PRO-2684) | 输入框展示一言 | 🟢 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto) |
-| hook-vue | [PRO-2684](https://github.com/PRO-2684) | Hook Vue 实例 | 🔴 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hook-vue) |
-| hook-fetch | [PRO-2684](https://github.com/PRO-2684) | Hook `window.fetch` | 🔴 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#hook-fetch) |
-| img-quick-close | [PRO-2684](https://github.com/PRO-2684) | 快速关闭图片 | 🔴 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#img-quick-close) |
-| inspectio | [PRO-2684](https://github.com/PRO-2684) | 添加各类提示信息，详见 README，需要 hook-vue.js 的支持 | 🟢 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#inspectio) |
-| link-preview | [PRO-2684](https://github.com/PRO-2684) | 链接预览：鼠标经过链接时尝试加载浏览，悬浮显示链接的标题和描述，需要 hook-vue.js 的支持 | 🟢 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#link-preview) |
-| msg-record-enhance | [PRO-2684](https://github.com/PRO-2684) | 查看聊天记录中部分发送者 QQ，需要 hook-vue.js 的支持 | 🔴 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#msg-record-enhance) |
-| open-in-browser | [PRO-2684](https://github.com/PRO-2684) | 小程序若可行则浏览器打开 | 🟢 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#open-in-browser) |
-| pangu | [PRO-2684](https://github.com/PRO-2684) | 编辑框内按下 Ctrl+P 后，自动在中英文、中文与数字之间添加空格，并进行合适的标点符号处理 | 🟢 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#pangu) |
-| privacio | [PRO-2684](https://github.com/PRO-2684) | 保护你的隐私：阻止 QQ 的一些追踪行为，需要 hook-fetch.js 的支持。 | 🟢 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#privacio) |
-| relay-self | [PRO-2684](https://github.com/PRO-2684) | 允许接龙自己的消息，需要 hook-vue.js 的支持 | 🟢 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#relay-self) |
-| shortcutio | [PRO-2684](https://github.com/PRO-2684) | 添加一些常用的快捷键 | 🟢 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio) |
-| show-time | [PRO-2684](https://github.com/PRO-2684) | 消息显示时间，需要 hook-vue.js 的支持 | 🟢 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#show-time) |
-| smooth-transition | [PRO-2684](https://github.com/PRO-2684) | 为页面间导航添加平滑过渡动画 | 🟢 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#smooth-transition) |
-| toast | [PRO-2684](https://github.com/PRO-2684) | 允许其它脚本调用 scriptio_toolkit.toast，需要 hook-vue.js 的支持 | 🔴 | [GitHub](https://github.com/PRO-2684/Scriptio-user-scripts/#toast) |
-| to-contact-list-top | [lgc2333](https://github.com/lgc2333) | 添加一个回到聊天列表顶部的侧边栏按钮 | 🟢 | [GitHub](https://github.com/lgc2333/ScriptioScripts/tree/main/to-contact-list-top#tocontactlisttop) |
+| 名称 | 实时响应 | 作者 | 说明 |
+| --- | --- | --- | --- |
+| [hitokoto](https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 输入框展示一言 |
+| [hook-vue](https://github.com/PRO-2684/Scriptio-user-scripts/#hook-vue) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | Hook Vue 实例 |
+| [hook-fetch](https://github.com/PRO-2684/Scriptio-user-scripts/#hook-fetch) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | Hook `window.fetch` |
+| [img-quick-close](https://github.com/PRO-2684/Scriptio-user-scripts/#img-quick-close) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | 快速关闭图片 |
+| [inspectio](https://github.com/PRO-2684/Scriptio-user-scripts/#inspectio) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 添加各类提示信息，详见 README，需要 hook-vue.js 的支持 |
+| [link-preview](https://github.com/PRO-2684/Scriptio-user-scripts/#link-preview) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 链接预览：鼠标经过链接时尝试加载浏览，悬浮显示链接的标题和描述，需要 hook-vue.js 的支持 |
+| [msg-record-enhance](https://github.com/PRO-2684/Scriptio-user-scripts/#msg-record-enhance) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | 查看聊天记录中部分发送者 QQ，需要 hook-vue.js 的支持 |
+| [open-in-browser](https://github.com/PRO-2684/Scriptio-user-scripts/#open-in-browser) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 小程序若可行则浏览器打开 |
+| [pangu](https://github.com/PRO-2684/Scriptio-user-scripts/#pangu) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 编辑框内按下 Ctrl+P 后，自动在中英文、中文与数字之间添加空格，并进行合适的标点符号处理 |
+| [privacio](https://github.com/PRO-2684/Scriptio-user-scripts/#privacio) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 保护你的隐私：阻止 QQ 的一些追踪行为，需要 hook-fetch.js 的支持。 |
+| [relay-self](https://github.com/PRO-2684/Scriptio-user-scripts/#relay-self) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 允许接龙自己的消息，需要 hook-vue.js 的支持 |
+| [shortcutio](https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 添加一些常用的快捷键 |
+| [show-time](https://github.com/PRO-2684/Scriptio-user-scripts/#show-time) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 消息显示时间，需要 hook-vue.js 的支持 |
+| [smooth-transition](https://github.com/PRO-2684/Scriptio-user-scripts/#smooth-transition) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 为页面间导航添加平滑过渡动画 |
+| [toast](https://github.com/PRO-2684/Scriptio-user-scripts/#toast) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | 允许其它脚本调用 scriptio_toolkit.toast，需要 hook-vue.js 的支持 |
+| [to-contact-list-top](https://github.com/lgc2333/ScriptioScripts/tree/main/to-contact-list-top#tocontactlisttop) | 🟢 | [lgc2333](https://github.com/lgc2333) | 添加一个回到聊天列表顶部的侧边栏按钮 |
