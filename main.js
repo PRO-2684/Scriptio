@@ -207,7 +207,7 @@ function extractUserScriptMetadata(code) {
 
         lines.forEach(line => {
             // Regular expression to match "// @name value" pattern
-            const matchLine = line.trim().match(/^\/\/\s*@([^ \t]+)\s+(.+)$/);
+            const matchLine = line.trim().match(/^\/\/\s*@(\S+)\s+(.+)$/);
             if (matchLine) {
                 const name = matchLine[1]; // Extract the name
                 const value = matchLine[2]; // Extract the value
