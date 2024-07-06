@@ -83,11 +83,10 @@
 
     /* 菜单 */
     .scriptio .scriptio-menu {
-        margin-left: 1em;
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 1em;
+        gap: 0.8em;
     }
 
     /* 悬浮显示的按钮 */
@@ -100,9 +99,14 @@
     .scriptio setting-item:not([data-deleted]):hover .scriptio-more {
         opacity: 0.6;
 
-        &:hover {
+        &:not([disabled]):hover {
             transform: scale(1.2);
             opacity: 1;
+        }
+
+        &[disabled] {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
     }
 

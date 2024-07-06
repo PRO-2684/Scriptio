@@ -142,25 +142,34 @@ async function onSettingWindowCreated(view) {
         const item = container.appendChild(document.createElement("setting-item"));
         item.setAttribute("data-direction", "row");
         item.setAttribute(configDataAttr, path);
+        // Left side - Name and description
         const left = item.appendChild(document.createElement("div"));
         const itemName = left.appendChild(document.createElement("setting-text"));
         const itemDesc = left.appendChild(document.createElement("setting-text"));
         itemDesc.setAttribute("data-type", "secondary");
         const right = item.appendChild(document.createElement("div"));
         right.classList.add("scriptio-menu");
-        const remove = right.appendChild(document.createElement("span"));
-        remove.textContent = "🗑️";
-        remove.classList.add("scriptio-more");
-        remove.title = "删除此样式";
+        // Right side - More options
+        function addScriptioMore(icon, title, className) {
+            const more = right.appendChild(document.createElement("span"));
+            more.textContent = icon;
+            more.classList.add("scriptio-more", className);
+            more.title = title;
+            return more;
+        }
+        const homepage = addScriptioMore("🔗", "打开脚本主页", "scriptio-homepage");
+        homepage.addEventListener("click", () => {
+            if (!item.hasAttribute("data-deleted") && !homepage.hasAttribute("disabled")) {
+                scriptio.open("link", homepage.getAttribute("data-homepage-url"));
+            }
+        });
+        const remove = addScriptioMore("🗑️", "删除此脚本", "scriptio-remove");
         remove.addEventListener("click", () => {
             if (!item.hasAttribute("data-deleted")) {
                 scriptio.removeScript(path);
             }
         });
-        const showInFolder = right.appendChild(document.createElement("span"));
-        showInFolder.textContent = "📂";
-        showInFolder.classList.add("scriptio-more");
-        showInFolder.title = "在文件夹中显示";
+        const showInFolder = addScriptioMore("📂", "在文件夹中显示", "scriptio-folder");
         showInFolder.addEventListener("click", () => {
             if (!item.hasAttribute("data-deleted")) {
                 scriptio.open("show", path);
@@ -191,6 +200,15 @@ async function onSettingWindowCreated(view) {
         if (!meta.reactive) {
             itemDesc.textContent = "* " + itemDesc.textContent;
             itemDesc.title += "\n对此脚本的更改将在重载后生效";
+        }
+        const homepage = item.querySelector("span.scriptio-homepage");
+        const url = meta.homepageURL;
+        if (url && (url.startsWith("https://") || url.startsWith("http://"))) {
+            homepage.setAttribute("data-homepage-url", url);
+            homepage.toggleAttribute("disabled", false);
+        } else {
+            homepage.removeAttribute("data-homepage-url");
+            homepage.toggleAttribute("disabled", true);
         }
         const switch_ = item.querySelector(`setting-switch[${switchDataAttr}="${path}"]`);
         switch_.toggleAttribute("is-active", enabled);
