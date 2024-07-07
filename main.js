@@ -314,9 +314,7 @@ function onScriptChange(eventType, filename) {
 function onConfigChange(event, absPath, enable) {
     log("onConfigChange", absPath, enable);
     scriptsConfig[absPath] = enable;
-    if (!devMode) {
-        updateScript(absPath);
-    }
+    updateScript(absPath);
 }
 
 // 监听开发者模式开关
