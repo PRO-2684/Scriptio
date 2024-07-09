@@ -91,3 +91,7 @@ plugins (所有的插件目录)
 | [smooth-transition](https://github.com/PRO-2684/Scriptio-user-scripts/#smooth-transition) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 为页面间导航添加平滑过渡动画 |
 | [toast](https://github.com/PRO-2684/Scriptio-user-scripts/#toast) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | 允许其它脚本调用 scriptio_toolkit.toast，需要 hook-vue.js 的支持 |
 | [to-contact-list-top](https://github.com/lgc2333/ScriptioScripts/tree/main/to-contact-list-top#tocontactlisttop) | 🟢 | [lgc2333](https://github.com/lgc2333) | 添加一个回到聊天列表顶部的侧边栏按钮 |
+
+## ⭐ Star History
+
+[![Stargazers over time](https://starchart.cc/PRO-2684/Scriptio.svg?variant=adaptive)](https://starchart.cc/PRO-2684/Scriptio)
