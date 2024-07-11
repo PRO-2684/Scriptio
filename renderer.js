@@ -48,7 +48,8 @@ const scriptio_toolkit = {
             }
             window.addEventListener(toolkitEventName, listener, { once: true });
         });
-    }
+    },
+    fetchText: scriptio.fetchText
 };
 Object.defineProperty(window, "scriptio_toolkit", {
     value: scriptio_toolkit,
