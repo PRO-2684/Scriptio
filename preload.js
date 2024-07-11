@@ -41,4 +41,5 @@ contextBridge.exposeInMainWorld("scriptio", {
         "LiteLoader.scriptio.updateScript",
         callback
     ),
+    ipcRenderer: ipcRenderer
 });
