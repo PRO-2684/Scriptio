@@ -75,6 +75,7 @@ plugins (所有的插件目录)
 
 | 名称 | 实时响应 | 作者 | 说明 |
 | --- | --- | --- | --- |
+| [Automatic-text-to-voice-conversion.js](https://github.com/Shapaper233/Shapaper-Scriptio-user-scripts/#Automatic-text-to-voice-conversion) | 🟢 | [Shapaper](https://github.com/Shapaper233) | 文字自动转语音！让我看看谁在语音没有麦克风😂游戏切换界面很麻烦？那就用这个插件把他的消息读出来吧！|
 | [Automatic-voice-to-text-conversion](https://github.com/Shapaper233/Shapaper-Scriptio-user-scripts/#Automatic-voice-to-text-conversion) | 🟢 | [Shapaper](https://github.com/Shapaper233) | 语音自动转文字！再也不需要手动右键转文字了！Need: Scriptio v1.3.4+|
 | [Group-name-completion](https://github.com/Shapaper233/Shapaper-Scriptio-user-scripts/#Group-name-completion) | 🟢 | [Shapaper](https://github.com/Shapaper233) | 给群昵称添加更多信息！ |
 | [hitokoto](https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 输入框展示一言 |
