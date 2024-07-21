@@ -1,5 +1,15 @@
 <style id="-scriptio-style-settings">
     /* 设置界面用到的 CSS */
+    /* Color scheme */
+    body {
+        &.q-theme-tokens-light[q-theme="light"] .scriptio {
+            color-scheme: light;
+        }
+        &.q-theme-tokens-dark[q-theme="dark"] .scriptio {
+            color-scheme: dark;
+        }
+    }
+
     /* 文件选择框 */
     .scriptio input[type="file"] {
         border-color: var(--fill_standard_primary);
