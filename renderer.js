@@ -50,7 +50,9 @@ const scriptio_toolkit = {
         });
     },
     fetchText: scriptio.fetchText,
-    ipcRenderer: scriptio.ipcRenderer
+    ipcRenderer: scriptio.ipcRenderer,
+    vueMount: [],
+    vueUnmount: []
 };
 Object.defineProperty(window, "scriptio_toolkit", {
     value: scriptio_toolkit,
@@ -320,7 +322,27 @@ async function onSettingWindowCreated(view) {
         link.addEventListener("click", openURL);
     });
 }
+function onVueComponentMount(component) {
+    for (let i = 0; i < scriptio_toolkit.vueMount.length; i++) {
+        try {
+            scriptio_toolkit.vueMount[i](component);
+        } catch (error) {
+            log(`Error calling scriptio_toolkit.vueMount[${i}]:`, error);
+        }
+    }
+}
+function onVueComponentUnmount(component) {
+    for (let i = 0; i < scriptio_toolkit.vueUnmount.length; i++) {
+        try {
+            scriptio_toolkit.vueUnmount[i](component);
+        } catch (error) {
+            log(`Error calling scriptio_toolkit.vueUnmount[${i}]:`, error);
+        }
+    }
+}
 
 export {
-    onSettingWindowCreated
+    onSettingWindowCreated,
+    onVueComponentMount,
+    onVueComponentUnmount
 }
