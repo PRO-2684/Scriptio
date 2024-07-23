@@ -1,8 +1,7 @@
 const scriptDataAttr = "data-scriptio-script";
 const configDataAttr = "data-scriptio-config";
 const switchDataAttr = "data-scriptio-switch";
-const eventName = "scriptio-toggle";
-const toolkitEventName = "scriptio-toolkit";
+const toolRegisteredEvent = "scriptio-tool-register";
 const $ = document.querySelector.bind(document);
 const pluginPath = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/"); // Normalized plugin path
 const dataPath = LiteLoader.plugins.scriptio.path.data.replace(":\\", "://").replaceAll("\\", "/");
@@ -10,31 +9,32 @@ let isDebug = false;
 let log = () => { }; // Dummy function
 
 const listeners = new Map();
-const scriptio_toolkit = {
+// const scriptio_internal = {};
+const scriptio = {
     listen: (toggleFunc, immediate) => {
-        const self = scriptio_toolkit.scriptPath;
+        const self = scriptio.scriptPath;
         listeners.set(self, toggleFunc);
         if (immediate) {
             toggleFunc(true);
         }
     },
     register: (tool, value) => { // Register a tool
-        if (tool in scriptio_toolkit) {
+        if (tool in scriptio) {
             return false;
         }
-        scriptio_toolkit[tool] = value;
-        window.dispatchEvent(new CustomEvent(toolkitEventName, { detail: tool }));
+        scriptio[tool] = value;
+        window.dispatchEvent(new CustomEvent(toolRegisteredEvent, { detail: tool }));
         return true;
     },
     wait: (tool, timeout = 5000) => { // Wait for a tool to be registered
         return new Promise((resolve, reject) => {
-            if (tool in scriptio_toolkit) {
-                return resolve(scriptio_toolkit[tool]);
+            if (tool in scriptio) {
+                return resolve(scriptio[tool]);
             }
             const timer = setTimeout(() => {
-                window.removeEventListener(toolkitEventName, listener);
-                if (tool in scriptio_toolkit) {
-                    resolve(scriptio_toolkit[tool]);
+                window.removeEventListener(toolRegisteredEvent, listener);
+                if (tool in scriptio) {
+                    resolve(scriptio[tool]);
                 } else {
                     reject(new Error("Timeout waiting for:", tool));
                 }
@@ -43,24 +43,30 @@ const scriptio_toolkit = {
                 if (event.detail === tool) {
                     clearTimeout(timer);
                     log("Toolkit event received:", tool);
-                    resolve(scriptio_toolkit[tool]);
+                    resolve(scriptio[tool]);
                 }
             }
-            window.addEventListener(toolkitEventName, listener, { once: true });
+            window.addEventListener(toolRegisteredEvent, listener, { once: true });
         });
     },
-    fetchText: scriptio.fetchText,
-    ipcRenderer: scriptio.ipcRenderer,
+    fetchText: scriptio_internal.fetchText,
+    ipcRenderer: scriptio_internal.ipcRenderer,
     vueMount: [],
     vueUnmount: []
 };
-Object.defineProperty(window, "scriptio_toolkit", {
-    value: scriptio_toolkit,
+Object.defineProperty(window, "scriptio", {
+    value: scriptio,
     writable: false,
     enumerable: true,
     configurable: false
 });
-Object.defineProperties(scriptio_toolkit, {
+Object.defineProperty(window, "scriptio_toolkit", { // Kept for compatibility - will be removed later
+    value: scriptio,
+    writable: false,
+    enumerable: true,
+    configurable: false
+});
+Object.defineProperties(scriptio, {
     page: {
         get: () => window.location.hash.slice(2).split("/")[0],
         set: () => { }
@@ -73,14 +79,14 @@ Object.defineProperties(scriptio_toolkit, {
 
 // Get page
 const pagePromise = new Promise((resolve, reject) => {
-    let page = scriptio_toolkit.page;
+    let page = scriptio.page;
     if (page && page !== "blank") {
         log("Page is:", page);
         resolve(page);
     } else {
         log("Waiting for navigation...");
         navigation.addEventListener("navigatesuccess", () => {
-            page = scriptio_toolkit.page;
+            page = scriptio.page;
             log("Page is:", page);
             resolve(page);
         }, { once: true });
@@ -95,12 +101,6 @@ function injectJS(path, code, enabled) {
         current.textContent = code;
         document.body.appendChild(current);
     }
-    window.dispatchEvent(new CustomEvent(eventName, {
-        detail: {
-            path: path,
-            enabled: enabled
-        }
-    }));
     const toggleFunc = listeners.get(path);
     if (toggleFunc) {
         toggleFunc(enabled);
@@ -126,11 +126,11 @@ function scriptHelper(path, code, enabled, description, runAts) {
         log(`"${path}" injected? ${result}`);
     });
 }
-scriptio.onUpdateScript((event, args) => {
+scriptio_internal.onUpdateScript((event, args) => {
     scriptHelper(args.path, args.code, args.enabled, args.meta.description, args.meta["run-at"]);
 });
-scriptio.rendererReady();
-scriptio.queryIsDebug().then(enabled => {
+scriptio_internal.rendererReady();
+scriptio_internal.queryIsDebug().then(enabled => {
     isDebug = enabled;
     if (isDebug) {
         log = console.log.bind(console, "[Scriptio]");
@@ -164,19 +164,19 @@ async function onSettingWindowCreated(view) {
         const homepage = addScriptioMore("🔗", "打开脚本主页", "scriptio-homepage");
         homepage.addEventListener("click", () => {
             if (!item.hasAttribute("data-deleted") && !homepage.hasAttribute("disabled")) {
-                scriptio.open("link", homepage.getAttribute("data-homepage-url"));
+                scriptio_internal.open("link", homepage.getAttribute("data-homepage-url"));
             }
         });
         const remove = addScriptioMore("🗑️", "删除此脚本", "scriptio-remove");
         remove.addEventListener("click", () => {
             if (!item.hasAttribute("data-deleted")) {
-                scriptio.removeScript(path);
+                scriptio_internal.removeScript(path);
             }
         });
         const showInFolder = addScriptioMore("📂", "在文件夹中显示", "scriptio-folder");
         showInFolder.addEventListener("click", () => {
             if (!item.hasAttribute("data-deleted")) {
-                scriptio.open("show", path);
+                scriptio_internal.open("show", path);
             }
         });
         const switch_ = right.appendChild(document.createElement("setting-switch"));
@@ -185,12 +185,12 @@ async function onSettingWindowCreated(view) {
         switch_.addEventListener("click", () => {
             if (!item.hasAttribute("data-deleted")) {
                 switch_.parentNode.classList.toggle("is-loading", true);
-                scriptio.configChange(path, switch_.toggleAttribute("is-active")); // Update the UI immediately, so it would be more smooth
+                scriptio_internal.configChange(path, switch_.toggleAttribute("is-active")); // Update the UI immediately, so it would be more smooth
             }
         });
         return item;
     }
-    scriptio.onUpdateScript((event, args) => {
+    scriptio_internal.onUpdateScript((event, args) => {
         const { path, meta, enabled } = args;
         const isDeleted = meta.name === " [已删除] ";
         const item = $(`setting-item[${configDataAttr}="${path}"]`) || addItem(path);
@@ -224,11 +224,11 @@ async function onSettingWindowCreated(view) {
     });
     function devMode() {
         const enabled = this.toggleAttribute("is-active");
-        scriptio.devMode(enabled);
+        scriptio_internal.devMode(enabled);
     }
     function openURI(type, uri) {
         console.log("[Scriptio] Opening", type, uri);
-        scriptio.open(type, uri);
+        scriptio_internal.open(type, uri);
     }
     function openURL() {
         const url = this.getAttribute("data-scriptio-url");
@@ -249,7 +249,7 @@ async function onSettingWindowCreated(view) {
                 console.log("[Scriptio] Importing", file.name);
                 let reader = new FileReader();
                 reader.onload = () => {
-                    scriptio.importScript(file.name, reader.result);
+                    scriptio_internal.importScript(file.name, reader.result);
                     console.log("[Scriptio] Imported", file.name);
                     resolve();
                 };
@@ -265,10 +265,10 @@ async function onSettingWindowCreated(view) {
             alert("没有导入任何 JS 文件");
         }
     }
-    scriptio.rendererReady(); // We don't have to create a new function for this 😉
+    scriptio_internal.rendererReady(); // We don't have to create a new function for this 😉
     const dev = $("#scriptio-dev");
     dev.addEventListener("click", devMode);
-    scriptio.queryDevMode().then(enabled => {
+    scriptio_internal.queryDevMode().then(enabled => {
         log("queryDevMode", enabled);
         dev.toggleAttribute("is-active", enabled);
     });
@@ -277,7 +277,7 @@ async function onSettingWindowCreated(view) {
         debug.style.color = "red";
         debug.title = "Debug 模式已激活";
     }
-    $("#scriptio-reload").addEventListener("dblclick", scriptio.reload);
+    $("#scriptio-reload").addEventListener("dblclick", scriptio_internal.reload);
     $("#scriptio-open-folder").addEventListener("click", () => {
         openURI("path", `${dataPath}/scripts`); // Relative to the data directory
     });
@@ -323,20 +323,20 @@ async function onSettingWindowCreated(view) {
     });
 }
 function onVueComponentMount(component) {
-    for (let i = 0; i < scriptio_toolkit.vueMount.length; i++) {
+    for (let i = 0; i < scriptio.vueMount.length; i++) {
         try {
-            scriptio_toolkit.vueMount[i](component);
+            scriptio.vueMount[i](component);
         } catch (error) {
-            log(`Error calling scriptio_toolkit.vueMount[${i}]:`, error);
+            log(`Error calling scriptio.vueMount[${i}]:`, error);
         }
     }
 }
 function onVueComponentUnmount(component) {
-    for (let i = 0; i < scriptio_toolkit.vueUnmount.length; i++) {
+    for (let i = 0; i < scriptio.vueUnmount.length; i++) {
         try {
-            scriptio_toolkit.vueUnmount[i](component);
+            scriptio.vueUnmount[i](component);
         } catch (error) {
-            log(`Error calling scriptio_toolkit.vueUnmount[${i}]:`, error);
+            log(`Error calling scriptio.vueUnmount[${i}]:`, error);
         }
     }
 }

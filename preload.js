@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld("scriptio", {
+contextBridge.exposeInMainWorld("scriptio_internal", {
     rendererReady: () => ipcRenderer.send(
         "LiteLoader.scriptio.rendererReady"
     ),
