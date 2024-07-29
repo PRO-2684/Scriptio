@@ -11,38 +11,46 @@
     }
 
     /* 文件选择框 */
-    .scriptio input[type="file"] {
-        border-color: var(--fill_standard_primary);
-        border-style: dashed;
-        border-radius: 0.5em;
-        padding: 0.5em;
-        transition: border-color 0.2s ease-in-out;
-
-        &:focus,
-        &:hover {
-            border: dashed var(--text_secondary) !important;
-        }
-
-        &::file-selector-button {
-            background-color: transparent;
-            border-radius: 8px;
-            color: var(--text_primary);
-            border: 1px solid;
+    .scriptio input {
+        &[type="file"] {
             border-color: var(--fill_standard_primary);
-            height: 2em;
-            transition: background-color 0.2s ease-in-out;
+            border-style: dashed;
+            border-radius: 0.5em;
+            padding: 0.5em;
+            transition: border-color 0.2s ease-in-out;
+            &:focus, &:hover {
+                border: dashed var(--text_secondary) !important;
+            }
+            &::file-selector-button {
+                background-color: transparent;
+                border-radius: 8px;
+                color: var(--text_primary);
+                border: 1px solid;
+                border-color: var(--fill_standard_primary);
+                height: 2em;
+                transition: background-color 0.2s ease-in-out;
+            }
+            &::file-selector-button:hover {
+                background-color: var(--overlay_hover);
+            }
         }
-
-        &::file-selector-button:hover {
-            background-color: var(--overlay_hover);
+        &[type="search"] {
+            border: 1px solid gray;
+            border-radius: 0.5em;
+            padding-left: 0.5em;
+        }
+        &#scriptio-search {
+            float: right;
+            padding-top: 0.1em;
+            padding-bottom: 0.1em;
+            scroll-margin-top: 3em; /* Prevent overlapping with logo */
         }
     }
 
     /* 各个脚本片段 */
     .scriptio setting-item {
-        &.is-loading {
+        &.is-loading { /* Loading snippets */
             cursor: progress;
-
             > setting-switch,
             > input,
             > setting-button {
@@ -50,15 +58,23 @@
                 opacity: 0.6;
             }
         }
-
-        &[data-deleted] {
+        &[data-deleted] { /* Deleted snippets */
             filter: grayscale(1);
             opacity: 0.6;
             cursor: not-allowed;
-
             & > * {
                 pointer-events: none;
             }
+        }
+        &[data-search-hidden] { /* Hidden by search */
+            display: none;
+            + setting-divider { /* Hide divider */
+                display: none;
+            }
+        }
+        &::highlight(scriptio-search-highlight) {
+            background-color: yellow;
+            color: black;
         }
     }
 
@@ -72,7 +88,6 @@
         background-size: 3em;
         background-position: center;
         transition: background 0.2s ease-in-out;
-
         &:hover {
             background-size: 2em;
             background-position: left;
@@ -85,7 +100,6 @@
         width: fit-content;
         margin: auto;
         transition: color 0.2s ease-in-out;
-
         &:hover {
             color: var(--brand_standard);
         }
@@ -108,12 +122,10 @@
 
     .scriptio setting-item:not([data-deleted]):hover .scriptio-more {
         opacity: 0.6;
-
         &:not([disabled]):hover {
             transform: scale(1.2);
             opacity: 1;
         }
-
         &[disabled] {
             opacity: 0.3;
             cursor: not-allowed;
@@ -131,7 +143,6 @@
         opacity: 0;
         transition: opacity 0.2s ease-in-out, width 0.2s ease-in-out, height 0.2s ease-in-out;
         background: none !important;
-
         &:hover {
             opacity: 1;
             animation: 1s jump-shaking 0.2s;
@@ -170,10 +181,11 @@
         </setting-list>
     </setting-panel>
 </setting-section>
+<input autofocus type="search" id="scriptio-search" title="键入内容以搜索..." placeholder="🔍 Search...">
 <setting-section data-title="用户脚本" class="snippets">
     <setting-panel>
         <setting-list data-direction="column">
-            <setting-item data-direction="row">
+            <setting-item class="special" data-direction="row">
                 <div>
                     <setting-text id="scriptio-reload" title="双击以立即重载所有窗口">导入脚本...</setting-text>
                     <setting-text data-type="secondary">导入任意用户脚本，或查看<span class="scriptio-link"

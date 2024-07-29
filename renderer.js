@@ -1,6 +1,4 @@
 const scriptDataAttr = "data-scriptio-script";
-const configDataAttr = "data-scriptio-config";
-const switchDataAttr = "data-scriptio-switch";
 const toolRegisteredEvent = "scriptio-tool-register";
 const $ = document.querySelector.bind(document);
 const pluginPath = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/"); // Normalized plugin path
@@ -138,6 +136,10 @@ scriptio_internal.queryIsDebug().then(enabled => {
     }
 });
 async function onSettingWindowCreated(view) {
+    const configDataAttr = "data-scriptio-config";
+    const switchDataAttr = "data-scriptio-switch";
+    const deletedDataAttr = "data-deleted";
+    const searchHiddenDataAttr = "data-search-hidden";
     const r = await fetch(`local:///${pluginPath}/settings.html`);
     const $ = view.querySelector.bind(view);
     view.innerHTML = await r.text();
@@ -163,19 +165,19 @@ async function onSettingWindowCreated(view) {
         }
         const homepage = addScriptioMore("🔗", "打开脚本主页", "scriptio-homepage");
         homepage.addEventListener("click", () => {
-            if (!item.hasAttribute("data-deleted") && !homepage.hasAttribute("disabled")) {
+            if (!item.hasAttribute(deletedDataAttr) && !homepage.hasAttribute("disabled")) {
                 scriptio_internal.open("link", homepage.getAttribute("data-homepage-url"));
             }
         });
         const remove = addScriptioMore("🗑️", "删除此脚本", "scriptio-remove");
         remove.addEventListener("click", () => {
-            if (!item.hasAttribute("data-deleted")) {
+            if (!item.hasAttribute(deletedDataAttr)) {
                 scriptio_internal.removeScript(path);
             }
         });
         const showInFolder = addScriptioMore("📂", "在文件夹中显示", "scriptio-folder");
         showInFolder.addEventListener("click", () => {
-            if (!item.hasAttribute("data-deleted")) {
+            if (!item.hasAttribute(deletedDataAttr)) {
                 scriptio_internal.open("show", path);
             }
         });
@@ -183,13 +185,14 @@ async function onSettingWindowCreated(view) {
         switch_.setAttribute(switchDataAttr, path);
         switch_.title = "启用/禁用此脚本";
         switch_.addEventListener("click", () => {
-            if (!item.hasAttribute("data-deleted")) {
+            if (!item.hasAttribute(deletedDataAttr)) {
                 switch_.parentNode.classList.toggle("is-loading", true);
                 scriptio_internal.configChange(path, switch_.toggleAttribute("is-active")); // Update the UI immediately, so it would be more smooth
             }
         });
         return item;
     }
+    // Update the setting window
     scriptio_internal.onUpdateScript((event, args) => {
         const { path, meta, enabled } = args;
         const isDeleted = meta.name === " [已删除] ";
@@ -218,7 +221,7 @@ async function onSettingWindowCreated(view) {
         switch_.toggleAttribute("is-active", enabled);
         switch_.parentNode.classList.toggle("is-loading", false);
         if (isDeleted) {
-            item.toggleAttribute("data-deleted", true);
+            item.toggleAttribute(deletedDataAttr, true);
         }
         log("onUpdateScript", path, enabled);
     });
@@ -266,17 +269,90 @@ async function onSettingWindowCreated(view) {
         }
     }
     scriptio_internal.rendererReady(); // We don't have to create a new function for this 😉
+    // Search
+    const inputTags = ["INPUT", "SELECT", "TEXTAREA"];
+    const search = $("#scriptio-search");
+    const listToSearch = $("setting-section.snippets > setting-panel > setting-list");
+    const highlight = new Highlight();
+    CSS.highlights.set("scriptio-search-highlight", highlight);
+    function doHighlight(textNode, start, end) { // Highlight a range of text in given Element
+        const range = new Range();
+        range.setStart(textNode, start);
+        range.setEnd(textNode, end);
+        highlight.add(range);
+    }
+    function searchAndHighlight(el, keyword) { // Search the keyword and highlight the matched text, returns if a match is found
+        if (!el) return false;
+        const textContent = el.textContent.toLowerCase();
+        let isMatch = false;
+        let startIndex = 0;
+        let index;
+        while ((index = textContent.indexOf(keyword, startIndex)) !== -1) {
+            doHighlight(el.firstChild, index, index + keyword.length);
+            isMatch = true;
+            startIndex = index + keyword.length;
+        }
+        return isMatch;
+    }
+    function searchAllAndHighlight(settingItem, keywords) { // Match the keywords and highlight the matched text, returns if all keywords are found
+        const nameEl = settingItem.querySelector("setting-text");
+        const descEl = settingItem.querySelector("setting-text[data-type='secondary']");
+        let matches = 0;
+        for (const keyword of keywords) {
+            const nameMatch = searchAndHighlight(nameEl, keyword);
+            const descMatch = searchAndHighlight(descEl, keyword);
+            if (nameMatch || descMatch) {
+                matches++;
+            }
+        }
+        return matches === keywords.size;
+    }
+    function doSearch() { // Main function for searching
+        log("Search", search.value);
+        highlight.clear(); // Clear previous highlights
+        const items = listToSearch.querySelectorAll("setting-item:not(.special)");
+        const searchWords = new Set( // Use Set to remove duplicates
+            search.value.toLowerCase() // Convert to lowercase
+                .split(" ") // Split by space
+                .map(word => word.trim()) // Remove leading and trailing spaces
+                .filter(word => word.length > 0) // Remove empty strings
+        );
+        items.forEach((settingItem) => { // Iterate through all `setting-item`s
+            const isMatch = searchAllAndHighlight(settingItem, searchWords);
+            settingItem.toggleAttribute(searchHiddenDataAttr, !isMatch); // Hide the `details` if it doesn't match
+        });
+    }
+    document.addEventListener("keydown", (e) => {
+        if (!view.checkVisibility()) return; // The setting window is not visible
+        if (document.activeElement === search) { // The search bar is focused
+            // Escape closes the window
+            if (e.key === "Enter") { // Search
+                search.scrollIntoView();
+            }
+        } else if (!inputTags.includes(document.activeElement.tagName)) { // Not focusing on some other input element
+            // Focus on the search bar when "Enter" or "Ctrl + F" is pressed
+            if (e.key === "Enter" || (e.ctrlKey && e.key === "f")) {
+                e.preventDefault();
+                search.focus();
+                search.scrollIntoView();
+            }
+        }
+    });
+    search.addEventListener("change", doSearch);
+    // Dev mode
     const dev = $("#scriptio-dev");
     dev.addEventListener("click", devMode);
     scriptio_internal.queryDevMode().then(enabled => {
         log("queryDevMode", enabled);
         dev.toggleAttribute("is-active", enabled);
     });
+    // Debug mode
     if (isDebug) {
         const debug = $("#scriptio-debug");
         debug.style.color = "red";
         debug.title = "Debug 模式已激活";
     }
+    // Buttons
     $("#scriptio-reload").addEventListener("dblclick", scriptio_internal.reload);
     $("#scriptio-open-folder").addEventListener("click", () => {
         openURI("path", `${dataPath}/scripts`); // Relative to the data directory
