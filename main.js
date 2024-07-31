@@ -1,11 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 const { BrowserWindow, ipcMain, webContents, shell } = require("electron");
+const { extractUserScriptMetadata } = require("./modules/main/parser.js");
+const { listJS } = require("./modules/main/walker.js");
+const { normalize, debounce, simpleLog, dummyLog } = require("./modules/main/utils");
 
 const isDebug = process.argv.includes("--scriptio-debug");
 const updateInterval = 1000;
-const ignoredFolders = new Set(["node_modules"]);
-const log = isDebug ? console.log.bind(console, "\x1b[38;2;0;72;91m%s\x1b[0m", "[Scriptio]") : () => { };
+const log = isDebug ? simpleLog : dummyLog;
 let devMode = false;
 let watcher = null;
 
@@ -13,12 +15,12 @@ const dataPath = LiteLoader.plugins.scriptio.path.data;
 const scriptPath = path.join(dataPath, "scripts");
 const CHARTSET_RE = /(?:charset|encoding)\s{0,10}=\s{0,10}['"]? {0,10}([\w\-]{1,100})/i;
 
-// 创建 scripts 目录 (如果不存在)
+// Create `scripts` directory if not exists
 if (!fs.existsSync(scriptPath)) {
     log(`${scriptPath} does not exist, creating...`);
     fs.mkdirSync(scriptPath, { recursive: true });
 }
-// 监听
+// IPC events
 ipcMain.on("LiteLoader.scriptio.rendererReady", (event) => {
     const window = BrowserWindow.fromWebContents(event.sender);
     loadScripts(window.webContents);
@@ -99,53 +101,6 @@ ipcMain.handle("LiteLoader.scriptio.fetchText", async (event, ...args) => {
     }
 });
 
-// 防抖
-function debounce(fn, time) {
-    let timer = null;
-    return function (...args) {
-        timer && clearTimeout(timer);
-        timer = setTimeout(() => {
-            fn.apply(this, args);
-        }, time);
-    }
-}
-
-// 标准化路径 (Unix style)
-function normalize(path) {
-    return path.replace(":\\", "://").replaceAll("\\", "/");
-}
-
-// 列出 JS 文件，或指向 JS 文件的快捷方式
-function listJS(dir) {
-    const files = [];
-    function walk(dir) {
-        const dirFiles = fs.readdirSync(dir);
-        for (const f of dirFiles) {
-            const stat = fs.lstatSync(dir + "/" + f);
-            if (stat.isDirectory()) {
-                if (!ignoredFolders.has(f) && !f.startsWith(".")) { // Ignore given folders and hidden folders
-                    walk(dir + "/" + f);
-                }
-            } else if (f.endsWith(".js")) {
-                files.push(normalize(dir + "/" + f));
-            } else if (f.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
-                const linkPath = dir + "/" + f;
-                try {
-                    const { target } = shell.readShortcutLink(linkPath);
-                    if (target.endsWith(".js")) {
-                        files.push(normalize(linkPath));
-                    }
-                } catch (e) {
-                    log("Failed to read shortcut", linkPath);
-                }
-            }
-        }
-        return files;
-    }
-    walk(dir);
-    return files;
-}
-
 const debouncedSet = debounce(LiteLoader.api.config.set, 1000);
 const scriptsConfig = new Proxy({}, {
     cache: null,
@@ -181,62 +136,7 @@ const scriptsConfig = new Proxy({}, {
     }
 });
 
-// 获取 JS 文件头的注释，返回为数组
-function getComments(code) {
-    const lines = code.split("\n");
-    const comments = [];
-    for (let line of lines) {
-        line = line.trim();
-        if (line.startsWith("//")) {
-            comments.push(line.slice(2).trim());
-        } else {
-            break;
-        }
-    }
-    return comments.slice(0, 2); // 目前只考虑前两行
-}
-
-function extractUserScriptMetadata(code) {
-    const result = {};
-    const userScriptRegex = /\/\/\s*=+\s*UserScript\s*=+\s*([\s\S]*?)\s*=+\s*\/UserScript\s*=+\s*/;
-    const match = code.match(userScriptRegex);
-
-    if (match) {// If the UserScript block is found
-        const content = match[1];// Extract the content within the UserScript block
-        const lines = content.split('\n'); // Split the content by newline
-
-        lines.forEach(line => {
-            // Regular expression to match "// @name value" pattern
-            const matchLine = line.trim().match(/^\/\/\s*@(\S+)\s+(.+)$/);
-            if (matchLine) {
-                const name = matchLine[1]; // Extract the name
-                const value = matchLine[2]; // Extract the value
-                result[name] = value; // Store in the result object
-            }
-        });
-    } else {// Fall back to the old method
-        const comments = getComments(code);
-        const comment = comments[0] || "";
-        let runAts = comments[1] || "";
-        if (runAts.toLowerCase().startsWith("@run-at ")) {
-            runAts = runAts.slice(8);
-            result["run-at"] = runAts;
-        } else {
-            result["run-at"] = "";
-        }
-        result["description"] = comment;
-        if (comment.startsWith("* ")) {
-            result["reactive"] = "false";
-            result["description"] = comment.slice(2).trim();
-        } else {
-            result["reactive"] = "true";
-        }
-    }
-
-    return result;
-}
-
-// 获取 JS 文件内容
+// Get script content
 function getScript(absPath) {
     if (absPath.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
         const { target } = shell.readShortcutLink(absPath);
@@ -250,7 +150,7 @@ function getScript(absPath) {
     }
 }
 
-// 脚本更改
+// Send updated script to renderer
 function updateScript(absPath, webContent) {
     absPath = normalize(absPath);
     const code = getScript(absPath);
@@ -273,9 +173,9 @@ function updateScript(absPath, webContent) {
     }
 }
 
-// 重载所有窗口
+// Reload all windows
 function reload(event) {
-    // 若有，关闭发送者窗口 (设置界面)
+    // If exists, close the sender window (settings window)
     if (event && event.sender) {
         const win = BrowserWindow.fromWebContents(event.sender);
         win.close();
@@ -285,7 +185,7 @@ function reload(event) {
     });
 }
 
-// 载入脚本
+// Load all scripts
 function loadScripts(webContent) {
     log("loadScripts");
     const scripts = listJS(scriptPath);
@@ -294,7 +194,7 @@ function loadScripts(webContent) {
     }
 }
 
-// 导入脚本
+// Import script from renderer
 function importScript(fname, content) {
     log("importScript", fname);
     const filePath = path.join(scriptPath, fname);
@@ -304,20 +204,20 @@ function importScript(fname, content) {
     }
 }
 
-// 监听 `scripts` 目录修改
+// Reload windows when file changes
 function onScriptChange(eventType, filename) {
     log("onScriptChange", eventType, filename);
     reload();
 }
 
-// 监听配置修改
+// Listen to config modification (from renderer)
 function onConfigChange(event, absPath, enable) {
     log("onConfigChange", absPath, enable);
     scriptsConfig[absPath] = enable;
     updateScript(absPath);
 }
 
-// 监听开发者模式开关
+// Listen to dev mode switch (from renderer)
 function onDevMode(event, enable) {
     log("onDevMode", enable);
     devMode = enable;
@@ -331,7 +231,7 @@ function onDevMode(event, enable) {
     }
 }
 
-// 监听目录更改
+// Listen to `scripts` directory
 function watchScriptChange() {
     return fs.watch(scriptPath, "utf-8",
         debounce(onScriptChange, updateInterval)
