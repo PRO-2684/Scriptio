@@ -8,7 +8,6 @@
 function normalize(path) {
     return path.replace(":\\", "://").replaceAll("\\", "/");
 }
-
 /**
  * Debounces a function.
  * @param {Function} fn Function to debounce.
@@ -24,7 +23,6 @@ function debounce(fn, time) {
         }, time);
     }
 }
-
 /**
  * Logs to the console with colored prefix.
  * @param {...any} args The arguments to log.
@@ -32,7 +30,6 @@ function debounce(fn, time) {
 function simpleLog(...args) {
     console.log("\x1b[38;2;0;72;91m%s\x1b[0m", "[Scriptio]", ...args);
 }
-
 /**
  * Logs nothing.
  * @param {...any} args The arguments to log.

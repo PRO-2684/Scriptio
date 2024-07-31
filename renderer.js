@@ -31,8 +31,4 @@ async function onSettingWindowCreated(view) {
     scriptio_internal.rendererReady(); //  // Call again to ensure the settings view gets the scripts data.
 }
 
-export {
-    onSettingWindowCreated,
-    onVueComponentMount,
-    onVueComponentUnmount
-}
+export { onSettingWindowCreated, onVueComponentMount, onVueComponentUnmount };

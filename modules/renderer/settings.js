@@ -225,4 +225,4 @@ function scriptioSettingsUpdateScript(container, args) {
     log("scriptioSettingsUpdateScript", path, enabled);
 }
 
-export { initScriptioSettings, scriptioSettingsUpdateScript }
+export { initScriptioSettings, scriptioSettingsUpdateScript };

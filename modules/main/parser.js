@@ -17,7 +17,6 @@ function getComments(code) {
     }
     return comments.slice(0, 2); // Only consider the first two comments for now.
 }
-
 /** Extract the metadata of a UserScript.
  * @param {string} code The code of the UserScript.
  * @returns {Object} The metadata of the UserScript.
