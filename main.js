@@ -102,39 +102,39 @@ ipcMain.handle("LiteLoader.scriptio.fetchText", async (event, ...args) => {
 });
 
 const debouncedSet = debounce(LiteLoader.api.config.set, 1000);
-const scriptsConfig = new Proxy({}, {
-    cache: null,
-    get(target, prop) {
-        if (!this.cache) {
-            log("Calling config.get");
-            this.cache = LiteLoader.api.config.get("scriptio", { scripts: {} }).scripts;
-        }
-        return this.cache[prop];
-    },
-    set(target, prop, value) {
-        this.cache[prop] = value;
-        log("Calling debounced config.set after set");
-        try {
-            debouncedSet("scriptio", { scripts: this.cache });
-        } catch (e) {
-            log("debouncedSet error", e);
-        }
-        return true;
-    },
-    deleteProperty(target, prop) {
-        if (prop in this.cache) {
-            delete this.cache[prop];
-            console.log("Calling debounced config.set after delete");
+const scriptsConfig = new Proxy(
+    LiteLoader.api.config.get("scriptio", { scripts: {} }).scripts, {
+        get(target, prop) {
+            return target[prop];
+        },
+        set(target, prop, value) {
+            target[prop] = value;
+            log("Calling debounced config.set after set");
             try {
-                debouncedSet("scriptio", { scripts: this.cache });
+                debouncedSet("scriptio", { scripts: target });
             } catch (e) {
                 log("debouncedSet error", e);
             }
             return true;
+        },
+        deleteProperty(target, prop) {
+            if (prop in target) {
+                delete target[prop];
+                log("Calling debounced config.set after delete");
+                try {
+                    debouncedSet("scriptio", { scripts: target });
+                } catch (e) {
+                    log("debouncedSet error", e);
+                }
+                return true;
+            }
+            return false;
+        },
+        ownKeys(target) {
+            return Object.keys(target);
         }
-        return false;
     }
-});
+);
 
 // Get script content
 function getScript(absPath) {
@@ -191,6 +191,11 @@ function loadScripts(webContent) {
     const scripts = listJS(scriptPath);
     for (const absPath of scripts) {
         updateScript(absPath, webContent);
+    }
+    const removedScripts = new Set(Object.keys(scriptsConfig)).difference(new Set(scripts));
+    for (const absPath of removedScripts) {
+        log("Removed script", absPath);
+        delete scriptsConfig[absPath];
     }
 }
 
