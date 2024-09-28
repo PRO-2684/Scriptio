@@ -76,6 +76,17 @@
             background-color: yellow;
             color: black;
         }
+        &:not([data-deleted]):hover .scriptio-more {
+            opacity: 0.6;
+            &:not([disabled]):hover {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            &[disabled] {
+                opacity: 0.3;
+                cursor: not-allowed;
+            }
+        }
     }
 
     /* 关于 */
@@ -118,18 +129,6 @@
         opacity: 0;
         transition: color 0.2s ease-in-out, opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
         font-family: system-ui, PingFang SC, PingFangSC-Regular, Microsoft YaHei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif, Apple Braille;
-    }
-
-    .scriptio setting-item:not([data-deleted]):hover .scriptio-more {
-        opacity: 0.6;
-        &:not([disabled]):hover {
-            transform: scale(1.2);
-            opacity: 1;
-        }
-        &[disabled] {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
     }
 
     /* Logo */

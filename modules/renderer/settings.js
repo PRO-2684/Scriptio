@@ -1,6 +1,7 @@
 // Description: The renderer script for the settings view of Scriptio.
 import { log, showDebugHint } from "./debug.js";
 import { setupSearch } from "./search.js";
+import { setupEasterEggs } from "./eggs.js";
 
 /** Scriptio plugin path */
 const pluginPath = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/"); // Normalized plugin path
@@ -69,35 +70,6 @@ function addItem(path, container) {
         }
     });
     return item;
-}
-/** Function to setup the easter egg at the settings view.
- * @param {HTMLElement} logo The logo element.
- * @returns {void}
- */
-function setupEasterEgg(logo) {
-    function shakeWindow() {
-        // Use moveBy to shake the window
-        const magnitude = 10;
-        const c = Math.PI / 4;
-        let t = 0;
-        const timer = setInterval(() => {
-            const delta = magnitude * (Math.sin(c * (t + 1)) - Math.sin(c * t));
-            window.moveBy(delta, 0);
-            t++;
-            if (t >= 16) {
-                clearInterval(timer);
-            }
-        }, 100);
-    }
-    const max = 10;
-    logo.addEventListener("animationend", () => {
-        const cnt = parseInt(logo.style.getPropertyValue("--data-cnt"));
-        if (cnt >= max) {
-            shakeWindow();
-        } else {
-            logo.style.setProperty("--data-cnt", cnt + 1);
-        }
-    });
 }
 /** Function to initialize the settings view.
  * @param {Element} view The settings view element.
@@ -176,7 +148,6 @@ async function initScriptioSettings(view) {
     // Logo
     const logo = $(".logo");
     logo.src = `local:///${pluginPath}/icons/icon.svg`;
-    setupEasterEgg(logo);
     // Links
     view.querySelectorAll(".scriptio-link").forEach(link => {
         if (!link.getAttribute("title")) {
@@ -184,6 +155,7 @@ async function initScriptioSettings(view) {
         }
         link.addEventListener("click", openURL);
     });
+    setupEasterEggs(view);
     const container = $("setting-section.snippets > setting-panel > setting-list");
     return container;
 }
