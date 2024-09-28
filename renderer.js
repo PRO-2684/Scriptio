@@ -1,5 +1,4 @@
 import { scriptio, scriptHelper, onVueComponentMount, onVueComponentUnmount } from "./modules/renderer/javascript.js";
-import { initScriptioSettings, scriptioSettingsUpdateScript } from "./modules/renderer/settings.js"
 
 Object.defineProperty(window, "scriptio", {
     value: scriptio,
@@ -24,6 +23,7 @@ scriptio_internal.rendererReady();
  * @param {Element} view The settings view element.
  */
 async function onSettingWindowCreated(view) {
+    const { initScriptioSettings, scriptioSettingsUpdateScript } = await import("./modules/renderer/settings.js");
     const container = await initScriptioSettings(view);
     scriptio_internal.onUpdateScript((event, args) => {
         scriptioSettingsUpdateScript(container, args);

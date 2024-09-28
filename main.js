@@ -162,7 +162,7 @@ function updateScript(absPath, webContent) {
     meta["run-at"] = (meta["run-at"] ?? "").split(",").map((item) => item.trim()).filter((item) => item);
     meta.reactive ??= "false";
     meta.reactive = (meta.reactive.toLowerCase() === "true");
-    log("updateScript", absPath, enabled, meta);
+    log("updateScript", absPath);
     const msg = { path: absPath, enabled, code, meta };
     if (webContent) {
         webContent.send("LiteLoader.scriptio.updateScript", msg);
