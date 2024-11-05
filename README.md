@@ -76,31 +76,7 @@ plugins (所有的插件目录)
 >
 > 若你有愿意分享的脚本，欢迎[提交 PR 或 Issue](https://github.com/PRO-2684/Scriptio/issues/1) 来将它们添加到这里。编写脚本前推荐先阅读 [Wiki](https://github.com/PRO-2684/Scriptio/wiki)。
 
-| 名称 | 实时响应 | 作者 | 说明 |
-| --- | --- | --- | --- |
-| [Automatic-text-to-voice-conversion.js](https://github.com/Shapaper233/Shapaper-Scriptio-user-scripts/#Automatic-text-to-voice-conversion) | 🟢 | [Shapaper](https://github.com/Shapaper233) | 文字自动转语音！让我看看谁在语音没有麦克风😂游戏切换界面很麻烦？那就用这个插件把他的消息读出来吧！|
-| [Automatic-voice-to-text-conversion](https://github.com/Shapaper233/Shapaper-Scriptio-user-scripts/#Automatic-voice-to-text-conversion) | 🟢 | [Shapaper](https://github.com/Shapaper233) | 语音自动转文字！再也不需要手动右键转文字了！Need: Scriptio v1.3.4+|
-|[celebration-on-send-message](https://github.com/Aboceder/Easy-Scriptio-Script/blob/main/celebration-on-send-message.js)| 🟢 |[bopomofo](https://github.com/Aboceder/Easy-Scriptio-Script)|发送消息，触发celebrate撒花动画|
-| [Chat_list_animation](https://github.com/naahi-i/LiteLoaderQQNT--Scriptio--Chat_list_animation) | 🟢 | [naahi-i](https://github.com/naahi-i) | 添加会话列表的动效，包含两个效果 |
-| [Conversation Quick Remover](https://github.com/Natsukage/Scriptio-user-scripts/blob/main/ConversationQuickRemover.js) | 🟢 | [Natsukage](https://github.com/Natsukage/) | 点击鼠标中键快速移除会话 |
-| [Group-name-completion](https://github.com/Shapaper233/Shapaper-Scriptio-user-scripts/#Group-name-completion) | 🟢 | [Shapaper](https://github.com/Shapaper233) | 给群昵称添加更多信息！ |
-| [hitokoto](https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 输入框展示一言 |
-| [hook-vue](https://github.com/PRO-2684/Scriptio-user-scripts/#hook-vue) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | Hook Vue 实例 |
-| [hook-fetch](https://github.com/PRO-2684/Scriptio-user-scripts/#hook-fetch) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | Hook `window.fetch` |
-| [img-quick-close](https://github.com/PRO-2684/Scriptio-user-scripts/#img-quick-close) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | 快速关闭图片 |
-| [inspectio](https://github.com/PRO-2684/Scriptio-user-scripts/#inspectio) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 添加各类提示信息，详见 README，需要 hook-vue.js 的支持 |
-| [link-preview](https://github.com/PRO-2684/Scriptio-user-scripts/#link-preview) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 链接预览：鼠标经过链接时尝试加载浏览，悬浮显示链接的标题和描述，需要 hook-vue.js 的支持 |
-| [msg-record-enhance](https://github.com/PRO-2684/Scriptio-user-scripts/#msg-record-enhance) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | 查看聊天记录中部分发送者 QQ，需要 hook-vue.js 的支持 |
-| [open-in-browser](https://github.com/PRO-2684/Scriptio-user-scripts/#open-in-browser) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 小程序若可行则浏览器打开 |
-| [pangu](https://github.com/PRO-2684/Scriptio-user-scripts/#pangu) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 编辑框内按下 Ctrl+P 后，自动在中英文、中文与数字之间添加空格，并进行合适的标点符号处理 |
-| [privacio](https://github.com/PRO-2684/Scriptio-user-scripts/#privacio) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 保护你的隐私：阻止 QQ 的一些追踪行为，需要 hook-fetch.js 的支持。 |
-| [relay-self](https://github.com/PRO-2684/Scriptio-user-scripts/#relay-self) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 允许接龙自己的消息，需要 hook-vue.js 的支持 |
-| [Scheduled Message Sender](https://github.com/Natsukage/Scriptio-user-scripts/blob/main/ScheduledMessageSender.js) | 🟢 | [Natsukage](https://github.com/Natsukage/) | 定时在指定群组发送消息，需要安装`euphony`（具体群组和消息内容在js文件中设定） |
-| [shortcutio](https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 添加一些常用的快捷键 |
-| [show-time](https://github.com/PRO-2684/Scriptio-user-scripts/#show-time) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 消息显示时间，需要 hook-vue.js 的支持 |
-| [smooth-transition](https://github.com/PRO-2684/Scriptio-user-scripts/#smooth-transition) | 🟢 | [PRO-2684](https://github.com/PRO-2684) | 为页面间导航添加平滑过渡动画 |
-| [toast](https://github.com/PRO-2684/Scriptio-user-scripts/#toast) | 🔴 | [PRO-2684](https://github.com/PRO-2684) | 允许其它脚本调用 scriptio_toolkit.toast，需要 hook-vue.js 的支持 |
-| [to-contact-list-top](https://github.com/lgc2333/ScriptioScripts/tree/main/to-contact-list-top#tocontactlisttop) | 🟢 | [lgc2333](https://github.com/lgc2333) | 添加一个回到聊天列表顶部的侧边栏按钮 |
+访问 [此网址](https://pro-2684.github.io/?page=scriptio_userscripts) 查看用户脚本列表。
 
 ## ⭐ Star History
 
