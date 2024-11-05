@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string",
+                "title": "Name",
+                "pattern": "^.+$",
+                "description": "The name of the script, preferably using only alphanumeric characters, hyphens and spaces and consistent with the script's `@name` metadata"
+            },
+            "author": {
+                "type": "string",
+                "title": "Author",
+                "pattern": "^[a-zA-Z0-9\\-_]+$",
+                "description": "The author's GitHub username"
+            },
+            "description": {
+                "type": "string",
+                "title": "Description",
+                "pattern": "^.+$",
+                "description": "A brief description of the script, preferably consistent with the script's `@description` metadata"
+            },
+            "reactive": {
+                "type": "boolean",
+                "title": "Reactive",
+                "description": "Whether the script is reactive (i.e. it reacts to toggles on settings page)"
+            },
+            "link": {
+                "type": "string",
+                "title": "Homepage Link",
+                "format": "uri",
+                "description": "A link to the script's homepage or repository, preferably consistent with the script's `@homepageURL` metadata"
+            },
+            "download": {
+                "type": "string",
+                "title": "Download Link",
+                "format": "uri",
+                "description": "The download link for the script"
+            }
+        },
+        "required": ["name", "author", "description", "reactive", "link", "download"]
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "/userscripts.json"
+            ],
+            "url": "/userscripts_schema.json"
+        }
+    ]
+}

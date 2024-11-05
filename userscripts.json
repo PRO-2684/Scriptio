@@ -1,0 +1,194 @@
+[
+    {
+        "name": "Automatic text to voice conversion",
+        "author": "Shapaper",
+        "description": "文字自动转语音！让我看看谁在语音没有麦克风😂游戏切换界面很麻烦？那就用这个插件把他的消息读出来吧！",
+        "reactive": true,
+        "link": "https://github.com/Shapaper233/Shapaper-Scriptio-user-scripts/#Automatic-text-to-voice-conversion",
+        "download": "https://raw.githubusercontent.com/Shapaper233/Shapaper-Scriptio-user-scripts/refs/heads/main/automatic-text-to-voice-conversion.js"
+    },
+    {
+        "name": "Automatic voice to text conversion",
+        "author": "Shapaper",
+        "description": "语音自动转文字！再也不需要手动右键转文字了！Need: Scriptio v1.3.4+",
+        "reactive": true,
+        "link": "https://github.com/Shapaper233/Shapaper-Scriptio-user-scripts/#Automatic-voice-to-text-conversion",
+        "download": "https://raw.githubusercontent.com/Shapaper233/Shapaper-Scriptio-user-scripts/refs/heads/main/automatic-voice-to-text-conversion.js"
+    },
+    {
+        "name": "celebrate",
+        "author": "bopomofo",
+        "description": "发送消息，触发celebrate撒花动画",
+        "reactive": true,
+        "link": "https://github.com/Aboceder/Easy-Scriptio-Script",
+        "download": "https://raw.githubusercontent.com/Aboceder/Easy-Scriptio-Script/refs/heads/main/celebration-on-send-message.js"
+    },
+    {
+        "name": "Chat_list_animation",
+        "author": "naahi-i",
+        "description": "添加会话列表动画",
+        "reactive": true,
+        "link": "https://github.com/naahi-i/LiteLoaderQQNT--Scriptio--Chat_list_animation",
+        "download": "https://raw.githubusercontent.com/naahi-i/LiteLoaderQQNT--Scriptio--Chat_list_animation/main/Chat_list_animation.js"
+    },
+    {
+        "name": "Conversation Quick Remover",
+        "author": "Natsukage",
+        "description": "鼠标中键点击移除会话",
+        "reactive": true,
+        "link": "https://github.com/Natsukage/Scriptio-user-scripts/blob/main/ConversationQuickRemover.js",
+        "download": "https://raw.githubusercontent.com/Natsukage/Scriptio-user-scripts/refs/heads/main/ConversationQuickRemover.js"
+    },
+    {
+        "name": "Group Name Completion",
+        "author": "Shapaper",
+        "description": "给群昵称添加更多信息！",
+        "reactive": true,
+        "link": "https://github.com/Shapaper233/Shapaper-Scriptio-user-scripts/#Group-name-completion",
+        "download": "https://raw.githubusercontent.com/Shapaper233/Shapaper-Scriptio-user-scripts/refs/heads/main/group-name-completion.js"
+    },
+    {
+        "name": "Hitokoto",
+        "author": "PRO-2684",
+        "description": "输入框展示一言",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#hitokoto",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/hitokoto.js"
+    },
+    {
+        "name": "Hook Fetch",
+        "author": "PRO-2684",
+        "description": "Hook `window.fetch`, providing before and after hooks for requests and responses",
+        "reactive": false,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#hook-fetch",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/hook-fetch.js"
+    },
+    {
+        "name": "Hook Vue (Deprecated)",
+        "author": "PRO-2684",
+        "description": "(Deprecated, use `scriptio.vueMount` & `scriptio.vueUnmount` instead) Hook Vue, providing mount and unmount hooks for components",
+        "reactive": false,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#hook-vue",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/hook-vue.js"
+    },
+    {
+        "name": "Image Quick Close",
+        "author": "PRO-2684",
+        "description": "单击关闭图片查看器",
+        "reactive": false,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#img-quick-close",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/img-quick-close.js"
+    },
+    {
+        "name": "Inspectio 🔎",
+        "author": "PRO-2684",
+        "description": "添加各类提示信息，Ctrl+Click 复制，功能细节详见 README，需要开启 LiteLoader Hook Vue",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#inspectio",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/inspectio.js"
+    },
+    {
+        "name": "Link Preview",
+        "author": "PRO-2684",
+        "description": "链接预览：鼠标经过链接时尝试加载浏览，悬浮显示链接的标题和描述，需要开启 LiteLoader Hook Vue",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#link-preview",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/link-preview.js"
+    },
+    {
+        "name": "Message Record Enhance",
+        "author": "PRO-2684",
+        "description": "查看转发的聊天记录中已知的和引用消息发送者 QQ，需要开启 LiteLoader Hook Vue",
+        "reactive": false,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#msg-record-enhance",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/msg-record-enhance.js"
+    },
+    {
+        "name": "No Popup",
+        "author": "PRO-2684",
+        "description": "阻止各类弹窗",
+        "reactive": false,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#no-popup",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/no-popup.js"
+    },
+    {
+        "name": "Open in Browser",
+        "author": "PRO-2684",
+        "description": "小程序若可行则浏览器打开",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#open-in-browser",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/open-in-browser.js"
+    },
+    {
+        "name": "Pangu",
+        "author": "PRO-2684",
+        "description": "编辑框内按下 Ctrl+P 后，自动在中英文、中文与数字之间添加空格，并进行合适的标点符号处理",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#pangu",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/pangu.js"
+    },
+    {
+        "name": "Privacio",
+        "author": "PRO-2684",
+        "description": "保护你的隐私：阻止 QQ 的一些追踪行为，需要 hook-fetch.js 的支持。",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#privacio",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/privacio.js"
+    },
+    {
+        "name": "Relay Self",
+        "author": "PRO-2684",
+        "description": "允许接龙自己的消息，需要开启 LiteLoader Hook Vue",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#relay-self",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/relay-self.js"
+    },
+    {
+        "name": "Scheduled Message Sender",
+        "author": "Natsukage",
+        "description": "定时向指定群组发送消息",
+        "reactive": true,
+        "link": "https://github.com/Natsukage/Scriptio-user-scripts/blob/main/ScheduledMessageSender.js",
+        "download": "https://raw.githubusercontent.com/Natsukage/Scriptio-user-scripts/refs/heads/main/ScheduledMessageSender.js"
+    },
+    {
+        "name": "Shortcutio",
+        "author": "PRO-2684",
+        "description": "添加一些常用的快捷键",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#shortcutio",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/shortcutio.js"
+    },
+    {
+        "name": "Show Time",
+        "author": "PRO-2684",
+        "description": "消息显示时间，鼠标悬停显示详细时间与消息序列号，双击复制时间戳，需要开启 LiteLoader Hook Vue",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#show-time",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/show-time.js"
+    },
+    {
+        "name": "Smooth Transition",
+        "author": "PRO-2684",
+        "description": "为页面间导航添加平滑过渡动画",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#smooth-transition",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/smooth-transition.js"
+    },
+    {
+        "name": "Toast",
+        "author": "PRO-2684",
+        "description": "允许其它脚本调用 scriptio.toast，需要开启 LiteLoader Hook Vue",
+        "reactive": false,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#toast",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/toast.js"
+    },
+    {
+        "name": "to-contact-list-top",
+        "author": "lgc2333",
+        "description": "添加一个回到聊天列表顶部的侧边栏按钮",
+        "reactive": true,
+        "link": "https://github.com/lgc2333/ScriptioScripts/tree/main/to-contact-list-top#tocontactlisttop",
+        "download": "https://raw.githubusercontent.com/lgc2333/ScriptioScripts/main/to-contact-list-top/to-contact-list-top.js"
+    }
+]
