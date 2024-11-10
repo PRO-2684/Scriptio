@@ -190,5 +190,13 @@
         "reactive": true,
         "link": "https://github.com/lgc2333/ScriptioScripts/tree/main/to-contact-list-top#tocontactlisttop",
         "download": "https://raw.githubusercontent.com/lgc2333/ScriptioScripts/main/to-contact-list-top/to-contact-list-top.js"
+    },
+    {
+        "name": "Universal Repeater",
+        "author": "PRO-2684",
+        "description": "消息复读机，需要开启 LiteLoader Hook Vue",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#universal-repeater",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/universal-repeater.js"
     }
 ]
