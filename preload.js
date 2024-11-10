@@ -1,5 +1,7 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
+const webContentIdPromise = ipcRenderer.invoke("LiteLoader.scriptio.queryWebContentId");
+
 contextBridge.exposeInMainWorld("scriptio_internal", {
     rendererReady: () => ipcRenderer.send(
         "LiteLoader.scriptio.rendererReady"
@@ -41,6 +43,28 @@ contextBridge.exposeInMainWorld("scriptio_internal", {
         "LiteLoader.scriptio.updateScript",
         callback
     ),
+    invokeNative: async (eventName, cmdName, isRegister, ...args) => {
+        // https://github.com/xtaw/LiteLoaderQQNT-Euphony/blob/899c0de2552cb63aa8bcfcae7e4af9333e35510b/src/main/preload.js#L10-L35
+        const webContentId = await webContentIdPromise;
+        return new Promise((resolve, reject) => {
+            const callbackId = crypto.randomUUID();
+            console.log(`invokeNative: ${eventName}-${webContentId}${isRegister ? '-register' : ''}, cmdName: ${cmdName}`, callbackId);
+            function callback(event, ...args) {
+                console.log(`invokeNative callback: ${eventName}-${webContentId}${isRegister ? '-register' : ''}`, args);
+                if (args?.[0]?.callbackId == callbackId) {
+                    ipcRenderer.off(`IPC_DOWN_${webContentId}`, callback);
+                    console.log(`invokeNative callback resolved: ${eventName}-${webContentId}${isRegister ? '-register' : ''}`, callbackId);
+                    resolve(args[1]);
+                }
+            };
+            ipcRenderer.on(`IPC_DOWN_${webContentId}`, callback);
+            ipcRenderer.send(`IPC_UP_${webContentId}`, {
+                type: 'request',
+                callbackId,
+                eventName: `${eventName}-${webContentId}${isRegister ? '-register' : ''}`
+            }, [cmdName, ...args]);
+        });
+    },
     ipcRenderer: { // https://www.electronjs.org/docs/latest/breaking-changes#behavior-changed-ipcrenderer-can-no-longer-be-sent-over-the-contextbridge
         on: (channel, listener) => ipcRenderer.on(channel, listener),
         off: (channel, listener) => ipcRenderer.off(channel, listener),

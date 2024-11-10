@@ -65,6 +65,10 @@ ipcMain.on("LiteLoader.scriptio.open", (event, type, uri) => {
 });
 ipcMain.on("LiteLoader.scriptio.configChange", onConfigChange);
 ipcMain.on("LiteLoader.scriptio.devMode", onDevMode);
+ipcMain.handle("LiteLoader.scriptio.queryWebContentId", async (event) => {
+    log("queryWebContentId", event.sender.id);
+    return event.sender.id;
+});
 ipcMain.handle("LiteLoader.scriptio.queryDevMode", async (event) => {
     log("queryDevMode", devMode);
     return devMode;

@@ -48,25 +48,7 @@ const scriptio = {
     fetchText: scriptio_internal.fetchText,
     vueMount: [],
     vueUnmount: [],
-    invokeNative: async (eventName, cmdName, isRegister, ...args) => {
-        // https://github.com/xtaw/LiteLoaderQQNT-Euphony/blob/899c0de2552cb63aa8bcfcae7e4af9333e35510b/src/main/preload.js#L10-L35
-        const webContentId = window.webContentId ?? 2;
-        return new Promise((resolve, reject) => {
-            const callbackId = crypto.randomUUID();
-            function callback(event, ...callbackArgs) {
-                if (callbackArgs?.[0]?.callbackId == callbackId) {
-                    ipcRenderer.off(`IPC_DOWN_${webContentId}`, callback);
-                    resolve(callbackArgs[1]);
-                }
-            };
-            ipcRenderer.on(`IPC_DOWN_${webContentId}`, callback);
-            ipcRenderer.send(`IPC_UP_${webContentId}`, {
-                type: 'request',
-                callbackId,
-                eventName: `${eventName}-${webContentId}${isRegister ? '-register' : ''}`
-            }, [cmdName, ...args]);
-        });
-    },
+    invokeNative: scriptio_internal.invokeNative,
     ipcRenderer: scriptio_internal.ipcRenderer
 };
 Object.defineProperties(scriptio, {
