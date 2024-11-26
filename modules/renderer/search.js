@@ -3,6 +3,8 @@ import { log } from "./debug.js";
 
 /** Attribute of `<setting-iitem>` that indicates the script is hidden by search. */
 const searchHiddenDataAttr = "data-search-hidden";
+/** Attribute of `<setting-switch>` that indicates its state is highlighted by search */
+const atRuleHighlightDataAttr = "data-at-rule-highlight";
 
 /** Search `keyword` in the `el` and highlight the matched text.
  * @param {Highlight} highlight The highlight object.
@@ -28,7 +30,7 @@ function searchAndHighlight(highlight, el, keyword) {
 }
 /** Search all `keywords` in the `setting-item` and highlight the matched text.
  * @param {Highlight} highlight The highlight object.
- * @param {HTMLElement} detail The `setting-item` element to search.
+ * @param {HTMLElement} settingItem The `setting-item` element to search.
  * @param {Set<string>} keywords The keywords to search.
  * @returns {boolean} Returns `true` if all keywords are found in the `details`.
  */
@@ -45,6 +47,36 @@ function searchAllAndHighlight(highlight, settingItem, keywords) {
     }
     return matches === keywords.size;
 }
+/**
+ * Check if the `details` satisfies the `atRules`.
+ * 1. If `atRules` is empty or all `atRules` are matched, return `true`
+ * 2. If not all `atRules` are matched, return `false`
+ * @param {Set<string>} atRules The at-rules to search. (without leading `@`)
+ * @param {HTMLDetailsElement} settingItem The `setting-item` element to search.
+ * @returns {boolean} Returns `true` if the `details` satisfies the `atRules`.
+ */
+function matchAtRules(atRules, settingItem) {
+    const switch_ = settingItem.querySelector(".scriptio-menu > setting-switch");
+    const enabled = switch_.hasAttribute("is-active");
+    let isMatch = true;
+    for (const atRule of atRules) {
+        switch (atRule) {
+            case "enabled":
+            case "on":
+            case "1": // `@enabled`/`@on`/`@1`: Match if enabled
+                isMatch = enabled; break;
+            case "disabled":
+            case "off":
+            case "0": // `@disabled`/`@off`/`@0`: Match if disabled
+                isMatch = !enabled; break;
+            default:
+                isMatch = false; // Invalid rule
+        }
+        if (!isMatch) break; // Stop if any rule is not matched
+    }
+    switch_.toggleAttribute(atRuleHighlightDataAttr, isMatch && (atRules.size > 0));
+    return isMatch;
+}
 /** Perform search and hide the `setting-item` that doesn't match the search.
  * @param {Highlight} highlight The highlight object.
  * @param {string} text The search text.
@@ -55,14 +87,23 @@ function doSearch(highlight, text, container) { // Main function for searching
     log("Search", text);
     highlight.clear(); // Clear previous highlights
     const items = container.querySelectorAll("setting-item:not(.special)");
-    const searchWords = new Set( // Use Set to remove duplicates
-        text.toLowerCase() // Convert to lowercase
-            .split(" ") // Split by space
-            .map(word => word.trim()) // Remove leading and trailing spaces
-            .filter(word => word.length > 0) // Remove empty strings
-    );
+    const words = text.toLowerCase() // Convert to lowercase
+        .split(" ") // Split by space
+        .map(word => word.trim()) // Remove leading and trailing spaces
+        .filter(word => word.length > 0); // Remove empty strings
+    // Split the `words` into normal words and at-rules
+    const [searchWords, atRules] = Array.from({ length: 2 }, () => new Set());
+    words.forEach((word) => {
+        switch (word[0]) {
+            case "@":
+                atRules.add(word.slice(1)); break;
+            default:
+                searchWords.add(word);
+        }
+    });
     items.forEach((settingItem) => { // Iterate through all `setting-item`s
-        const isMatch = searchAllAndHighlight(highlight, settingItem, searchWords);
+        const isMatch = searchAllAndHighlight(highlight, settingItem, searchWords)
+            && matchAtRules(atRules, settingItem);
         settingItem.toggleAttribute(searchHiddenDataAttr, !isMatch); // Hide the `details` if it doesn't match
     });
 }
