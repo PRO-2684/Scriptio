@@ -40,6 +40,14 @@
         "download": "https://raw.githubusercontent.com/Natsukage/Scriptio-user-scripts/refs/heads/main/ConversationQuickRemover.js"
     },
     {
+        "name": "Editio",
+        "author": "PRO-2684",
+        "description": "给编辑器添加一些额外的功能",
+        "reactive": true,
+        "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#editio",
+        "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/editio.js"
+    },
+    {
         "name": "Group Name Completion",
         "author": "Shapaper",
         "description": "给群昵称添加更多信息！",
