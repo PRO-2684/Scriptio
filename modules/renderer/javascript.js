@@ -7,10 +7,14 @@ const toolRegisteredEvent = "scriptio-tool-register";
 const listeners = new Map();
 /** The `scriptio` object. */
 const scriptio = {
-    listen: (toggleFunc, immediate) => {
-        const self = scriptio.scriptPath;
+    listen: (toggleFunc, options) => {
+        // `options` can be an object or a boolean (for compatibility).
+        if (typeof options === "boolean") {
+            options = { immediate: options };
+        }
+        const self = options?.scriptPath ?? scriptio.scriptPath;
         listeners.set(self, toggleFunc);
-        if (immediate) {
+        if (options?.immediate) {
             toggleFunc(true);
         }
     },
