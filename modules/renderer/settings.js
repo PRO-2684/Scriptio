@@ -13,6 +13,8 @@ const configDataAttr = "data-scriptio-config";
 const switchDataAttr = "data-scriptio-switch";
 /** Attribute of `<setting-item>` that indicates the script is deleted */
 const deletedDataAttr = "data-deleted";
+/** Function to manually trigger the search (re-search) */
+let research = () => { }; // Placeholder for the search function
 
 /** Function to add a button to the right side of the setting item.
  * @param {Element} right The right side element.
@@ -123,7 +125,7 @@ async function initScriptioSettings(view) {
         }
     }
     // Search
-    setupSearch(view);
+    research = setupSearch(view);
     // Dev mode
     const dev = $("#scriptio-dev");
     dev.addEventListener("click", devMode);
@@ -194,6 +196,7 @@ function scriptioSettingsUpdateScript(container, args) {
     if (isDeleted) {
         item.toggleAttribute(deletedDataAttr, true);
     }
+    research();
     log("scriptioSettingsUpdateScript", path, enabled);
 }
 
