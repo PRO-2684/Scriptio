@@ -5,7 +5,7 @@
     "name": "Scriptio",
     "slug": "scriptio",
     "description": "📄 自定义渲染层 JavaScript 脚本加载器",
-    "version": "1.4.3",
+    "version": "1.4.4",
     "icon": "./icons/icon.svg",
     "thumb": "./icons/thumb.svg",
     "authors": [
@@ -18,7 +18,7 @@
         "repo": "PRO-2684/Scriptio",
         "branch": "main",
         "release": {
-            "tag": "v1.4.3",
+            "tag": "v1.4.4",
             "file": "scriptio-release.zip"
         }
     },
