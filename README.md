@@ -8,6 +8,9 @@
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/PRO-2684/Scriptio/total?logo=github)](https://github.com/PRO-2684/Scriptio/releases)
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/PRO-2684/Scriptio/latest/total?logo=github)](https://github.com/PRO-2684/Scriptio/releases/latest)
 
+> [!NOTE]
+> 最近风控较为严格，作者的账号也没有幸免，现在无法在电脑上登录与调试。因此此插件本体暂停维护，但仍然会接受用户脚本的提交。
+
 [LiteLoaderQQNT](https://github.com/mo-jinran/LiteLoaderQQNT) 插件，用于为 QQNT 加载任意**渲染层**的 JavaScript 片段。
 
 你可能也感兴趣：[Transitio](https://github.com/PRO-2684/transitio)，自定义 CSS 片段加载器。
@@ -25,6 +28,7 @@
 ![Scriptio](./attachments/settings.jpg)
 
 ## 📥 安装
+
 ### 稳定版
 
 下载 Release 中的 `scriptio-release.zip`，解压后放入[数据目录](https://github.com/mo-jinran/LiteLoaderQQNT-Plugin-Template/wiki/1.%E4%BA%86%E8%A7%A3%E6%95%B0%E6%8D%AE%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84#liteloader%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9B%AE%E5%BD%95)下的 `plugins/Scriptio` 文件夹中即可。(若没有该文件夹请自行创建)
