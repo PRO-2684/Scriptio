@@ -49,11 +49,12 @@ const scriptio = {
             window.addEventListener(toolRegisteredEvent, listener, { once: true });
         });
     },
+    open: scriptio_internal.open,
     fetchText: scriptio_internal.fetchText,
     vueMount: [],
     vueUnmount: [],
     invokeNative: scriptio_internal.invokeNative,
-    ipcRenderer: scriptio_internal.ipcRenderer
+    ipcRenderer: scriptio_internal.ipcRenderer,
 };
 Object.defineProperties(scriptio, {
     page: {
