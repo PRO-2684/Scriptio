@@ -8,9 +8,6 @@
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/PRO-2684/Scriptio/total?logo=github)](https://github.com/PRO-2684/Scriptio/releases)
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/PRO-2684/Scriptio/latest/total?logo=github)](https://github.com/PRO-2684/Scriptio/releases/latest)
 
-> [!NOTE]
-> 最近风控较为严格，作者的账号也没有幸免，现在无法在电脑上登录与调试。因此此插件本体暂停维护，但仍然会接受用户脚本的提交。
-
 [LiteLoaderQQNT](https://github.com/mo-jinran/LiteLoaderQQNT) 插件，用于为 QQNT 加载任意**渲染层**的 JavaScript 片段。
 
 你可能也感兴趣：[Transitio](https://github.com/PRO-2684/transitio)，自定义 CSS 片段加载器。
