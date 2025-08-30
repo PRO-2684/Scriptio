@@ -1,7 +1,8 @@
 {
-    "$schema": "./manifest_schema.json",
+    "$schema": "./manifest.schema.json",
     "manifest_version": 4,
     "type": "extension",
+    "esm": true,
     "name": "Scriptio",
     "slug": "scriptio",
     "description": "📄 自定义渲染层 JavaScript 脚本加载器",

@@ -14,12 +14,12 @@ jobs:
       - name: "Checkout Repository"
         uses: "actions/checkout@v4"
         with:
-          fetch-depth: 16 # Ensure we can generate changelogs
+          fetch-depth: 32 # Ensure we can generate changelogs
 
       - name: "Zip release files" # Only if the version has been updated
         run: |
           echo "Creating a release zip file..."
-          zip -r scriptio-release.zip icons/ modules/ main.js manifest.json preload.js renderer.js settings.html
+          zip -r scriptio-release.zip icons/ modules/ main.js manifest.json package.json preload.js renderer.js settings.html
           echo "Done!"
 
       - name: "Create Release"

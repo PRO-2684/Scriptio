@@ -1,32 +1,33 @@
 // Walks a directory and returns a list of javascript files or a shortcut to a javascript file.
-const { normalize } = require("./utils");
-const fs = require("fs");
-const { shell } = require("electron");
+import { normalize } from "../loaders/unified.js";
+import { readdirSync, lstatSync } from "fs";
+import { shell } from "electron";
 
 /** Folders to ignore. */
 const ignoredFolders = new Set(["node_modules", ".git", ".vscode", ".idea", ".github"]);
 
 /**
- * Walks a directory and returns a list of either javascript files or shortcuts to javascript files.
- * @param {string} dir Directory to walk.
+ * Walks a directory and returns a list of either javascript files or shortcuts to javascript files, relative to given directory.
+ * @param {string} baseDir Directory to walk, ending with `/`.
  * @returns {string[]} List of javascript files or shortcuts.
  */
-function listJS(dir) {
+function listJS(baseDir) {
     const files = [];
+    // `dir` must end with `/` or be empty.
     function walk(dir) {
-        const dirFiles = fs.readdirSync(dir);
+        const dirFiles = readdirSync(baseDir +dir);
         for (const f of dirFiles) {
-            const stat = fs.lstatSync(dir + "/" + f);
+            const stat = lstatSync(baseDir + dir + f);
             if (stat.isDirectory()) {
                 if (!ignoredFolders.has(f) && !f.startsWith(".")) { // Ignore given folders and hidden folders
-                    walk(dir + "/" + f);
+                    walk(dir + f + "/");
                 }
             } else if (f.endsWith(".js")) {
-                files.push(normalize(dir + "/" + f));
+                files.push(normalize(dir + f));
             } else if (f.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
-                const linkPath = dir + "/" + f;
+                const linkPath = dir + f;
                 try {
-                    const { target } = shell.readShortcutLink(linkPath);
+                    const { target } = shell.readShortcutLink(baseDir + linkPath);
                     if (target.endsWith(".js")) {
                         files.push(normalize(linkPath));
                     }
@@ -37,8 +38,8 @@ function listJS(dir) {
         }
         return files;
     }
-    walk(dir);
+    walk("");
     return files;
 }
 
-module.exports = { listJS };
+export { listJS };

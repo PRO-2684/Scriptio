@@ -2,11 +2,10 @@
 import { log, showDebugHint } from "./debug.js";
 import { setupSearch } from "./search.js";
 import { setupEasterEggs } from "./eggs.js";
+import { scriptPath, pluginPath, scriptioVersion } from "../loaders/unified.js";
 
-/** Scriptio plugin path */
-const pluginPath = LiteLoader.plugins.scriptio.path.plugin.replace(":\\", "://").replaceAll("\\", "/"); // Normalized plugin path
-/** Scriptio data path */
-const dataPath = LiteLoader.plugins.scriptio.path.data.replace(":\\", "://").replaceAll("\\", "/");
+/** Scriptio plugin uri */
+const pluginUri = window.LiteLoader ? `local:///${pluginPath}` : qwqnt.framework.protocol.pathToStorageUrl(pluginPath);
 /** Attribute of `<setting-item>` that stores the script path */
 const configDataAttr = "data-scriptio-config";
 /** Attribute of `<setting-switch>` that stores the script path */
@@ -59,7 +58,7 @@ function addItem(path, container) {
     const showInFolder = addScriptioMore(right, { icon: "📂", title: "在文件夹中显示", className: "scriptio-folder"});
     showInFolder.addEventListener("click", () => {
         if (!item.hasAttribute(deletedDataAttr)) {
-            scriptio_internal.open("show", path);
+            scriptio_internal.open("show", scriptPath + path);
         }
     });
     const switch_ = right.appendChild(document.createElement("setting-switch"));
@@ -78,7 +77,7 @@ function addItem(path, container) {
  * @returns {Promise<Element>} The container to add the items.
  */
 async function initScriptioSettings(view) {
-    const r = await fetch(`local:///${pluginPath}/settings.html`);
+    const r = await fetch(pluginUri + "/settings.html");
     const $ = view.querySelector.bind(view);
     view.innerHTML = await r.text();
     function devMode() {
@@ -138,18 +137,18 @@ async function initScriptioSettings(view) {
     // Buttons
     $("#scriptio-reload").addEventListener("dblclick", scriptio_internal.reload);
     $("#scriptio-open-folder").addEventListener("click", () => {
-        openURI("path", `${dataPath}/scripts`); // Relative to the data directory
+        openURI("path", scriptPath);
     });
     $("#scriptio-import").addEventListener("change", importScript);
     // About - Version
-    $("#scriptio-version").textContent = LiteLoader.plugins.scriptio.manifest.version;
+    $("#scriptio-version").textContent = scriptioVersion;
     // About - Backgroud image
     ["version", "author", "issues", "submit"].forEach(id => {
-        $(`#scriptio-about-${id}`).style.backgroundImage = `url("local:///${pluginPath}/icons/${id}.svg")`;
+        $(`#scriptio-about-${id}`).style.backgroundImage = `url("${pluginUri}/icons/${id}.svg")`;
     });
     // Logo
     const logo = $(".logo");
-    logo.src = `local:///${pluginPath}/icons/icon.svg`;
+    logo.src = pluginUri + "/icons/icon.svg";
     // Links
     view.querySelectorAll(".scriptio-link").forEach(link => {
         if (!link.getAttribute("title")) {

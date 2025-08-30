@@ -1,14 +1,6 @@
 // Some utility functions for main.
 
 /**
- * Normalize a path to Unix style.
- * @param {string} path Path to normalize.
- * @returns {string} Normalized path.
- */
-function normalize(path) {
-    return path.replace(":\\", "://").replaceAll("\\", "/");
-}
-/**
  * Debounces a function.
  * @param {Function} fn Function to debounce.
  * @param {number} time Debounce time.
@@ -36,4 +28,4 @@ function simpleLog(...args) {
  */
 function dummyLog(...args) {}
 
-module.exports = { normalize, debounce, simpleLog, dummyLog };
+export { debounce, simpleLog, dummyLog };

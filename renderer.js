@@ -31,4 +31,13 @@ async function onSettingWindowCreated(view) {
     scriptio_internal.rendererReady(); //  // Call again to ensure the settings view gets the scripts data.
 }
 
+// https://github.com/QwQ-002/QwQNT-RendererEvents
+window.RendererEvents?.onSettingsWindowCreated?.(async () => {
+    // https://github.com/QwQ-002/QwQNT-PluginSettings
+    const view = await window.PluginSettings?.renderer?.registerPluginSettings?.(qwqnt.framework.plugins.scriptio.meta.packageJson);
+    if (view) {
+        onSettingWindowCreated(view);
+    }
+});
+
 export { onSettingWindowCreated, onVueComponentMount, onVueComponentUnmount };

@@ -60,4 +60,4 @@ function extractUserScriptMetadata(code) {
     return result;
 }
 
-module.exports = { extractUserScriptMetadata };
+export { extractUserScriptMetadata };
