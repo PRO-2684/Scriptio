@@ -1,3 +1,4 @@
+/// <reference types="@qwqnt/types/renderer" />
 import { scriptio, scriptHelper, onVueComponentMount, onVueComponentUnmount } from "./modules/renderer/javascript.js";
 
 Object.defineProperty(window, "scriptio", {
@@ -31,13 +32,23 @@ async function onSettingWindowCreated(view) {
     scriptio_internal.rendererReady(); //  // Call again to ensure the settings view gets the scripts data.
 }
 
-// https://github.com/QwQ-002/QwQNT-RendererEvents
-window.RendererEvents?.onSettingsWindowCreated?.(async () => {
-    // https://github.com/QwQ-002/QwQNT-PluginSettings
-    const view = await window.PluginSettings?.renderer?.registerPluginSettings?.(qwqnt.framework.plugins.scriptio.meta.packageJson);
-    if (view) {
-        onSettingWindowCreated(view);
-    }
-});
+if (typeof qwqnt !== "undefined") {
+    // https://github.com/QwQ-002/QwQNT-RendererEvents
+    window.RendererEvents.onSettingsWindowCreated(async () => {
+        // https://github.com/QwQ-002/QwQNT-PluginSettings
+        const view = await window.PluginSettings.renderer.registerPluginSettings(qwqnt.framework.plugins.scriptio.meta.packageJson);
+        if (view) {
+            onSettingWindowCreated(view);
+        }
+    });
+
+    window.addEventListener("vue:component-mount", e => {
+        onVueComponentMount(e.detail);
+    });
+
+    window.addEventListener("vue:component-unmount", e => {
+        onVueComponentUnmount(e.detail);
+    });
+}
 
 export { onSettingWindowCreated, onVueComponentMount, onVueComponentUnmount };
