@@ -1,4 +1,4 @@
-// Description: Walks a directory and returns a list of javascript files or a shortcut to a javascript file.
+// Walks a directory and returns a list of javascript files or a shortcut to a javascript file.
 const { normalize } = require("./utils");
 const fs = require("fs");
 const { shell } = require("electron");

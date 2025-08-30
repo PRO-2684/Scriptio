@@ -1,4 +1,4 @@
-// Description: Scriptio's parser module for UserScript metadata extraction.
+// Scriptio's parser module for UserScript metadata extraction.
 
 /** Get the first two lines of a script. (will be deprecated)
  * @param {string} code The code of the script.

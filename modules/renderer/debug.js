@@ -1,4 +1,4 @@
-// Description: Debugging utilities for the renderer.
+// Debugging utilities for the renderer.
 
 /** If debug mode is enabled. */
 let isDebug = false;

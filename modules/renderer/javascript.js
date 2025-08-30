@@ -1,4 +1,4 @@
-// Description: Utilities related to javascript & `scriptio` object.
+// Utilities related to javascript & `scriptio` object.
 import { log } from "./debug.js";
 
 /** Event that is dispatched when a tool is registered. */

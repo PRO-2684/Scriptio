@@ -1,4 +1,4 @@
-// Description: Some utility functions for main.
+// Some utility functions for main.
 
 /**
  * Normalize a path to Unix style.

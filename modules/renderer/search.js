@@ -1,4 +1,4 @@
-// Description: Search module for settings view.
+// Search module for settings view.
 import { log } from "./debug.js";
 
 /** Attribute of `<setting-iitem>` that indicates the script is hidden by search. */

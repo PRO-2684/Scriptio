@@ -21,15 +21,15 @@ if (!fs.existsSync(scriptPath)) {
     fs.mkdirSync(scriptPath, { recursive: true });
 }
 // IPC events
-ipcMain.on("LiteLoader.scriptio.rendererReady", (event) => {
+ipcMain.on("PRO-2684.scriptio.rendererReady", (event) => {
     const window = BrowserWindow.fromWebContents(event.sender);
     loadScripts(window.webContents);
 });
-ipcMain.on("LiteLoader.scriptio.reload", reload);
-ipcMain.on("LiteLoader.scriptio.importScript", (event, fname, content) => {
+ipcMain.on("PRO-2684.scriptio.reload", reload);
+ipcMain.on("PRO-2684.scriptio.importScript", (event, fname, content) => {
     importScript(fname, content);
 });
-ipcMain.on("LiteLoader.scriptio.removeScript", (event, absPath) => {
+ipcMain.on("PRO-2684.scriptio.removeScript", (event, absPath) => {
     log("removeScript", absPath);
     fs.unlinkSync(absPath);
     delete scriptsConfig[absPath];
@@ -43,11 +43,11 @@ ipcMain.on("LiteLoader.scriptio.removeScript", (event, absPath) => {
             }
         };
         webContents.getAllWebContents().forEach((webContent) => {
-            webContent.send("LiteLoader.scriptio.updateScript", msg);
+            webContent.send("PRO-2684.scriptio.updateScript", msg);
         });
     }
 });
-ipcMain.on("LiteLoader.scriptio.open", (event, type, uri) => {
+ipcMain.on("PRO-2684.scriptio.open", (event, type, uri) => {
     log("open", type, uri);
     switch (type) {
         case "link":
@@ -63,21 +63,21 @@ ipcMain.on("LiteLoader.scriptio.open", (event, type, uri) => {
             break;
     }
 });
-ipcMain.on("LiteLoader.scriptio.configChange", onConfigChange);
-ipcMain.on("LiteLoader.scriptio.devMode", onDevMode);
-ipcMain.handle("LiteLoader.scriptio.queryWebContentId", async (event) => {
+ipcMain.on("PRO-2684.scriptio.configChange", onConfigChange);
+ipcMain.on("PRO-2684.scriptio.devMode", onDevMode);
+ipcMain.handle("PRO-2684.scriptio.queryWebContentId", async (event) => {
     log("queryWebContentId", event.sender.id);
     return event.sender.id;
 });
-ipcMain.handle("LiteLoader.scriptio.queryDevMode", async (event) => {
+ipcMain.handle("PRO-2684.scriptio.queryDevMode", async (event) => {
     log("queryDevMode", devMode);
     return devMode;
 });
-ipcMain.handle("LiteLoader.scriptio.queryIsDebug", (event) => {
+ipcMain.handle("PRO-2684.scriptio.queryIsDebug", (event) => {
     log("queryIsDebug", isDebug);
     return isDebug;
 });
-ipcMain.handle("LiteLoader.scriptio.fetchText", async (event, ...args) => {
+ipcMain.handle("PRO-2684.scriptio.fetchText", async (event, ...args) => {
     log("fetch", ...args);
     try {
         // Firing a HEAD request to check the content type
@@ -169,10 +169,10 @@ function updateScript(absPath, webContent) {
     log("updateScript", absPath);
     const msg = { path: absPath, enabled, code, meta };
     if (webContent) {
-        webContent.send("LiteLoader.scriptio.updateScript", msg);
+        webContent.send("PRO-2684.scriptio.updateScript", msg);
     } else {
         webContents.getAllWebContents().forEach((webContent) => {
-            webContent.send("LiteLoader.scriptio.updateScript", msg);
+            webContent.send("PRO-2684.scriptio.updateScript", msg);
         });
     }
 }

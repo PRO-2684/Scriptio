@@ -1,46 +1,46 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-const webContentIdPromise = ipcRenderer.invoke("LiteLoader.scriptio.queryWebContentId");
+const webContentIdPromise = ipcRenderer.invoke("PRO-2684.scriptio.queryWebContentId");
 
 contextBridge.exposeInMainWorld("scriptio_internal", {
     rendererReady: () => ipcRenderer.send(
-        "LiteLoader.scriptio.rendererReady"
+        "PRO-2684.scriptio.rendererReady"
     ),
     configChange: (path, enable) => ipcRenderer.send(
-        "LiteLoader.scriptio.configChange",
+        "PRO-2684.scriptio.configChange",
         path, enable
     ),
     devMode: (enable) => ipcRenderer.send(
-        "LiteLoader.scriptio.devMode",
+        "PRO-2684.scriptio.devMode",
         enable
     ),
     reload: () => ipcRenderer.send(
-        "LiteLoader.scriptio.reload"
+        "PRO-2684.scriptio.reload"
     ),
     importScript: (fname, content) => ipcRenderer.send(
-        "LiteLoader.scriptio.importScript",
+        "PRO-2684.scriptio.importScript",
         fname, content
     ),
     removeScript: (path) => ipcRenderer.send(
-        "LiteLoader.scriptio.removeScript",
+        "PRO-2684.scriptio.removeScript",
         path
     ),
     open: (type, uri) => ipcRenderer.send(
-        "LiteLoader.scriptio.open",
+        "PRO-2684.scriptio.open",
         type, uri
     ),
     queryIsDebug: () => ipcRenderer.invoke(
-        "LiteLoader.scriptio.queryIsDebug"
+        "PRO-2684.scriptio.queryIsDebug"
     ),
     queryDevMode: () => ipcRenderer.invoke(
-        "LiteLoader.scriptio.queryDevMode"
+        "PRO-2684.scriptio.queryDevMode"
     ),
     fetchText: (...args) => ipcRenderer.invoke(
-        "LiteLoader.scriptio.fetchText",
+        "PRO-2684.scriptio.fetchText",
         ...args
     ),
     onUpdateScript: (callback) => ipcRenderer.on(
-        "LiteLoader.scriptio.updateScript",
+        "PRO-2684.scriptio.updateScript",
         callback
     ),
     invokeNative: async (eventName, cmdName, ...args) => {
