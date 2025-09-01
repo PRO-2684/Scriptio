@@ -1,0 +1,23 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    devDependencies:
+      '@qwqnt/types':
+        specifier: github:QwQ-002/types
+        version: https://codeload.github.com/QwQ-002/types/tar.gz/dbf148cedce0fa64bd1bab015e2f4cd2a0bbb037
+
+packages:
+
+  '@qwqnt/types@https://codeload.github.com/QwQ-002/types/tar.gz/dbf148cedce0fa64bd1bab015e2f4cd2a0bbb037':
+    resolution: {tarball: https://codeload.github.com/QwQ-002/types/tar.gz/dbf148cedce0fa64bd1bab015e2f4cd2a0bbb037}
+    version: 0.0.0
+
+snapshots:
+
+  '@qwqnt/types@https://codeload.github.com/QwQ-002/types/tar.gz/dbf148cedce0fa64bd1bab015e2f4cd2a0bbb037': {}

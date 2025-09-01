@@ -1,7 +1,8 @@
+// ESM support in preload is not quite mature, so we use CommonJS `require` here
+
 const { contextBridge, ipcRenderer } = require("electron");
 
 const webContentIdPromise = ipcRenderer.invoke("PRO-2684.scriptio.queryWebContentId");
-
 contextBridge.exposeInMainWorld("scriptio_internal", {
     rendererReady: () => ipcRenderer.send(
         "PRO-2684.scriptio.rendererReady"

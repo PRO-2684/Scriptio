@@ -143,7 +143,7 @@ function scriptHelper(path, code, enabled, description, runAts) {
 }
 /**
  * Called when a Vue component is mounted.
- * @param {VueComponent} component The Vue component.
+ * @param {ComponentInternalInstance} component The Vue component instance.
  */
 function onVueComponentMount(component) {
     for (let i = 0; i < scriptio.vueMount.length; i++) {
@@ -156,7 +156,7 @@ function onVueComponentMount(component) {
 }
 /**
  * Called when a Vue component is unmounted.
- * @param {VueComponent} component The Vue component.
+ * @param {ComponentInternalInstance} component The Vue component instance.
  */
 function onVueComponentUnmount(component) {
     for (let i = 0; i < scriptio.vueUnmount.length; i++) {

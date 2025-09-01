@@ -1,24 +1,58 @@
-const fs = require("fs");
-const path = require("path");
-const { BrowserWindow, ipcMain, webContents, shell } = require("electron");
-const { extractUserScriptMetadata } = require("./modules/main/parser.js");
-const { listJS } = require("./modules/main/walker.js");
-const { normalize, debounce, simpleLog, dummyLog } = require("./modules/main/utils");
+import { existsSync, mkdirSync, unlinkSync, readFileSync, writeFileSync, watch } from "fs";
+import { normalize as normalize_platform, basename } from "path";
+import { BrowserWindow, ipcMain, webContents, shell } from "electron";
+import { extractUserScriptMetadata } from "./modules/main/parser.js";
+import { listJS } from "./modules/main/walker.js";
+import { debounce, simpleLog, dummyLog } from "./modules/main/utils.js";
+import { normalize, configApi, scriptPath } from "./modules/loaders/unified.js";
 
 const isDebug = process.argv.includes("--scriptio-debug");
 const updateInterval = 1000;
 const log = isDebug ? simpleLog : dummyLog;
 let devMode = false;
 let watcher = null;
-
-const dataPath = LiteLoader.plugins.scriptio.path.data;
-const scriptPath = path.join(dataPath, "scripts");
 const CHARTSET_RE = /(?:charset|encoding)\s{0,10}=\s{0,10}['"]? {0,10}([\w\-]{1,100})/i;
 
-// Create `scripts` directory if not exists
-if (!fs.existsSync(scriptPath)) {
+const debouncedSet = debounce(configApi.set, updateInterval);
+const scriptsConfig = new Proxy(
+    configApi.get().scripts, {
+        get(target, prop) {
+            return target[prop];
+        },
+        set(target, prop, value) {
+            target[prop] = value;
+            log("Calling debounced config.set after set");
+            try {
+                debouncedSet({ scripts: target });
+            } catch (e) {
+                log("debouncedSet error", e);
+            }
+            return true;
+        },
+        deleteProperty(target, prop) {
+            if (prop in target) {
+                delete target[prop];
+                log("Calling debounced config.set after delete");
+                try {
+                    debouncedSet({ scripts: target });
+                } catch (e) {
+                    log("debouncedSet error", e);
+                }
+                return true;
+            }
+            return false;
+        },
+        ownKeys(target) {
+            return Object.keys(target);
+        }
+    }
+);
+
+
+// Create data & `scripts` directory if not exists
+if (!existsSync(scriptPath)) {
     log(`${scriptPath} does not exist, creating...`);
-    fs.mkdirSync(scriptPath, { recursive: true });
+    mkdirSync(scriptPath, { recursive: true });
 }
 // IPC events
 ipcMain.on("PRO-2684.scriptio.rendererReady", (event) => {
@@ -29,13 +63,13 @@ ipcMain.on("PRO-2684.scriptio.reload", reload);
 ipcMain.on("PRO-2684.scriptio.importScript", (event, fname, content) => {
     importScript(fname, content);
 });
-ipcMain.on("PRO-2684.scriptio.removeScript", (event, absPath) => {
-    log("removeScript", absPath);
-    fs.unlinkSync(absPath);
-    delete scriptsConfig[absPath];
+ipcMain.on("PRO-2684.scriptio.removeScript", (event, relPath) => {
+    log("removeScript", relPath);
+    unlinkSync(scriptPath + relPath);
+    delete scriptsConfig[relPath];
     if (!devMode) {
         const msg = {
-            path: absPath, enabled: false, code: "// Removed", meta: {
+            path: relPath, enabled: false, code: "// Removed", meta: {
                 name: " [已删除] ",
                 description: "[此脚本已被删除]",
                 "run-at": [],
@@ -54,10 +88,10 @@ ipcMain.on("PRO-2684.scriptio.open", (event, type, uri) => {
             shell.openExternal(uri);
             break;
         case "path":
-            shell.openPath(path.normalize(uri));
+            shell.openPath(normalize_platform(uri));
             break;
         case "show":
-            shell.showItemInFolder(path.normalize(uri));
+            shell.showItemInFolder(normalize_platform(uri));
             break;
         default:
             break;
@@ -105,69 +139,35 @@ ipcMain.handle("PRO-2684.scriptio.fetchText", async (event, ...args) => {
     }
 });
 
-const debouncedSet = debounce(LiteLoader.api.config.set, 1000);
-const scriptsConfig = new Proxy(
-    LiteLoader.api.config.get("scriptio", { scripts: {} }).scripts, {
-        get(target, prop) {
-            return target[prop];
-        },
-        set(target, prop, value) {
-            target[prop] = value;
-            log("Calling debounced config.set after set");
-            try {
-                debouncedSet("scriptio", { scripts: target });
-            } catch (e) {
-                log("debouncedSet error", e);
-            }
-            return true;
-        },
-        deleteProperty(target, prop) {
-            if (prop in target) {
-                delete target[prop];
-                log("Calling debounced config.set after delete");
-                try {
-                    debouncedSet("scriptio", { scripts: target });
-                } catch (e) {
-                    log("debouncedSet error", e);
-                }
-                return true;
-            }
-            return false;
-        },
-        ownKeys(target) {
-            return Object.keys(target);
-        }
-    }
-);
-
 // Get script content
-function getScript(absPath) {
-    if (absPath.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
-        const { target } = shell.readShortcutLink(absPath);
-        absPath = target;
+function getScript(relPath) {
+    let realPath = scriptPath + relPath;
+    if (realPath.endsWith(".lnk") && shell.readShortcutLink) { // lnk file & on Windows
+        const { target } = shell.readShortcutLink(realPath);
+        realPath = target;
     }
     try {
-        return fs.readFileSync(absPath, "utf-8");
+        return readFileSync(realPath, "utf-8");
     } catch (err) {
-        log("getScript", absPath, err)
+        log("getScript", relPath, err)
         return "";
     }
 }
 
 // Send updated script to renderer
-function updateScript(absPath, webContent) {
-    absPath = normalize(absPath);
-    const code = getScript(absPath);
+function updateScript(relPath, webContent) {
+    relPath = normalize(relPath);
+    const code = getScript(relPath);
     if (!code) return;
-    const enabled = scriptsConfig[absPath] ?? (scriptsConfig[absPath] = true);
+    const enabled = scriptsConfig[relPath] ?? (scriptsConfig[relPath] = true);
     const meta = extractUserScriptMetadata(code);
-    meta.name ??= path.basename(absPath, ".js");
+    meta.name ??= basename(relPath, ".js");
     meta.description ??= "此脚本没有描述";
     meta["run-at"] = (meta["run-at"] ?? "").split(",").map((item) => item.trim()).filter((item) => item);
     meta.reactive ??= "false";
     meta.reactive = (meta.reactive.toLowerCase() === "true");
-    log("updateScript", absPath);
-    const msg = { path: absPath, enabled, code, meta };
+    log("updateScript", relPath);
+    const msg = { path: relPath, enabled, code, meta };
     if (webContent) {
         webContent.send("PRO-2684.scriptio.updateScript", msg);
     } else {
@@ -193,23 +193,23 @@ function reload(event) {
 function loadScripts(webContent) {
     log("loadScripts");
     const scripts = listJS(scriptPath);
-    for (const absPath of scripts) {
-        updateScript(absPath, webContent);
+    for (const relPath of scripts) {
+        updateScript(relPath, webContent);
     }
     const removedScripts = new Set(Object.keys(scriptsConfig)).difference(new Set(scripts));
-    for (const absPath of removedScripts) {
-        log("Removed script", absPath);
-        delete scriptsConfig[absPath];
+    for (const relPath of removedScripts) {
+        log("Removed script", relPath);
+        delete scriptsConfig[relPath];
     }
 }
 
 // Import script from renderer
 function importScript(fname, content) {
     log("importScript", fname);
-    const filePath = path.join(scriptPath, fname);
-    fs.writeFileSync(filePath, content, "utf-8");
+    const filePath = scriptPath + fname;
+    writeFileSync(filePath, content, "utf-8");
     if (!devMode) {
-        updateScript(filePath);
+        updateScript(fname);
     }
 }
 
@@ -220,10 +220,10 @@ function onScriptChange(eventType, filename) {
 }
 
 // Listen to config modification (from renderer)
-function onConfigChange(event, absPath, enable) {
-    log("onConfigChange", absPath, enable);
-    scriptsConfig[absPath] = enable;
-    updateScript(absPath);
+function onConfigChange(event, relPath, enable) {
+    log("onConfigChange", relPath, enable);
+    scriptsConfig[relPath] = enable;
+    updateScript(relPath);
 }
 
 // Listen to dev mode switch (from renderer)
@@ -242,7 +242,7 @@ function onDevMode(event, enable) {
 
 // Listen to `scripts` directory
 function watchScriptChange() {
-    return fs.watch(scriptPath, "utf-8",
+    return watch(scriptPath, "utf-8",
         debounce(onScriptChange, updateInterval)
     );
 }
