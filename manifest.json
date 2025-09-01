@@ -5,7 +5,7 @@
     "esm": true,
     "name": "Scriptio",
     "slug": "scriptio",
-    "description": "📄 自定义渲染层 JavaScript 脚本加载器",
+    "description": "📄 自定义用户脚本加载器",
     "version": "1.4.5",
     "icon": "./icons/icon.svg",
     "thumb": "./icons/thumb.svg",
