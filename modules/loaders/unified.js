@@ -1,7 +1,7 @@
 // Unified API for LiteLoader & QwQNT, main & renderer
 
 const { dataPathOrig, pluginPathOrig, scriptioVersion, configApi } = globalThis.LiteLoader ?
-    await import("./liteloader.js") : // TODO: LiteLoader doesn't support ESM imports - maybe drop support or use tools to auto transform?
+    await import("./liteloader.js") :
     await import("./qwqnt.js");
 /** Scriptio data path, normalized to use `/`, ending with `/` */
 const dataPath = normalize(dataPathOrig) + "/";
