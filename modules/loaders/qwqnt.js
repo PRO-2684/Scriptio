@@ -3,7 +3,7 @@ const dataPathOrig = qwqnt.framework.paths.data + "/" + slug;
 const pluginPathOrig = qwqnt.framework.plugins[slug].meta.path;
 const scriptioVersion = qwqnt.framework.plugins[slug].meta.packageJson.version;
 const configApi = {
-    get: () => PluginSettings.main.readConfig(slug, { styles: {} }),
+    get: () => PluginSettings.main.readConfig(slug, { scripts: {} }),
     set: (config) => PluginSettings.main.writeConfig(slug, config),
 };
 
