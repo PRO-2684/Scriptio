@@ -56,6 +56,14 @@
         "download": "https://raw.githubusercontent.com/Shapaper233/Shapaper-Scriptio-user-scripts/refs/heads/main/group-name-completion.js"
     },
     {
+        "name": "Group Name Completion(aoguai)",
+        "author": "aoguai",
+        "description": "给群昵称添加更多信息！（感谢原作者 Shapaper）",
+        "reactive": true,
+        "link": "https://github.com/aoguai/Scriptio-user-scripts/#group-name-completion",
+        "download": "https://raw.githubusercontent.com/aoguai/Scriptio-user-scripts/refs/heads/main/group-name-completion.js"
+    },
+    {
         "name": "Hitokoto",
         "author": "PRO-2684",
         "description": "输入框展示一言",
