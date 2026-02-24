@@ -1,34 +1,34 @@
 {
-  "$schema": "https://raw.githubusercontent.com/qwqnt-community/types/main/plugin.schema.json",
-  "name": "scriptio",
-  "type": "module",
-  "version": "1.4.5",
-  "description": "Load custom UserScripts for QQNT",
-  "main": "main.js",
-  "qwqnt": {
-    "name": "Scriptio",
-    "dependencies": {
-      "qwqnt-hako": "^1.0.1"
+    "$schema": "https://raw.githubusercontent.com/qwqnt-community/types/main/plugin.schema.json",
+    "name": "scriptio",
+    "type": "module",
+    "version": "1.4.6",
+    "description": "Load custom UserScripts for QQNT",
+    "main": "main.js",
+    "qwqnt": {
+        "name": "Scriptio",
+        "dependencies": {
+            "qwqnt-hako": "^1.0.1"
+        },
+        "icon": "./icons/thumb.svg"
     },
-    "icon": "./icons/thumb.svg"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/PRO-2684/Scriptio.git"
-  },
-  "keywords": [
-    "liteloaderqqnt",
-    "llqqnt",
-    "qwqnt",
-    "userscript"
-  ],
-  "author": "PRO-2684",
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/PRO-2684/Scriptio/issues"
-  },
-  "homepage": "https://github.com/PRO-2684/Scriptio#readme",
-  "devDependencies": {
-    "@qwqnt/types": "github:qwqnt-community/types"
-  }
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/PRO-2684/Scriptio.git"
+    },
+    "keywords": [
+        "liteloaderqqnt",
+        "llqqnt",
+        "qwqnt",
+        "userscript"
+    ],
+    "author": "PRO-2684",
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/PRO-2684/Scriptio/issues"
+    },
+    "homepage": "https://github.com/PRO-2684/Scriptio#readme",
+    "devDependencies": {
+        "@qwqnt/types": "github:qwqnt-community/types"
+    }
 }
