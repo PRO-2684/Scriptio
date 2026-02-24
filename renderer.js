@@ -33,9 +33,8 @@ async function onSettingWindowCreated(view) {
 }
 
 if (typeof qwqnt !== "undefined") {
-    // https://github.com/QwQ-002/QwQNT-RendererEvents
+    // https://github.com/qwqnt-community/qwqnt-hako
     window.RendererEvents.onSettingsWindowCreated(async () => {
-        // https://github.com/QwQ-002/QwQNT-PluginSettings
         const view = await window.PluginSettings.renderer.registerPluginSettings(qwqnt.framework.plugins.scriptio.meta.packageJson);
         if (view) {
             onSettingWindowCreated(view);

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/QwQ-002/types/main/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/qwqnt-community/types/main/plugin.schema.json",
   "name": "scriptio",
   "type": "module",
   "version": "1.4.5",
@@ -8,7 +8,7 @@
   "qwqnt": {
     "name": "Scriptio",
     "dependencies": {
-      "qwqnt-plugin_settings": "^1.2.5"
+      "qwqnt-hako": "^1.0.1"
     },
     "icon": "./icons/thumb.svg"
   },
@@ -29,6 +29,6 @@
   },
   "homepage": "https://github.com/PRO-2684/Scriptio#readme",
   "devDependencies": {
-    "@qwqnt/types": "github:QwQ-002/types"
+    "@qwqnt/types": "github:qwqnt-community/types"
   }
 }
