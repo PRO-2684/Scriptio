@@ -8,7 +8,8 @@
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/PRO-2684/Scriptio/total?logo=github)](https://github.com/PRO-2684/Scriptio/releases)
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/PRO-2684/Scriptio/latest/total?logo=github)](https://github.com/PRO-2684/Scriptio/releases/latest)
 
-[LiteLoaderQQNT](https://github.com/mo-jinran/LiteLoaderQQNT) / QwQNT 插件，用于为 QQNT 加载任意 **渲染层** 的用户脚本。
+> [!WARNING]
+> 由于 [LiteLoaderQQNT](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT) 没有良好的 ESM 支持，此插件将暂停支持此框架。若您仍需在 LiteLoaderQQNT 下使用，请使用 [`v1.4.5`](https://github.com/PRO-2684/Scriptio/releases/tag/v1.4.5) 及之前的旧版本。若您有良好的编程基础，亦可参考 [`llqqnt`](https://github.com/PRO-2684/Scriptio/tree/llqqnt) branch 的说明修改 LiteLoaderQQNT 框架后使用。
 
 你可能也感兴趣：[Transitio](https://github.com/PRO-2684/transitio)，自定义用户样式加载器。
 
