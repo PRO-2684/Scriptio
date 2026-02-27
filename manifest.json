@@ -2,7 +2,6 @@
     "$schema": "./manifest.schema.json",
     "manifest_version": 4,
     "type": "extension",
-    "esm": true,
     "name": "Scriptio",
     "slug": "scriptio",
     "description": "📄 自定义用户脚本加载器",
@@ -31,7 +30,7 @@
     "platform": ["win32", "linux", "darwin"],
     "injects": {
         "renderer": "./renderer.js",
-        "main": "./main.js",
+        "main": "./main.cjs",
         "preload": "./preload.js"
     }
 }

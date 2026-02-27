@@ -8,6 +8,11 @@
 [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/PRO-2684/Scriptio/total?logo=github)](https://github.com/PRO-2684/Scriptio/releases)
 [![GitHub Downloads (all assets, latest release)](https://img.shields.io/github/downloads/PRO-2684/Scriptio/latest/total?logo=github)](https://github.com/PRO-2684/Scriptio/releases/latest)
 
+> [!NOTE]
+> 若需在 LiteLoaderQQNT 中使用此插件，需要修改 [框架的白名单代码](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT/blob/9628031664e9d3df35834f373cd5456f92ea250a/src/main/api.js#L45-L51)，使得 Scriptio 能够读取 LiteLoader 对象。
+>
+> 具体来说，对于 CJS `require`，error stack 会使用正常的平台路径，例如 `D:\LiteLoader\plugins\plugininstaller\dist\main.js:16:362331`；但是此插件使用了 ESM `import`，因此 error stack 中的路径会被转换为 `file:///D:/LiteLoader/plugins/Scriptio/modules/loaders/unified.js:3:38`，从而导致框架的白名单代码无法正确识别路径。
+
 [LiteLoaderQQNT](https://github.com/mo-jinran/LiteLoaderQQNT) / QwQNT 插件，用于为 QQNT 加载任意 **渲染层** 的用户脚本。
 
 你可能也感兴趣：[Transitio](https://github.com/PRO-2684/transitio)，自定义用户样式加载器。
