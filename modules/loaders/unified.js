@@ -1,7 +1,11 @@
 // Unified API for LiteLoader & QwQNT, main & renderer
 
-const { dataPathOrig, pluginPathOrig, scriptioVersion, configApi } =
-    await import("./qwqnt.js");
+import {
+    dataPathOrig,
+    pluginPathOrig,
+    scriptioVersion,
+    configApi,
+} from "./qwqnt.js";
 /** Scriptio data path, normalized to use `/`, ending with `/` */
 const dataPath = normalize(dataPathOrig) + "/";
 /** Scriptio script path, normalized to use `/`, ending with `/` */
