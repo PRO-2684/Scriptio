@@ -5,7 +5,7 @@ import { setupEasterEggs } from "./eggs.js";
 import { scriptPath, pluginPath, scriptioVersion } from "../loaders/unified.js";
 
 /** Scriptio plugin uri */
-const pluginUri = window.LiteLoader ? `local:///${pluginPath}` : qwqnt.framework.protocol.pathToStorageUrl(pluginPath);
+const pluginUri = qwqnt.framework.protocol.pathToStorageUrl(pluginPath);
 /** Attribute of `<setting-item>` that stores the script path */
 const configDataAttr = "data-scriptio-config";
 /** Attribute of `<setting-switch>` that stores the script path */
@@ -13,7 +13,7 @@ const switchDataAttr = "data-scriptio-switch";
 /** Attribute of `<setting-item>` that indicates the script is deleted */
 const deletedDataAttr = "data-deleted";
 /** Function to manually trigger the search (re-search) */
-let research = () => { }; // Placeholder for the search function
+let research = () => {}; // Placeholder for the search function
 
 /** Function to add a button to the right side of the setting item.
  * @param {Element} right The right side element.
@@ -43,19 +43,37 @@ function addItem(path, container) {
     itemDesc.setAttribute("data-type", "secondary");
     const right = item.appendChild(document.createElement("div"));
     right.classList.add("scriptio-menu");
-    const homepage = addScriptioMore(right, { icon: "🔗", title: "打开脚本主页", className: "scriptio-homepage"});
+    const homepage = addScriptioMore(right, {
+        icon: "🔗",
+        title: "打开脚本主页",
+        className: "scriptio-homepage",
+    });
     homepage.addEventListener("click", () => {
-        if (!item.hasAttribute(deletedDataAttr) && !homepage.hasAttribute("disabled")) {
-            scriptio_internal.open("link", homepage.getAttribute("data-homepage-url"));
+        if (
+            !item.hasAttribute(deletedDataAttr) &&
+            !homepage.hasAttribute("disabled")
+        ) {
+            scriptio_internal.open(
+                "link",
+                homepage.getAttribute("data-homepage-url"),
+            );
         }
     });
-    const remove = addScriptioMore(right, { icon: "🗑️", title: "删除此脚本", className: "scriptio-remove"});
+    const remove = addScriptioMore(right, {
+        icon: "🗑️",
+        title: "删除此脚本",
+        className: "scriptio-remove",
+    });
     remove.addEventListener("click", () => {
         if (!item.hasAttribute(deletedDataAttr)) {
             scriptio_internal.removeScript(path);
         }
     });
-    const showInFolder = addScriptioMore(right, { icon: "📂", title: "在文件夹中显示", className: "scriptio-folder"});
+    const showInFolder = addScriptioMore(right, {
+        icon: "📂",
+        title: "在文件夹中显示",
+        className: "scriptio-folder",
+    });
     showInFolder.addEventListener("click", () => {
         if (!item.hasAttribute(deletedDataAttr)) {
             scriptio_internal.open("show", scriptPath + path);
@@ -67,7 +85,10 @@ function addItem(path, container) {
     switch_.addEventListener("click", () => {
         if (!item.hasAttribute(deletedDataAttr)) {
             switch_.parentNode.classList.toggle("is-loading", true);
-            scriptio_internal.configChange(path, switch_.toggleAttribute("is-active")); // Update the UI immediately, so it would be more smooth
+            scriptio_internal.configChange(
+                path,
+                switch_.toggleAttribute("is-active"),
+            ); // Update the UI immediately, so it would be more smooth
         }
     });
     return item;
@@ -102,17 +123,22 @@ async function initScriptioSettings(view) {
                 console.log("[Scriptio] Ignored", file.name);
                 continue;
             }
-            promises.push(new Promise((resolve, reject) => {
-                cnt++;
-                console.log("[Scriptio] Importing", file.name);
-                let reader = new FileReader();
-                reader.onload = () => {
-                    scriptio_internal.importScript(file.name, reader.result);
-                    console.log("[Scriptio] Imported", file.name);
-                    resolve();
-                };
-                reader.readAsText(file);
-            }));
+            promises.push(
+                new Promise((resolve, reject) => {
+                    cnt++;
+                    console.log("[Scriptio] Importing", file.name);
+                    let reader = new FileReader();
+                    reader.onload = () => {
+                        scriptio_internal.importScript(
+                            file.name,
+                            reader.result,
+                        );
+                        console.log("[Scriptio] Imported", file.name);
+                        resolve();
+                    };
+                    reader.readAsText(file);
+                }),
+            );
         }
         await Promise.all(promises);
         this.parentNode.classList.toggle("is-loading", false);
@@ -128,14 +154,17 @@ async function initScriptioSettings(view) {
     // Dev mode
     const dev = $("#scriptio-dev");
     dev.addEventListener("click", devMode);
-    scriptio_internal.queryDevMode().then(enabled => {
+    scriptio_internal.queryDevMode().then((enabled) => {
         log("queryDevMode", enabled);
         dev.toggleAttribute("is-active", enabled);
     });
     // Debug mode
     showDebugHint(view);
     // Buttons
-    $("#scriptio-reload").addEventListener("dblclick", scriptio_internal.reload);
+    $("#scriptio-reload").addEventListener(
+        "dblclick",
+        scriptio_internal.reload,
+    );
     $("#scriptio-open-folder").addEventListener("click", () => {
         openURI("path", scriptPath);
     });
@@ -143,21 +172,24 @@ async function initScriptioSettings(view) {
     // About - Version
     $("#scriptio-version").textContent = scriptioVersion;
     // About - Backgroud image
-    ["version", "author", "issues", "submit"].forEach(id => {
-        $(`#scriptio-about-${id}`).style.backgroundImage = `url("${pluginUri}/icons/${id}.svg")`;
+    ["version", "author", "issues", "submit"].forEach((id) => {
+        $(`#scriptio-about-${id}`).style.backgroundImage =
+            `url("${pluginUri}/icons/${id}.svg")`;
     });
     // Logo
     const logo = $(".logo");
     logo.src = pluginUri + "/icons/icon.svg";
     // Links
-    view.querySelectorAll(".scriptio-link").forEach(link => {
+    view.querySelectorAll(".scriptio-link").forEach((link) => {
         if (!link.getAttribute("title")) {
             link.setAttribute("title", link.getAttribute("data-scriptio-url"));
         }
         link.addEventListener("click", openURL);
     });
     setupEasterEggs(view);
-    const container = $("setting-section.snippets > setting-panel > setting-list");
+    const container = $(
+        "setting-section.snippets > setting-panel > setting-list",
+    );
     return container;
 }
 /** Function to handle `updateScript` event on settings view.
@@ -168,7 +200,9 @@ async function initScriptioSettings(view) {
 function scriptioSettingsUpdateScript(container, args) {
     const { path, meta, enabled } = args;
     const isDeleted = meta.name === " [已删除] ";
-    const item = container.querySelector(`setting-item[${configDataAttr}="${path}"]`) || addItem(path, container);
+    const item =
+        container.querySelector(`setting-item[${configDataAttr}="${path}"]`) ||
+        addItem(path, container);
     const itemName = item.querySelector("setting-text");
     const optionalVersion = meta.version ? ` (v${meta.version})` : "";
     itemName.textContent = meta.name + optionalVersion;
@@ -189,7 +223,9 @@ function scriptioSettingsUpdateScript(container, args) {
         homepage.removeAttribute("data-homepage-url");
         homepage.toggleAttribute("disabled", true);
     }
-    const switch_ = item.querySelector(`setting-switch[${switchDataAttr}="${path}"]`);
+    const switch_ = item.querySelector(
+        `setting-switch[${switchDataAttr}="${path}"]`,
+    );
     switch_.toggleAttribute("is-active", enabled);
     switch_.parentNode.classList.toggle("is-loading", false);
     if (isDeleted) {

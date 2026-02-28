@@ -1,21 +1,33 @@
 /// <reference types="@qwqnt/types/renderer" />
-import { scriptio, scriptHelper, onVueComponentMount, onVueComponentUnmount } from "./modules/renderer/javascript.js";
+import {
+    scriptio,
+    scriptHelper,
+    onVueComponentMount,
+    onVueComponentUnmount,
+} from "./modules/renderer/javascript.js";
 
 Object.defineProperty(window, "scriptio", {
     value: scriptio,
     writable: false,
     enumerable: true,
-    configurable: false
+    configurable: false,
 });
-Object.defineProperty(window, "scriptio_toolkit", { // Kept for compatibility - will be deprecated.
+Object.defineProperty(window, "scriptio_toolkit", {
+    // Kept for compatibility - will be deprecated.
     value: scriptio,
     writable: false,
     enumerable: true,
-    configurable: false
+    configurable: false,
 });
 
 scriptio_internal.onUpdateScript((event, args) => {
-    scriptHelper(args.path, args.code, args.enabled, args.meta.description, args.meta["run-at"]);
+    scriptHelper(
+        args.path,
+        args.code,
+        args.enabled,
+        args.meta.description,
+        args.meta["run-at"],
+    );
 });
 scriptio_internal.rendererReady();
 
@@ -24,7 +36,8 @@ scriptio_internal.rendererReady();
  * @param {Element} view The settings view element.
  */
 async function onSettingWindowCreated(view) {
-    const { initScriptioSettings, scriptioSettingsUpdateScript } = await import("./modules/renderer/settings.js");
+    const { initScriptioSettings, scriptioSettingsUpdateScript } =
+        await import("./modules/renderer/settings.js");
     const container = await initScriptioSettings(view);
     scriptio_internal.onUpdateScript((event, args) => {
         scriptioSettingsUpdateScript(container, args);
@@ -32,22 +45,19 @@ async function onSettingWindowCreated(view) {
     scriptio_internal.rendererReady(); //  // Call again to ensure the settings view gets the scripts data.
 }
 
-if (typeof qwqnt !== "undefined") {
-    // https://github.com/qwqnt-community/qwqnt-hako
-    window.RendererEvents.onSettingsWindowCreated(async () => {
-        const view = await window.PluginSettings.renderer.registerPluginSettings(qwqnt.framework.plugins.scriptio.meta.packageJson);
+// https://github.com/qwqnt-community/qwqnt-hako
+PluginSettings.renderer
+    .registerPluginSettings(qwqnt.framework.plugins.scriptio.meta.packageJson)
+    .then((view) => {
         if (view) {
             onSettingWindowCreated(view);
         }
     });
 
-    window.addEventListener("vue:component-mount", e => {
-        onVueComponentMount(e.detail);
-    });
+window.addEventListener("vue:component-mount", (e) => {
+    onVueComponentMount(e.detail);
+});
 
-    window.addEventListener("vue:component-unmount", e => {
-        onVueComponentUnmount(e.detail);
-    });
-}
-
-export { onSettingWindowCreated, onVueComponentMount, onVueComponentUnmount };
+window.addEventListener("vue:component-unmount", (e) => {
+    onVueComponentUnmount(e.detail);
+});
