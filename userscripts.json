@@ -98,7 +98,7 @@
     {
         "name": "Inspectio 🔎",
         "author": "PRO-2684",
-        "description": "添加各类提示信息，Ctrl+Click 复制，功能细节详见 README，需要开启 LiteLoader Hook Vue",
+        "description": "添加各类提示信息，Ctrl+Click 复制，功能细节详见 README",
         "reactive": true,
         "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#inspectio",
         "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/inspectio.js"
@@ -106,7 +106,7 @@
     {
         "name": "Link Preview",
         "author": "PRO-2684",
-        "description": "链接预览：鼠标经过链接时尝试加载浏览，悬浮显示链接的标题和描述，需要开启 LiteLoader Hook Vue",
+        "description": "链接预览：鼠标经过链接时尝试加载浏览，悬浮显示链接的标题和描述",
         "reactive": true,
         "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#link-preview",
         "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/link-preview.js"
@@ -114,7 +114,7 @@
     {
         "name": "Message Record Enhance",
         "author": "PRO-2684",
-        "description": "查看转发的聊天记录中已知的和引用消息发送者 QQ，需要开启 LiteLoader Hook Vue",
+        "description": "查看转发的聊天记录中已知的和引用消息发送者 QQ",
         "reactive": false,
         "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#msg-record-enhance",
         "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/msg-record-enhance.js"
@@ -154,7 +154,7 @@
     {
         "name": "Relay Self",
         "author": "PRO-2684",
-        "description": "允许接龙自己的消息，需要开启 LiteLoader Hook Vue",
+        "description": "允许接龙自己的消息",
         "reactive": true,
         "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#relay-self",
         "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/relay-self.js"
@@ -178,7 +178,7 @@
     {
         "name": "Show Time",
         "author": "PRO-2684",
-        "description": "消息显示时间，鼠标悬停显示详细时间与消息序列号，双击复制时间戳，需要开启 LiteLoader Hook Vue",
+        "description": "消息显示时间，鼠标悬停显示详细时间与消息序列号，双击复制时间戳",
         "reactive": true,
         "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#show-time",
         "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/show-time.js"
@@ -194,7 +194,7 @@
     {
         "name": "Toast",
         "author": "PRO-2684",
-        "description": "允许其它脚本调用 scriptio.toast，需要开启 LiteLoader Hook Vue",
+        "description": "允许其它脚本调用 scriptio.toast",
         "reactive": false,
         "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#toast",
         "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/toast.js"
@@ -210,7 +210,7 @@
     {
         "name": "Universal Repeater",
         "author": "PRO-2684",
-        "description": "消息复读机，需要开启 LiteLoader Hook Vue",
+        "description": "消息复读机",
         "reactive": true,
         "link": "https://github.com/PRO-2684/Scriptio-user-scripts/#universal-repeater",
         "download": "https://raw.githubusercontent.com/PRO-2684/Scriptio-user-scripts/refs/heads/main/universal-repeater.js"

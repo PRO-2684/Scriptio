@@ -23,7 +23,7 @@ QwQNT 插件，用于为 QQNT 加载任意 **渲染层** 的用户脚本。
 
 ## 🖼️ 截图
 
-> 演示中使用了 [MSpring-Theme](https://github.com/MUKAPP/LiteLoaderQQNT-MSpring-Theme)，主题色为 `#74A9F6`。
+> 演示中使用了 [MSpring-Theme](https://github.com/MUKAPP/mspring-theme)，主题色为 `#74A9F6`。
 
 ![Scriptio](./attachments/settings.png)
 
@@ -42,7 +42,6 @@ QwQNT 插件，用于为 QQNT 加载任意 **渲染层** 的用户脚本。
 ```
 plugins (所有的插件目录)
 └── scriptio (此插件目录)
-    ├── manifest.json (LiteLoaderQQNT 插件元数据)
     ├── package.json (QwQNT 插件元数据)
     ├── main.js (插件代码)
     ├── preload.js (插件代码)
